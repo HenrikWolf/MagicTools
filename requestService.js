@@ -1,14 +1,5 @@
 class RequestService {
 
-  // RequestService() {
-  //   this.app_token = "TY9c4GFnaHXjMbJe";
-  //   this.app_secret = "XUpi8kNDTs3VyJad4A7mbFWFsbsNfOMk";
-  //   this.access_token = "m3naRZnW9DS34E4c9Nec77ojOEvikVvf";
-  //   this.access_token_secret = "enHqyVK8WUOUO2odSEA9NM7OmtX3UhMc";
-  //   this.version = "1.0";
-  //   this.signature_method = "HMAC-SHA1";
-  // }
-
   getData(request_url) {
     var app_token = "TY9c4GFnaHXjMbJe";
     var app_secret = "XUpi8kNDTs3VyJad4A7mbFWFsbsNfOMk";
@@ -45,20 +36,7 @@ class RequestService {
         + "\",oauth_timestamp=\"" + oauth_timestamp + "\",oauth_signature_method=\"" + oauth_signature_method
         + "\",oauth_version=\"" + oauth_version + "\",oauth_signature=\"" + signature  + "\"";
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", request_url, true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.setRequestHeader("Authorization", "OAuth " + auth);
-    xhttp.send();
-
-    var myArr;
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-          myArr = JSON.parse(this.responseText);
-      }
-
-    return myArr;
-    }
+    return this.request(request_url, auth);
   }
 
   getAccountData() {
@@ -67,4 +45,34 @@ class RequestService {
     return this.getData(request_url);
   }
 
+  request(request_url, auth) {
+    return new Promise(function (resolve, reject) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("GET", request_url, true);
+      xhttp.setRequestHeader("Access-Control-Allow-Origin","*");
+      xhttp.setRequestHeader("Content-type", "application/json");
+      xhttp.setRequestHeader("Authorization", "OAuth " + auth);
+
+      xhttp.onload = function() {
+        if (this.status >= 200 && this.status < 300) {
+          resolve(xhttp.response);
+        } else {
+          reject({
+            status: this.status,
+            statusText: xhttp.statusText
+          });
+        }
+      }
+
+      xhttp.onerror = function() {
+        console.log(this);
+        reject({
+          status: this.status,
+          statusText: xhttp.statusText
+        });
+      };
+
+      xhttp.send();
+    });
+  }
 }
