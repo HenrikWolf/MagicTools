@@ -20,20 +20,11 @@
 
   <script>
   $(function() {
-    $("#wantlist-export-link").click(function(e) {
-		   //$("#login-form").delay(100).fadeIn(100);
- 		   //$("#register-form").fadeOut(100);
+    $(".nav-link").click(function(e) {
        $(".navbar").find(".active").removeClass("active");
-		   $("#wantlist-export-item").addClass('active');
+		   this.parent().addClass('active');
 		   e.preventDefault();
 	  });
-	  $("#wantlist-import-link").click(function(e) {
-		   //$("#register-form").delay(100).fadeIn(100);
- 		   //$("#login-form").fadeOut(100);
-       $(".navbar").find(".active").removeClass("active");
-		   $("#wantlist-import-item").addClass('active');
-		   e.preventDefault();
-	   });
   });
   </script>
 
@@ -44,19 +35,31 @@
     <span class="navbar-brand mb-0 h1">MKM Tools</span>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item" id="wantlist-export-item">
-          <a class="nav-link" href="#" id="wantlist-export-link">Export Wantlist</a>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Export Wantlist</a>
         </li>
-        <li class="nav-item active" id="wantlist-import-item">
-          <a class="nav-link" href="#" id="wantlist-import-link">Import Wantlist</a>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Import Wantlist</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Noch irgendwas</a>
         </li>
       </ul>
     </div>
   </nav>
 
+  <div class="container.fluid">
+  <div class="row">
+    <div class="col-lg">
+      Login-Tokens
+    </div>
+    <div class="col-lg">
+      Application
+    </div>
+  </div>
+</div>
 
-
-  <button type="button" class="btn btn-primary" onclick="UserAction()">Search</button>
+  <!-- <button type="button" class="btn btn-primary" onclick="UserAction()">Search</button> -->
 </body>
 
 
