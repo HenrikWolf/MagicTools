@@ -1,4 +1,4 @@
-class RequestService {
+export class RequestService {
 
   getData(request_url) {
     var app_token = "TY9c4GFnaHXjMbJe";
@@ -47,32 +47,30 @@ class RequestService {
 
   request(request_url, auth) {
     return new Promise(function (resolve, reject) {
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", request_url, true);
-      xhttp.setRequestHeader("Access-Control-Allow-Origin","*");
-      xhttp.setRequestHeader("Content-type", "application/json");
-      xhttp.setRequestHeader("Authorization", "OAuth " + auth);
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", request_url, true);
+      xhr.setRequestHeader("Content-type", "application/json");
+      xhr.setRequestHeader("Authorization", "OAuth " + auth);
 
-      xhttp.onload = function() {
+      xhr.onload = function() {
         if (this.status >= 200 && this.status < 300) {
-          resolve(xhttp.response);
+          resolve(xhr.response);
         } else {
           reject({
             status: this.status,
-            statusText: xhttp.statusText
+            statusText: xhr.statusText
           });
         }
       }
 
-      xhttp.onerror = function() {
-        console.log(this);
+      xhr.onerror = function() {
         reject({
           status: this.status,
-          statusText: xhttp.statusText
+          statusText: xhr.statusText
         });
       };
 
-      xhttp.send();
+      xhr.send();
     });
   }
 }

@@ -1,4 +1,12 @@
-function UserAction() {
+import {RequestService} from "./requestService.js"
+
+$(function() {
+  $("#btn-search").click(function(e) {
+     userAction();
+  });
+});
+
+function userAction() {
 
   let rs = new RequestService();
 

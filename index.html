@@ -15,14 +15,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/sha1.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-base64.js"></script>
 
-  <script src="requestService.js"></script>
-  <script src="javascript.js"></script>
+  <!-- in order to use modules/es6 you have to set type="module" -->
+  <!-- Firefox: dom.moduleScripts.enabled false to true -->
+  <script type="module" src="javascript.js"></script>
 
+  <!-- TODO: put this in a separate js-file -->
   <script>
   $(function() {
     $(".nav-link").click(function(e) {
        $(".navbar").find(".active").removeClass("active");
-		   this.parent().addClass('active');
+		   $(this).parent().addClass("active");
 		   e.preventDefault();
 	  });
   });
@@ -49,18 +51,17 @@
   </nav>
 
   <div class="container.fluid">
-  <div class="row">
-    <div class="col-lg">
-      Login-Tokens
-    </div>
-    <div class="col-lg">
-      Application
+    <div class="row">
+      <div class="col-lg">
+        Login-Tokens
+      </div>
+      <div class="col-lg">
+        Application
+      </div>
     </div>
   </div>
-</div>
 
-  <!-- <button type="button" class="btn btn-primary" onclick="UserAction()">Search</button> -->
+  <button type="button" class="btn btn-primary" id="btn-search">Search</button>
 </body>
-
 
 </html>
