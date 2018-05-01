@@ -1,0 +1,8 @@
+.nav-pills .nav-link:not(.active) {
+    color: white;
+}
+
+.nav-pills .nav-link.active {
+    background-color: lightgrey;
+    color: black;
+}
