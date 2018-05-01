@@ -15,15 +15,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/sha1.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-base64.js"></script>
 
-  <script src="requestService.js"></script>
-  <script src="javascript.js"></script>
+  <script src="javascript.js" type="module"></script>
 
   <script>
   $(function() {
     $(".nav-link").click(function(e) {
        $(".navbar").find(".active").removeClass("active");
-		   this.parent().addClass('active');
-		   e.preventDefault();
+		   $(this).parent().addClass('active');
 	  });
   });
   </script>
@@ -31,18 +29,18 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <span class="navbar-brand mb-0 h1">MKM Tools</span>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Export Wantlist</a>
+    <div class="collapse navbar-collapse">
+      <ul class="nav nav-pills" id="pills-tab" role="tablist">
+        <li class="nav-item active">
+          <a class="nav-link active" id="export-tab" data-toggle="pill" href="#export" role="tab" aria-controls="export" aria-selected="true">Export Wantlist</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Import Wantlist</a>
+          <a class="nav-link" id="import-tab" data-toggle="pill" href="#import" role="tab" aria-controls="import" aria-selected="false">Import Wantlist</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Noch irgendwas</a>
+          <a class="nav-link" id="contact-tab" data-toggle="pill" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Noch irgendwas</a>
         </li>
       </ul>
     </div>
@@ -51,15 +49,55 @@
   <div class="container.fluid">
   <div class="row">
     <div class="col-lg">
-      Login-Tokens
+      <h3>Login-Tokens</h3>
+      <form>
+        <div class="form-group">
+          <label for="input-access-token">Access Token</label>
+          <input id="input-access-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token">
+        </div>
+        <div class="form-group">
+          <label for="input-access-token-secret">Access Token Secret</label>
+          <input id="input-access-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token Secret">
+        </div>
+        <div class="form-group">
+          <label for="input-access-token"></label>
+          <input id="input-access-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token">
+        </div>
+        <div class="form-group">
+          <label for="input-access-token"></label>
+          <input id="input-access-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token">
+        </div>
+      </form>
+      <button type="button" class="btn btn-secondary">Check Tokens</button>
     </div>
-    <div class="col-lg">
-      Application
+    <div class="col-lg border-left">
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="export" role="tabpanel" aria-labelledby="export-tab">
+          <button type="button" class="btn btn-secondary">Get Lists</button>
+          <label for="export-dropdown"></label>
+          <select id="export-dropdown" class="form-control" disabled>
+            <option selected>Choose Wantlist</option>
+            <option>test</option>
+          </select>
+          <button type="button" class="btn btn-secondary">Retrieve List</button>
+          <form>
+            <div class="form-group">
+              <label for="export-output"></label>
+              <textarea class="form-control" id="export-output" rows="10" readonly></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="tab-pane fade" id="import" role="tabpanel" aria-labelledby="import-tab">
+          <p>Import</p>
+        </div>
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+          <h3>Irgendwas anderes</h3>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-  <!-- <button type="button" class="btn btn-primary" onclick="UserAction()">Search</button> -->
 </body>
 
 
