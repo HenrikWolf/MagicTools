@@ -15,8 +15,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/sha1.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-base64.js"></script>
 
-  <script src="javascript.js" type="module"></script>
+  <!-- in order to use modules/es6 you have to set type="module" -->
+  <!-- Firefox: dom.moduleScripts.enabled false to true -->
+  <script type="module" src="javascript.js"></script>
 
+  <!-- TODO: put this in a separate js-file -->
   <script>
   $(function() {
     $(".nav-link").click(function(e) {
@@ -73,13 +76,12 @@
     <div class="col-lg border-left">
       <div class="tab-content">
         <div class="tab-pane fade show active" id="export" role="tabpanel" aria-labelledby="export-tab">
-          <button type="button" class="btn btn-secondary">Get Lists</button>
+          <button type="button" class="btn btn-secondary" id="btn-search">Get Lists</button>
           <label for="export-dropdown"></label>
           <select id="export-dropdown" class="form-control" disabled>
             <option selected>Choose Wantlist</option>
             <option>test</option>
           </select>
-          <button type="button" class="btn btn-secondary">Retrieve List</button>
           <form>
             <div class="form-group">
               <label for="export-output"></label>
