@@ -1,3 +1,5 @@
+import prop from "./properties.js";
+
 export class RequestService {
 
   getData(request_url) {
@@ -5,8 +7,6 @@ export class RequestService {
     var app_secret = "XUpi8kNDTs3VyJad4A7mbFWFsbsNfOMk";
     var access_token = "m3naRZnW9DS34E4c9Nec77ojOEvikVvf";
     var access_token_secret = "enHqyVK8WUOUO2odSEA9NM7OmtX3UhMc";
-    var version = "1.0";
-    var signature_method = "HMAC-SHA1";
 
     var nonce = Math.floor(Date.now()).toString();
     var timestamp = Math.floor(Date.now() / 1000).toString();
@@ -16,8 +16,8 @@ export class RequestService {
     var oauth_token = access_token;
     var oauth_nonce = nonce;
     var oauth_timestamp = timestamp;
-    var oauth_signature_method = signature_method;
-    var oauth_version = version;
+    var oauth_signature_method = prop.signature_method;
+    var oauth_version = prop.version;
 
     var baseStringWithoutGet = "oauth_consumer_key=" + oauth_consumer_key
             + "&oauth_nonce=" + oauth_nonce
@@ -40,7 +40,7 @@ export class RequestService {
   }
 
   getAccountData() {
-    var request_url = "https://api.cardmarket.com/ws/v2.0/output.json/account";
+    var request_url = prop.mkm_url + "account";
 
     return this.getData(request_url);
   }
