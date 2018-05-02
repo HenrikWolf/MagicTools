@@ -6,3 +6,11 @@
     background-color: lightgrey;
     color: black;
 }
+
+.alert {
+  line-height:15px;
+}
+
+.alert-trim {
+  display: inline-block;
+}
