@@ -2,18 +2,22 @@ import prop from "./properties.js";
 
 export class RequestService {
 
-  getData(request_url) {
-    var app_token = "TY9c4GFnaHXjMbJe";
-    var app_secret = "XUpi8kNDTs3VyJad4A7mbFWFsbsNfOMk";
-    var access_token = "m3naRZnW9DS34E4c9Nec77ojOEvikVvf";
-    var access_token_secret = "enHqyVK8WUOUO2odSEA9NM7OmtX3UhMc";
+  getAccountData(auth_token_set) {
+    var request_url = prop.mkm_url + "account";
 
+    return this.getData(request_url, auth_token_set);
+  }
+
+  getData(request_url, auth_token_set) {
+
+    // create unique values for OAuth
     var nonce = Math.floor(Date.now()).toString();
     var timestamp = Math.floor(Date.now() / 1000).toString();
 
+    // get params needed for OAuth
     var realm = request_url;
-    var oauth_consumer_key = app_token;
-    var oauth_token = access_token;
+    var oauth_consumer_key = auth_token_set.app_token;
+    var oauth_token = auth_token_set.access_token;
     var oauth_nonce = nonce;
     var oauth_timestamp = timestamp;
     var oauth_signature_method = prop.signature_method;
@@ -26,7 +30,7 @@ export class RequestService {
 
     var baseString = "GET&" + encodeURIComponent(realm) + "&" + encodeURIComponent(baseStringWithoutGet);
 
-    var signingKey = encodeURIComponent(app_secret) + "&" + encodeURIComponent(access_token_secret);
+    var signingKey = encodeURIComponent(auth_token_set.app_secret) + "&" + encodeURIComponent(auth_token_set.access_token_secret);
 
     var rawSignature = CryptoJS.HmacSHA1(baseString, signingKey);
     var signature = CryptoJS.enc.Base64.stringify(rawSignature);
@@ -39,12 +43,6 @@ export class RequestService {
     return this.request(request_url, auth);
   }
 
-  getAccountData() {
-    var request_url = prop.mkm_url + "account";
-
-    return this.getData(request_url);
-  }
-
   request(request_url, auth) {
     return new Promise(function (resolve, reject) {
       var xhr = new XMLHttpRequest();
@@ -54,7 +52,8 @@ export class RequestService {
 
       xhr.onload = function() {
         if (this.status >= 200 && this.status < 300) {
-          resolve(xhr.response);
+          let result = JSON.parse(xhr.response);
+          resolve(result);
         } else {
           reject({
             status: this.status,
