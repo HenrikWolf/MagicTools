@@ -1,6 +1,7 @@
 import {RequestService} from "./requestService.js"
 import {AuthTokenSet} from "./properties.js";
 
+// TODO: remove wrapper function
 $(function() {
   // TODO: rename id of the button
   $("#btn-search").click(function(e) {
@@ -10,6 +11,14 @@ $(function() {
      getWantlists();
   });
 });
+
+$("#btn-confirm").click(function(e) {
+  // TODO: show loading spinner
+   console.log("loading...");
+   getWantlist();
+});
+
+// TODO: add own click event for getWantlists()
 
 // set Finns tokens as default to input fields (temporary)
 $("#input-app-token").val(AuthTokenSet.app_token);
@@ -64,6 +73,40 @@ function getWantlists() {
       $("#export-dropdown").append(option);
     })
     console.log(lists);
+  })
+  .catch(function (err) {
+    // TODO: write error as alert
+    console.error('Augh, there was an error!', err.status, err.statusText);
+  });
+}
+
+function getWantlist() {
+
+  // read tokens from input fields
+  var auth_token_set = {
+    app_token : $("#input-app-token").val(),
+    app_secret : $("#input-app-token-secret").val(),
+    access_token : $("#input-access-token").val(),
+    access_token_secret : $("#input-access-token-secret").val(),
+  };
+
+  var listId = $("#export-dropdown").val();
+
+  let rs = new RequestService();
+
+  rs.getWantlist(listId, auth_token_set)
+  .then(function (result) {
+    let list = result.wantslist.item;
+    let txt = "";
+    list.forEach(function(item) {
+      if (item.metaproduct) {
+        txt += item.metaproduct.enName + "\n";
+      } else {
+        txt += item.product.enName + "\n";
+      }
+    })
+    $("#export-output").val(txt);
+    console.log(list);
   })
   .catch(function (err) {
     // TODO: write error as alert

@@ -14,6 +14,12 @@ export class RequestService {
     return this.getData(request_url, auth_token_set);
   }
 
+  getWantlist(listId, auth_token_set) {
+    var request_url = prop.mkm_url + "wantslist/" + listId;
+
+    return this.getData(request_url, auth_token_set);
+  }
+
   getData(request_url, auth_token_set) {
 
     // create unique values for OAuth
