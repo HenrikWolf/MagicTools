@@ -7,6 +7,7 @@ $(function() {
     // TODO: show loading spinner
      console.log("loading...");
      checkTokens();
+     getWantlists();
   });
 });
 
@@ -34,6 +35,35 @@ function checkTokens() {
     // TODO: use id instead of class
     $(".alert").text("Success: Connected to Account "+username);
     console.log(result.account);
+  })
+  .catch(function (err) {
+    // TODO: write error as alert
+    console.error('Augh, there was an error!', err.status, err.statusText);
+  });
+}
+
+function getWantlists() {
+
+  // read tokens from input fields
+  var auth_token_set = {
+    app_token : $("#input-app-token").val(),
+    app_secret : $("#input-app-token-secret").val(),
+    access_token : $("#input-access-token").val(),
+    access_token_secret : $("#input-access-token-secret").val(),
+  };
+
+  let rs = new RequestService();
+
+  rs.getWantlists(auth_token_set)
+  .then(function (result) {
+    $("#export-dropdown").empty();
+    $("#export-dropdown").prop("disabled", false);
+    let lists = result.wantslist;
+    lists.forEach(function(list) {
+      let option = $('<option />').val(list.idWantslist).html(list.name + " (" + list.itemCount + " Wants)");
+      $("#export-dropdown").append(option);
+    })
+    console.log(lists);
   })
   .catch(function (err) {
     // TODO: write error as alert
