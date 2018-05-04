@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="custom.css">
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -82,10 +83,13 @@
         </div>
       </div>
       <div class="row justify-content-center">
-        <div class="col-md-3">
+        <div class="col-md-2">
           <button type="button" class="btn btn-secondary" id="btn-check-tokens">Check Tokens</button>
         </div>
-        <div class="col-md-9" align="right">
+        <div class="col-md-2">
+          <i id="icon-check-tokens" class="fas fa-lg"></i>
+        </div>
+        <div class="col-md-8" align="right">
           <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-check-tokens"></div>
         </div>
       </div>
@@ -99,11 +103,12 @@
         <div class="tab-pane fade show active" id="export" role="tabpanel" aria-labelledby="export-tab">
           <h3>Export Wantlist</h3>
           <div class="row">
-            <div class="col-md-9">
-              <button type="button" class="btn btn-secondary" id="btn-get-lists">Get Lists</button>
+            <div class="col-md-6"></div>
+            <div class="col-md-3">
+              <button type="button" class="btn btn-secondary btn-block" id="btn-get-lists">Get Lists</button>
             </div>
-            <div class ="col-md-3">
-              <p>Check</p>
+            <div class="col-md-3">
+              <i id="icon-export-get-lists" class="fas fa-lg"></i>
             </div>
           </div>
           <div class="row">
@@ -113,11 +118,11 @@
                 <option value="null" selected>Choose Wantlist</option>
               </select>
             </div>
-            <div class="col-md-3">
-              <button type="button" class="btn btn-secondary" id="btn-get-wants">Get Wants</button>
+            <div class="col-md-3 pt-4">
+              <button type="button" class="btn btn-secondary btn-block" id="btn-get-wants">Get Wants</button>
             </div>
-            <div class ="col-md-3">
-              <p>Check</p>
+            <div class="col-md-3">
+              <i id="icon-export-get-wants" class="fas fa-lg"></i>
             </div>
           </div>
           <div class="row">

@@ -2,19 +2,19 @@ import {RequestService} from "./requestService.js"
 import prop from "./properties.js";
 
 $("#btn-check-tokens").click(function(e) {
-  // TODO: show loading spinner
+  $("#icon-check-tokens").addClass("fa-spinner fa-spin");
   console.log("loading...");
   checkTokens();
 });
 
 $("#btn-get-lists").click(function(e) {
-  // TODO: show loading spinner
+  $("#icon-export-get-lists").addClass("fa-spinner fa-spin");
   console.log("loading...");
   getWantlists();
 });
 
 $("#btn-get-wants").click(function(e) {
-  // TODO: show loading spinner
+  $("#icon-export-get-wants").addClass("fa-spinner fa-spin");
   console.log("loading...");
   getWantlist();
 });
@@ -44,6 +44,7 @@ function checkTokens() {
     $("#alert-check-tokens").show();
     $("#alert-check-tokens").html("Connected to Account <strong>"+username+"</strong>");
     console.log(result.account);
+    $("#icon-check-tokens").removeClass("fa-spinner fa-spin");
   })
   .catch(function (err) {
     // TODO: write error as alert
@@ -73,6 +74,7 @@ function getWantlists() {
       $("#export-dropdown").append(option);
     })
     console.log(lists);
+    $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
   })
   .catch(function (err) {
     // TODO: write error as alert
@@ -107,6 +109,7 @@ function getWantlist() {
     })
     $("#export-output").val(txt);
     console.log(list);
+    $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
   })
   .catch(function (err) {
     // TODO: write error as alert
