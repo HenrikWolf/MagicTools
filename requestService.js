@@ -2,25 +2,25 @@ import prop from "./properties.js";
 
 export class RequestService {
 
-  getAccountData(auth_token_set) {
+  static getAccountData(auth_token_set) {
     var request_url = prop.mkm_url + "account";
 
     return this.getData(request_url, auth_token_set);
   }
 
-  getWantlists(auth_token_set) {
+  static getWantlists(auth_token_set) {
     var request_url = prop.mkm_url + "wantslist";
 
     return this.getData(request_url, auth_token_set);
   }
 
-  getWantlist(listId, auth_token_set) {
+  static getWantlist(listId, auth_token_set) {
     var request_url = prop.mkm_url + "wantslist/" + listId;
 
     return this.getData(request_url, auth_token_set);
   }
 
-  getData(request_url, auth_token_set) {
+  static getData(request_url, auth_token_set) {
 
     // create unique values for OAuth
     var nonce = Math.floor(Date.now()).toString();
@@ -55,7 +55,7 @@ export class RequestService {
     return this.request(request_url, auth);
   }
 
-  request(request_url, auth) {
+  static request(request_url, auth) {
     return new Promise(function (resolve, reject) {
       var xhr = new XMLHttpRequest();
       xhr.open("GET", request_url, true);

@@ -28,9 +28,8 @@ $("#input-access-token-secret").val(prop.access_token_secret);
 function checkTokens() {
 
   var auth_token_set = readAuthTokenSet();
-  let rs = new RequestService();
 
-  rs.getAccountData(auth_token_set)
+  RequestService.getAccountData(auth_token_set)
   .then(function (result) {
     let username = result.account.username;
     $("#alert-check-tokens").show();
@@ -46,9 +45,8 @@ function checkTokens() {
 function getWantlists() {
 
   var auth_token_set = readAuthTokenSet();
-  let rs = new RequestService();
 
-  rs.getWantlists(auth_token_set)
+  RequestService.getWantlists(auth_token_set)
   .then(function (result) {
     $("#export-dropdown").empty();
     $("#export-dropdown").prop("disabled", false);
@@ -70,9 +68,7 @@ function getWantlist() {
   var auth_token_set = readAuthTokenSet();
   var listId = $("#export-dropdown").val();
 
-  let rs = new RequestService();
-
-  rs.getWantlist(listId, auth_token_set)
+  RequestService.getWantlist(listId, auth_token_set)
   .then(function (result) {
     let list = result.wantslist.item;
     let txt = "";
@@ -100,5 +96,4 @@ function readAuthTokenSet() {
     access_token : $("#input-access-token").val(),
     access_token_secret : $("#input-access-token-secret").val(),
   };
-  //return auth_token_set;
 }
