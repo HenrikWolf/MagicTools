@@ -27,20 +27,12 @@ $("#input-access-token-secret").val(prop.access_token_secret);
 
 function checkTokens() {
 
-  // read tokens from input fields
-  var auth_token_set = {
-    app_token : $("#input-app-token").val(),
-    app_secret : $("#input-app-token-secret").val(),
-    access_token : $("#input-access-token").val(),
-    access_token_secret : $("#input-access-token-secret").val(),
-  };
-
+  var auth_token_set = readAuthTokenSet();
   let rs = new RequestService();
 
   rs.getAccountData(auth_token_set)
   .then(function (result) {
     let username = result.account.username;
-    // TODO: use id instead of class
     $("#alert-check-tokens").show();
     $("#alert-check-tokens").html("Connected to Account <strong>"+username+"</strong>");
     console.log(result.account);
@@ -53,14 +45,7 @@ function checkTokens() {
 
 function getWantlists() {
 
-  // read tokens from input fields
-  var auth_token_set = {
-    app_token : $("#input-app-token").val(),
-    app_secret : $("#input-app-token-secret").val(),
-    access_token : $("#input-access-token").val(),
-    access_token_secret : $("#input-access-token-secret").val(),
-  };
-
+  var auth_token_set = readAuthTokenSet();
   let rs = new RequestService();
 
   rs.getWantlists(auth_token_set)
@@ -82,14 +67,7 @@ function getWantlists() {
 
 function getWantlist() {
 
-  // read tokens from input fields
-  var auth_token_set = {
-    app_token : $("#input-app-token").val(),
-    app_secret : $("#input-app-token-secret").val(),
-    access_token : $("#input-access-token").val(),
-    access_token_secret : $("#input-access-token-secret").val(),
-  };
-
+  var auth_token_set = readAuthTokenSet();
   var listId = $("#export-dropdown").val();
 
   let rs = new RequestService();
@@ -112,4 +90,15 @@ function getWantlist() {
     // TODO: write error as alert
     console.error('Augh, there was an error!', err.status, err.statusText);
   });
+}
+
+// read tokens from input fields
+function readAuthTokenSet() {
+  var auth_token_set = {
+    app_token : $("#input-app-token").val(),
+    app_secret : $("#input-app-token-secret").val(),
+    access_token : $("#input-access-token").val(),
+    access_token_secret : $("#input-access-token-secret").val(),
+  };
+  //return auth_token_set;
 }
