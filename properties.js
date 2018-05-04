@@ -4,7 +4,7 @@ export default {
   mkm_url : "https://api.cardmarket.com/ws/v2.0/output.json/"
 }
 
-export var AuthTokenSet = {
+export class AuthTokenSet = {
   app_token : "TY9c4GFnaHXjMbJe",
   app_secret : "XUpi8kNDTs3VyJad4A7mbFWFsbsNfOMk",
   access_token : "m3naRZnW9DS34E4c9Nec77ojOEvikVvf",
