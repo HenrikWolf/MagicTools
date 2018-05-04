@@ -27,7 +27,7 @@ $("#input-access-token-secret").val(prop.access_token_secret);
 
 function checkTokens() {
 
-  var auth_token_set = readAuthTokenSet();
+  let auth_token_set = readAuthTokenSet();
 
   RequestService.getAccountData(auth_token_set)
   .then(function (result) {
@@ -44,7 +44,7 @@ function checkTokens() {
 
 function getWantlists() {
 
-  var auth_token_set = readAuthTokenSet();
+  let auth_token_set = readAuthTokenSet();
 
   RequestService.getWantlists(auth_token_set)
   .then(function (result) {
@@ -65,8 +65,8 @@ function getWantlists() {
 
 function getWantlist() {
 
-  var auth_token_set = readAuthTokenSet();
-  var listId = $("#export-dropdown").val();
+  let auth_token_set = readAuthTokenSet();
+  let listId = $("#export-dropdown").val();
 
   RequestService.getWantlist(listId, auth_token_set)
   .then(function (result) {
@@ -90,10 +90,11 @@ function getWantlist() {
 
 // read tokens from input fields
 function readAuthTokenSet() {
-  var auth_token_set = {
+  let auth_token_set = {
     app_token : $("#input-app-token").val(),
     app_secret : $("#input-app-token-secret").val(),
     access_token : $("#input-access-token").val(),
     access_token_secret : $("#input-access-token-secret").val(),
   };
+  return auth_token_set;
 }

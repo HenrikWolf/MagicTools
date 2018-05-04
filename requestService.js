@@ -28,8 +28,8 @@ export class RequestService {
 
     // get params needed for OAuth
     var realm = request_url;
-    var oauth_consumer_key = prop.app_token;
-    var oauth_token = prop.access_token;
+    var oauth_consumer_key = auth_token_set.app_token;
+    var oauth_token = auth_token_set.access_token;
     var oauth_nonce = nonce;
     var oauth_timestamp = timestamp;
     var oauth_signature_method = prop.signature_method;
@@ -42,7 +42,7 @@ export class RequestService {
 
     var baseString = "GET&" + encodeURIComponent(realm) + "&" + encodeURIComponent(baseStringWithoutGet);
 
-    var signingKey = encodeURIComponent(prop.app_secret) + "&" + encodeURIComponent(prop.access_token_secret);
+    var signingKey = encodeURIComponent(auth_token_set.app_secret) + "&" + encodeURIComponent(auth_token_set.access_token_secret);
 
     var rawSignature = CryptoJS.HmacSHA1(baseString, signingKey);
     var signature = CryptoJS.enc.Base64.stringify(rawSignature);
