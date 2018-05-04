@@ -1,24 +1,23 @@
 import {RequestService} from "./requestService.js"
 import prop from "./properties.js";
 
-// TODO: remove wrapper function
-$(function() {
-  // TODO: rename id of the button
-  $("#btn-get-lists").click(function(e) {
-    // TODO: show loading spinner
-     console.log("loading...");
-     checkTokens();
-     getWantlists();
-  });
-});
-
-$("#btn-confirm").click(function(e) {
+$("#btn-check-tokens").click(function(e) {
   // TODO: show loading spinner
-   console.log("loading...");
-   getWantlist();
+  console.log("loading...");
+  checkTokens();
 });
 
-// TODO: add own click event for getWantlists()
+$("#btn-get-lists").click(function(e) {
+  // TODO: show loading spinner
+  console.log("loading...");
+  getWantlists();
+});
+
+$("#btn-get-wants").click(function(e) {
+  // TODO: show loading spinner
+  console.log("loading...");
+  getWantlist();
+});
 
 // set Finns tokens as default to input fields (temporary)
 $("#input-app-token").val(prop.app_token);
