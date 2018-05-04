@@ -1,10 +1,10 @@
 import {RequestService} from "./requestService.js"
-import {prop} from "./properties.js";
+import prop from "./properties.js";
 
 // TODO: remove wrapper function
 $(function() {
   // TODO: rename id of the button
-  $("#btn-search").click(function(e) {
+  $("#btn-get-lists").click(function(e) {
     // TODO: show loading spinner
      console.log("loading...");
      checkTokens();
@@ -42,7 +42,8 @@ function checkTokens() {
   .then(function (result) {
     let username = result.account.username;
     // TODO: use id instead of class
-    $(".alert").text("Success: Connected to Account "+username);
+    $("#alert-check-tokens").show();
+    $("#alert-check-tokens").html("Connected to Account <strong>"+username+"</strong>");
     console.log(result.account);
   })
   .catch(function (err) {
