@@ -1,4 +1,4 @@
-import prop from "./properties.js";
+import {prop} from "./properties.js";
 
 export class RequestService {
 

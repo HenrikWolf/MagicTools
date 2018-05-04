@@ -1,5 +1,5 @@
 import {RequestService} from "./requestService.js"
-import prop from "./properties.js";
+import {prop} from "./properties.js";
 
 // TODO: remove wrapper function
 $(function() {
