@@ -27,45 +27,31 @@ $("#input-access-token-secret").val(prop.access_token_secret);
 
 function checkTokens() {
 
-  // read tokens from input fields
-  var auth_token_set = {
-    app_token : $("#input-app-token").val(),
-    app_secret : $("#input-app-token-secret").val(),
-    access_token : $("#input-access-token").val(),
-    access_token_secret : $("#input-access-token-secret").val(),
-  };
+  let auth_token_set = readAuthTokenSet();
 
-  let rs = new RequestService();
-
-  rs.getAccountData(auth_token_set)
+  RequestService.getAccountData(auth_token_set)
   .then(function (result) {
     let username = result.account.username;
-    // TODO: use id instead of class
-    $("#alert-check-tokens").show();
-    $("#alert-check-tokens").html("Connected to Account <strong>"+username+"</strong>");
+    $("#alert-check-tokens").removeClass("alert-danger").addClass("alert-success");
+    $("#alert-check-tokens").html("Connected to Account <strong>"+username+"</strong>").show();
     console.log(result.account);
     $("#icon-check-tokens").removeClass("fa-spinner fa-spin");
   })
   .catch(function (err) {
-    // TODO: write error as alert
+    $("#alert-check-tokens").removeClass("alert-success").addClass("alert-danger");
+    $("#alert-check-tokens").html("Fehler: <strong>"+err.statusText+"</strong>").show();
     console.error('Augh, there was an error!', err.status, err.statusText);
+    // TODO: hide loading spinner
   });
 }
 
 function getWantlists() {
 
-  // read tokens from input fields
-  var auth_token_set = {
-    app_token : $("#input-app-token").val(),
-    app_secret : $("#input-app-token-secret").val(),
-    access_token : $("#input-access-token").val(),
-    access_token_secret : $("#input-access-token-secret").val(),
-  };
+  let auth_token_set = readAuthTokenSet();
 
-  let rs = new RequestService();
-
-  rs.getWantlists(auth_token_set)
+  RequestService.getWantlists(auth_token_set)
   .then(function (result) {
+    $("#alert-export").hide();
     $("#export-dropdown").empty();
     $("#export-dropdown").prop("disabled", false);
     let lists = result.wantslist;
@@ -77,27 +63,20 @@ function getWantlists() {
     $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
   })
   .catch(function (err) {
-    // TODO: write error as alert
+    $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
     console.error('Augh, there was an error!', err.status, err.statusText);
+    // TODO: hide loading spinner
   });
 }
 
 function getWantlist() {
 
-  // read tokens from input fields
-  var auth_token_set = {
-    app_token : $("#input-app-token").val(),
-    app_secret : $("#input-app-token-secret").val(),
-    access_token : $("#input-access-token").val(),
-    access_token_secret : $("#input-access-token-secret").val(),
-  };
+  let auth_token_set = readAuthTokenSet();
+  let listId = $("#export-dropdown").val();
 
-  var listId = $("#export-dropdown").val();
-
-  let rs = new RequestService();
-
-  rs.getWantlist(listId, auth_token_set)
+  RequestService.getWantlist(listId, auth_token_set)
   .then(function (result) {
+    $("#alert-export").hide();
     let list = result.wantslist.item;
     let txt = "";
     list.forEach(function(item) {
@@ -112,7 +91,18 @@ function getWantlist() {
     $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
   })
   .catch(function (err) {
-    // TODO: write error as alert
+    $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
     console.error('Augh, there was an error!', err.status, err.statusText);
+    // TODO: hide loading spinner
   });
+}
+
+// read tokens from input fields
+function readAuthTokenSet() {
+  return {
+    app_token : $("#input-app-token").val(),
+    app_secret : $("#input-app-token-secret").val(),
+    access_token : $("#input-access-token").val(),
+    access_token_secret : $("#input-access-token-secret").val(),
+  };
 }
