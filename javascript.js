@@ -1,5 +1,5 @@
 import {RequestService} from "./requestService.js"
-import {AuthTokenSet} from "./properties.js";
+import prop from "./properties.js";
 
 // TODO: remove wrapper function
 $(function() {
@@ -21,10 +21,10 @@ $("#btn-confirm").click(function(e) {
 // TODO: add own click event for getWantlists()
 
 // set Finns tokens as default to input fields (temporary)
-$("#input-app-token").val(AuthTokenSet.app_token);
-$("#input-app-token-secret").val(AuthTokenSet.app_secret);
-$("#input-access-token").val(AuthTokenSet.access_token);
-$("#input-access-token-secret").val(AuthTokenSet.access_token_secret);
+$("#input-app-token").val(prop.app_token);
+$("#input-app-token-secret").val(prop.app_secret);
+$("#input-access-token").val(prop.access_token);
+$("#input-access-token-secret").val(prop.access_token_secret);
 
 function checkTokens() {
 
