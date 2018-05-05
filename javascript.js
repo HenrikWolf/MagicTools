@@ -41,7 +41,7 @@ function checkTokens() {
     $("#alert-check-tokens").removeClass("alert-success").addClass("alert-danger");
     $("#alert-check-tokens").html("Fehler: <strong>"+err.statusText+"</strong>").show();
     console.error('Augh, there was an error!', err.status, err.statusText);
-    // TODO: hide loading spinner
+    $("#icon-check-tokens").removeClass("fa-spinner fa-spin");
   });
 }
 
@@ -65,7 +65,7 @@ function getWantlists() {
   .catch(function (err) {
     $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
     console.error('Augh, there was an error!', err.status, err.statusText);
-    // TODO: hide loading spinner
+    $("##icon-export-get-lists").removeClass("fa-spinner fa-spin");
   });
 }
 
@@ -93,7 +93,7 @@ function getWantlist() {
   .catch(function (err) {
     $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
     console.error('Augh, there was an error!', err.status, err.statusText);
-    // TODO: hide loading spinner
+    $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
   });
 }
 
