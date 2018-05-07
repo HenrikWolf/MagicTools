@@ -74,27 +74,36 @@ function getWantlist() {
   let auth_token_set = readAuthTokenSet();
   let listId = $("#export-dropdown").val();
 
-  RequestService.getWantlist(listId, auth_token_set)
-  .then(function (result) {
-    $("#alert-export").hide();
-    let list = result.wantslist.item;
-    let txt = "";
-    list.forEach(function(item) {
-      if (item.metaproduct) {
-        txt += item.metaproduct.enName + "\n";
-      } else {
-        txt += item.product.enName + "\n";
-      }
+  // check if a valid wantlist is selected
+  if (listId=="null" || listId==null) {
+    $("#alert-export").html("Please select a valid Wantlist").show();
+    console.log("No valid wantlist selected.");
+    $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+  } else {
+
+    RequestService.getWantlist(listId, auth_token_set)
+    .then(function (result) {
+      $("#alert-export").hide();
+      let list = result.wantslist.item;
+      let txt = "";
+      list.forEach(function(item) {
+        if (item.metaproduct) {
+          txt += item.metaproduct.enName + "\n";
+        } else {
+          txt += item.product.enName + "\n";
+        }
+      })
+      $("#export-output").val(txt);
+      console.log(list);
+      $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
     })
-    $("#export-output").val(txt);
-    console.log(list);
-    $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
-  })
-  .catch(function (err) {
-    $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
-    console.error('Augh, there was an error!', err.status, err.statusText);
-    $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
-  });
+    .catch(function (err) {
+      $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
+      console.error('Augh, there was an error!', err.status, err.statusText);
+      $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+    });
+
+  }
 }
 
 // read tokens from input fields
