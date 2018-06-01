@@ -87,11 +87,25 @@ function getWantlist() {
       let list = result.wantslist.item;
       let txt = "";
       list.forEach(function(item) {
+        //storing additional information in array
+        var additionalInfo = [];
+
+        txt += item.count + "x ";
         if (item.metaproduct) {
-          txt += item.metaproduct.enName + "\n";
+          txt += item.metaproduct.enName;
         } else {
-          txt += item.product.enName + "\n";
+          txt += item.product.enName;
+          additionalInfo.push(item.product.expansionName);
         }
+        if (item.isFoil == true){additionalInfo.push("Foil")}
+
+        //appending the addional info to txt
+        if (additionalInfo.length>0){
+          txt += " (";
+          for (var i = 0; i < additionalInfo.length-1; i++){txt += additionalInfo[i] + ", ";}
+          txt += additionalInfo[additionalInfo.length-1] + ")";
+        }
+        txt += "\n";
       })
       $("#export-output").val(txt);
       console.log(list);
