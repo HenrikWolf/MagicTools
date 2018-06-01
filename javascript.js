@@ -19,6 +19,12 @@ $("#btn-get-wants").click(function(e) {
   getWantlist();
 });
 
+$("#btn-copy-clipboard").click(function(e) {
+  var copyText = document.getElementById("export-output");
+  copyText.select();
+  document.execCommand("copy");
+});
+
 // set Finns tokens as default to input fields (temporary)
 $("#input-app-token").val(prop.app_token);
 $("#input-app-token-secret").val(prop.app_secret);
