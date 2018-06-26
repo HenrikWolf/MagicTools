@@ -26,10 +26,11 @@ $("#btn-copy-clipboard").click(function(e) {
 });
 
 // set Finns tokens as default to input fields (temporary)
-$("#input-app-token").val(prop.app_token);
-$("#input-app-token-secret").val(prop.app_secret);
-$("#input-access-token").val(prop.access_token);
-$("#input-access-token-secret").val(prop.access_token_secret);
+var ats = prop.auth_token_sets.henrik;
+$("#input-app-token").val(ats.app_token);
+$("#input-app-token-secret").val(ats.app_secret);
+$("#input-access-token").val(ats.access_token);
+$("#input-access-token-secret").val(ats.access_token_secret);
 
 function checkTokens() {
 
