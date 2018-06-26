@@ -1,6 +1,10 @@
 import {RequestService} from "./requestService.js"
 import prop from "./properties.js";
 
+$(document).ready(function() {
+  fillSelectUserDropdown();
+});
+
 $("#btn-check-tokens").click(function(e) {
   $("#icon-check-tokens").addClass("fa-spinner fa-spin");
   console.log("loading...");
@@ -25,12 +29,23 @@ $("#btn-copy-clipboard").click(function(e) {
   document.execCommand("copy");
 });
 
+function fillSelectUserDropdown() {
+  let ats = prop.auth_token_sets;
+  if(ats) {
+    for (var set in ats) {
+      let option = $('<option />').val(set).html(set);
+      $("#selectUser").append(option);
+    }
+    $("#selectUser").append("<option value='test'>test</option>");
+  }
+}
+
 // set Finns tokens as default to input fields (temporary)
-var ats = prop.auth_token_sets.henrik;
-$("#input-app-token").val(ats.app_token);
-$("#input-app-token-secret").val(ats.app_secret);
-$("#input-access-token").val(ats.access_token);
-$("#input-access-token-secret").val(ats.access_token_secret);
+// var ats = prop.auth_token_sets.henrik;
+// $("#input-app-token").val(ats.app_token);
+// $("#input-app-token-secret").val(ats.app_secret);
+// $("#input-access-token").val(ats.access_token);
+// $("#input-access-token-secret").val(ats.access_token_secret);
 
 function checkTokens() {
 
@@ -151,12 +166,12 @@ function getWantlist() {
 function readAuthTokenSet() {
   let user = $("#selectUser").find(":selected").text();
   console.log(user + " selected");
-  var ats = null;
-  if (user=="Henrik") {
-    var ats = prop.auth_token_sets.henrik;
+  let ats = null;
+  if (user=="henrik") {
+    ats = prop.auth_token_sets.henrik;
   };
-  if (user=="Finn") {
-    var ats = prop.auth_token_sets.finn;
+  if (user=="finn") {
+    ats = prop.auth_token_sets.finn;
   };
   return ats;
 }
