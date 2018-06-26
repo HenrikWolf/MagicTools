@@ -5,6 +5,11 @@ $(document).ready(function() {
   fillSelectUserDropdown();
 });
 
+$(".nav a").on("click", function(){
+  $(".nav").find(".active").removeClass("active");
+  $(this).parent().addClass("active");
+});
+
 $("#btn-check-tokens").click(function(e) {
   $("#icon-check-tokens").addClass("fa-spinner fa-spin");
   console.log("loading...");

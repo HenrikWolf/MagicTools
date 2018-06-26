@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="custom.css">
 
+  <!-- import icon lib -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
   <!-- import bootstrap and jquery -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -45,54 +48,28 @@
           <a class="nav-link" id="contact-tab" data-toggle="pill" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Noch irgendwas</a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <select class="form-control" id="selectUser">
-        </select>
-      </form>
+      <ul class="nav">
+        <li class"nav-item">
+          <form class="form-inline my-2 my-lg-0 mx-1">
+            <select class="form-control" id="selectUser"></select>
+          </form>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fas fa-user-edit fa-lg px-1" style="color:white" id="user-edit-tab" data-toggle="pill" href="#user-edit" role="tab" aria-controls="user-edit" aria-selected="false"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fas fa-user-plus fa-lg px-1" style="color:white" id="user-add-tab" data-toggle="pill" href="#user-add" role="tab" aria-controls="user-add" aria-selected="false"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fas fa-user-minus fa-lg px-1" style="color:white" id="user-delete-tab" data-toggle="pill" href="#user-delete" role="tab" aria-controls="user-add" aria-selected="false"></a>
+        </li>
+      </ul>
     </div>
   </nav>
 
   <!-- Begin Content -->
   <div class="container.fluid">
   <div class="row justify-content-md-center">
-
-    <!-- Begin Login -->
-    <!-- <div class="col-md px-5 py-3">
-      <h3>Login Data</h3>
-      <div class="row">
-        <div class="col-md">
-          <form>
-            <div class="form-group">
-              <label for="input-app-token">App Token</label>
-              <input id="input-app-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token">
-            </div>
-            <div class="form-group">
-              <label for="input-app-token-secret">App Token Secret</label>
-              <input id="input-app-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token Secret">
-            </div>
-            <div class="form-group">
-              <label for="input-access-token">Access Token</label>
-              <input id="input-access-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token">
-            </div>
-            <div class="form-group">
-              <label for="input-access-token-secret">Access Token Secret</label>
-              <input id="input-access-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token Secret">
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col-md-3">
-          <button type="button" class="btn btn-secondary btn-block" id="btn-check-tokens">Check Tokens</button>
-        </div>
-        <div class="col-md-1 center-parent-regular">
-          <i id="icon-check-tokens" class="fas fa-lg center-child-regular"></i>
-        </div>
-        <div class="col-md-8" align="right">
-          <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-check-tokens"></div>
-        </div>
-      </div>
-    </div> -->
 
     <!-- Begin Apps -->
     <div class="col-lg-6 px-5 py-3">
@@ -155,6 +132,45 @@
           <h3>Irgendwas anderes</h3>
           coming not so soon...
         </div>
+
+        <!-- Begin User-Edit -->
+        <div class="tab-pane fade" id="user-edit" role="tabpanel" aria-labelledby="user-edit-tab">
+          <h3>Login Data</h3>
+          <div class="row">
+            <div class="col-md">
+              <form>
+                <div class="form-group">
+                  <label for="input-app-token">App Token</label>
+                  <input id="input-app-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token">
+                </div>
+                <div class="form-group">
+                  <label for="input-app-token-secret">App Token Secret</label>
+                  <input id="input-app-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token Secret">
+                </div>
+                <div class="form-group">
+                  <label for="input-access-token">Access Token</label>
+                  <input id="input-access-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token">
+                </div>
+                <div class="form-group">
+                  <label for="input-access-token-secret">Access Token Secret</label>
+                  <input id="input-access-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token Secret">
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+              <button type="button" class="btn btn-secondary btn-block" id="btn-check-tokens">Check Tokens</button>
+            </div>
+            <div class="col-md-1 center-parent-regular">
+              <i id="icon-check-tokens" class="fas fa-lg center-child-regular"></i>
+            </div>
+            <div class="col-md-8" align="right">
+              <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-check-tokens"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
