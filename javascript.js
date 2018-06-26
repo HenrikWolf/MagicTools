@@ -43,7 +43,7 @@ $("#btn-copy-clipboard").click(function(e) {
   document.execCommand("copy");
 });
 
-$("#btn-save-tokens").click(function(e) {
+$("#btn-user-edit-save").click(function(e) {
   $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
   $("#alert-user-edit").html("Fehler: <strong>Keine Funktionalität implementiert</strong>").show();
 });
