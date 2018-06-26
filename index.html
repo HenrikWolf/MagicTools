@@ -30,8 +30,11 @@
   <!-- Begin Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <span class="navbar-brand mb-0 h1">MKM Tools</span>
-    <div class="collapse navbar-collapse">
-      <ul class="nav nav-pills" id="pills-tab" role="tablist">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="nav nav-pills mr-auto">
         <li class="nav-item active">
           <a class="nav-link active" id="export-tab" data-toggle="pill" href="#export" role="tab" aria-controls="export" aria-selected="true">Export Wantlist</a>
         </li>
@@ -42,6 +45,12 @@
           <a class="nav-link" id="contact-tab" data-toggle="pill" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Noch irgendwas</a>
         </li>
       </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <select class="form-control" id="selectUser">
+          <option>Finn</option>
+          <option>Henrik</option>
+        </select>
+      </form>
     </div>
   </nav>
 
