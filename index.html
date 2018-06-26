@@ -49,7 +49,7 @@
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0 mx-1">
-        <select class="form-control" id="selectUser"></select>
+        <select class="form-control" id="select-user"></select>
       </form>
       <ul class="nav">
         <li class="nav-item">
@@ -134,6 +134,7 @@
         <!-- Begin User-Edit -->
         <div class="tab-pane fade" id="user-edit" role="tabpanel" aria-labelledby="user-edit-tab">
           <h3>Authentifizierung</h3>
+          <p class="lead" id="p-user-edit"><p>
           <div class="row">
             <div class="col-md">
               <form>
@@ -158,16 +159,16 @@
           </div>
           <div class="row justify-content-center">
             <div class="col-md-3">
-              <button type="button" class="btn btn-secondary btn-block" id="btn-check-tokens">Check Tokens</button>
+              <button type="button" class="btn btn-secondary btn-block" id="btn-user-edit-check">Check Tokens</button>
             </div>
             <div class="col-md-2">
-              <button type="button" class="btn btn-secondary btn-block" id="btn-save-tokens">Save</button>
+              <button type="button" class="btn btn-secondary btn-block" id="btn-user-edit-save">Save</button>
             </div>
             <div class="col-md-1 center-parent-regular">
-              <i id="icon-check-tokens" class="fas fa-lg center-child-regular"></i>
+              <i id="icon-user-edit" class="fas fa-lg center-child-regular"></i>
             </div>
             <div class="col-md-6" align="right">
-              <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-check-tokens"></div>
+              <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-user-edit"></div>
             </div>
           </div>
         </div>

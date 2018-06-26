@@ -10,8 +10,8 @@ $(".nav a").click(function(){
   $(this).parent().addClass("active");
 });
 
-$("#btn-check-tokens").click(function(e) {
-  $("#icon-check-tokens").addClass("fa-spinner fa-spin");
+$("#btn-user-edit-check").click(function(e) {
+  $("#icon-user-edit").addClass("fa-spinner fa-spin");
   console.log("loading...");
   checkTokens();
 });
@@ -32,10 +32,9 @@ $("#user-edit-tab").click(function(e) {
   fillUserEditForm();
 });
 
-// TODO: rename selectUser rename alert-checkt-tokens
-$("#selectUser").change(function(e) {
+$("#select-user").change(function(e) {
   fillUserEditForm();
-  $("#alert-check-tokens").hide();
+  $("#alert-user-edit").hide();
 });
 
 $("#btn-copy-clipboard").click(function(e) {
@@ -45,8 +44,8 @@ $("#btn-copy-clipboard").click(function(e) {
 });
 
 $("#btn-save-tokens").click(function(e) {
-  $("#alert-check-tokens").removeClass("alert-success").addClass("alert-danger");
-  $("#alert-check-tokens").html("Fehler: <strong>Keine Funktionalität implementiert</strong>").show();
+  $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
+  $("#alert-user-edit").html("Fehler: <strong>Keine Funktionalität implementiert</strong>").show();
 });
 
 function fillSelectUserDropdown() {
@@ -54,20 +53,27 @@ function fillSelectUserDropdown() {
   if(ats) {
     for (var set in ats) {
       let option = $('<option />').val(set).html(set);
-      $("#selectUser").append(option);
+      $("#select-user").append(option);
     }
-    $("#selectUser").append("<option value='test'>test</option>");
+    $("#select-user").append("<option value='test'>test</option>");
   }
 }
 
 function fillUserEditForm() {
-  let user = $("#selectUser").find(":selected").text();
+  let user = $("#select-user").find(":selected").text();
+  $("#p-user-edit").html("Edit user <i>"+user+"</i>");
   let ats = eval("prop.auth_token_sets."+user);
-  // TODO: check if ats is valid
-  $("#user-edit-app-token").val(ats.app_token);
-  $("#user-edit-app-token-secret").val(ats.app_secret);
-  $("#user-edit-access-token").val(ats.access_token);
-  $("#user-edit-access-token-secret").val(ats.access_token_secret);
+  if (ats) {
+    $("#user-edit-app-token").val(ats.app_token);
+    $("#user-edit-app-token-secret").val(ats.app_secret);
+    $("#user-edit-access-token").val(ats.access_token);
+    $("#user-edit-access-token-secret").val(ats.access_token_secret);
+  } else {
+    $("#user-edit-app-token").val("");
+    $("#user-edit-app-token-secret").val("");
+    $("#user-edit-access-token").val("");
+    $("#user-edit-access-token-secret").val("");
+  }
 }
 
 function checkTokens() {
@@ -82,16 +88,16 @@ function checkTokens() {
   RequestService.getAccountData(auth_token_set)
   .then(function (result) {
     let username = result.account.username;
-    $("#alert-check-tokens").removeClass("alert-danger").addClass("alert-success");
-    $("#alert-check-tokens").html("Connected to Account <strong>"+username+"</strong>").show();
+    $("#alert-user-edit").removeClass("alert-danger").addClass("alert-success");
+    $("#alert-user-edit").html("Connected to Account <strong>"+username+"</strong>").show();
     console.log(result.account);
-    $("#icon-check-tokens").removeClass("fa-spinner fa-spin");
+    $("#icon-user-edit").removeClass("fa-spinner fa-spin");
   })
   .catch(function (err) {
-    $("#alert-check-tokens").removeClass("alert-success").addClass("alert-danger");
-    $("#alert-check-tokens").html("Fehler: <strong>"+err.statusText+"</strong>").show();
+    $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
+    $("#alert-user-edit").html("Fehler: <strong>"+err.statusText+"</strong>").show();
     console.error('Augh, there was an error!', err.status, err.statusText);
-    $("#icon-check-tokens").removeClass("fa-spinner fa-spin");
+    $("#icon-user-edit").removeClass("fa-spinner fa-spin");
   });
 }
 
@@ -192,15 +198,7 @@ function getWantlist() {
 
 // read tokens from properties
 function readAuthTokenSet() {
-  // TODO: use generic ats call
-  let user = $("#selectUser").find(":selected").text();
-  console.log(user + " selected");
-  let ats = null;
-  if (user=="henrik") {
-    ats = prop.auth_token_sets.henrik;
-  };
-  if (user=="finn") {
-    ats = prop.auth_token_sets.finn;
-  };
+  let user = $("#select-user").find(":selected").text();
+  let ats = eval("prop.auth_token_sets."+user);
   return ats;
 }
