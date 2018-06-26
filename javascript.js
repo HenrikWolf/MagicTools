@@ -5,7 +5,7 @@ $(document).ready(function() {
   fillSelectUserDropdown();
 });
 
-$(".nav a").on("click", function(){
+$(".nav a").click(function(){
   $(".nav").find(".active").removeClass("active");
   $(this).parent().addClass("active");
 });
@@ -28,10 +28,25 @@ $("#btn-get-wants").click(function(e) {
   getWantlist();
 });
 
+$("#user-edit-tab").click(function(e) {
+  fillUserEditForm();
+});
+
+// TODO: rename selectUser rename alert-checkt-tokens
+$("#selectUser").change(function(e) {
+  fillUserEditForm();
+  $("#alert-check-tokens").hide();
+});
+
 $("#btn-copy-clipboard").click(function(e) {
   var copyText = document.getElementById("export-output");
   copyText.select();
   document.execCommand("copy");
+});
+
+$("#btn-save-tokens").click(function(e) {
+  $("#alert-check-tokens").removeClass("alert-success").addClass("alert-danger");
+  $("#alert-check-tokens").html("Fehler: <strong>Keine Funktionalität implementiert</strong>").show();
 });
 
 function fillSelectUserDropdown() {
@@ -45,16 +60,24 @@ function fillSelectUserDropdown() {
   }
 }
 
-// set Finns tokens as default to input fields (temporary)
-// var ats = prop.auth_token_sets.henrik;
-// $("#input-app-token").val(ats.app_token);
-// $("#input-app-token-secret").val(ats.app_secret);
-// $("#input-access-token").val(ats.access_token);
-// $("#input-access-token-secret").val(ats.access_token_secret);
+function fillUserEditForm() {
+  let user = $("#selectUser").find(":selected").text();
+  let ats = eval("prop.auth_token_sets."+user);
+  // TODO: check if ats is valid
+  $("#user-edit-app-token").val(ats.app_token);
+  $("#user-edit-app-token-secret").val(ats.app_secret);
+  $("#user-edit-access-token").val(ats.access_token);
+  $("#user-edit-access-token-secret").val(ats.access_token_secret);
+}
 
 function checkTokens() {
 
-  let auth_token_set = readAuthTokenSet();
+  let auth_token_set = {
+    app_token : $("#user-edit-app-token").val(),
+    app_secret : $("#user-edit-app-token-secret").val(),
+    access_token : $("#user-edit-access-token").val(),
+    access_token_secret : $("#user-edit-access-token-secret").val()
+  }
 
   RequestService.getAccountData(auth_token_set)
   .then(function (result) {
@@ -169,6 +192,7 @@ function getWantlist() {
 
 // read tokens from properties
 function readAuthTokenSet() {
+  // TODO: use generic ats call
   let user = $("#selectUser").find(":selected").text();
   console.log(user + " selected");
   let ats = null;

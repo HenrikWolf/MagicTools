@@ -48,12 +48,10 @@
           <a class="nav-link" id="contact-tab" data-toggle="pill" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Noch irgendwas</a>
         </li>
       </ul>
+      <form class="form-inline my-2 my-lg-0 mx-1">
+        <select class="form-control" id="selectUser"></select>
+      </form>
       <ul class="nav">
-        <li class"nav-item">
-          <form class="form-inline my-2 my-lg-0 mx-1">
-            <select class="form-control" id="selectUser"></select>
-          </form>
-        </li>
         <li class="nav-item">
           <a class="nav-link fas fa-user-edit fa-lg px-1" style="color:white" id="user-edit-tab" data-toggle="pill" href="#user-edit" role="tab" aria-controls="user-edit" aria-selected="false"></a>
         </li>
@@ -135,25 +133,25 @@
 
         <!-- Begin User-Edit -->
         <div class="tab-pane fade" id="user-edit" role="tabpanel" aria-labelledby="user-edit-tab">
-          <h3>Login Data</h3>
+          <h3>Authentifizierung</h3>
           <div class="row">
             <div class="col-md">
               <form>
                 <div class="form-group">
-                  <label for="input-app-token">App Token</label>
-                  <input id="input-app-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token">
+                  <label for="user-edit-app-token">App Token</label>
+                  <input id="user-edit-app-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token">
                 </div>
                 <div class="form-group">
-                  <label for="input-app-token-secret">App Token Secret</label>
-                  <input id="input-app-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token Secret">
+                  <label for="user-edit-app-token-secret">App Token Secret</label>
+                  <input id="user-edit-app-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token Secret">
                 </div>
                 <div class="form-group">
-                  <label for="input-access-token">Access Token</label>
-                  <input id="input-access-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token">
+                  <label for="user-edit-access-token">Access Token</label>
+                  <input id="user-edit-access-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token">
                 </div>
                 <div class="form-group">
-                  <label for="input-access-token-secret">Access Token Secret</label>
-                  <input id="input-access-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token Secret">
+                  <label for="user-edit-access-token-secret">Access Token Secret</label>
+                  <input id="user-edit-access-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token Secret">
                 </div>
               </form>
             </div>
@@ -162,10 +160,13 @@
             <div class="col-md-3">
               <button type="button" class="btn btn-secondary btn-block" id="btn-check-tokens">Check Tokens</button>
             </div>
+            <div class="col-md-2">
+              <button type="button" class="btn btn-secondary btn-block" id="btn-save-tokens">Save</button>
+            </div>
             <div class="col-md-1 center-parent-regular">
               <i id="icon-check-tokens" class="fas fa-lg center-child-regular"></i>
             </div>
-            <div class="col-md-8" align="right">
+            <div class="col-md-6" align="right">
               <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-check-tokens"></div>
             </div>
           </div>
