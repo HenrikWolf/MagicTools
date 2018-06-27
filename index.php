@@ -182,15 +182,31 @@
               <form>
                 <div class="form-group">
                   <label for="user-create-username">Username</label>
-                  <input id="user-create-username" type="text" class="form-control" value="">
+                  <input id="user-create-username" type="text" class="form-control" aria-describedby="help-username" placeholder="Username">
                 </div>
                 <div class="form-group">
                   <label for="user-create-password">Password</label>
-                  <input id="user-create-password" type="password" class="form-control" value="">
+                  <input id="user-create-password" type="password" class="form-control" aria-describedby="help-password" placeholder="Password">
                 </div>
                 <div class="form-group">
                   <label for="user-create-confirm-password">Confirm Password</label>
-                  <input id="user-create-confirm-password" type="password" class="form-control" value="">
+                  <input id="user-create-confirm-password" type="password" class="form-control" aria-describedby="help-confirm-password" placeholder="Confirm Password">
+                </div>
+                <div class="form-group">
+                  <label for="user-create-app-token">App Token</label>
+                  <input id="user-create-app-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token">
+                </div>
+                <div class="form-group">
+                  <label for="user-create-app-token-secret">App Token Secret</label>
+                  <input id="user-create-app-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="App Token Secret">
+                </div>
+                <div class="form-group">
+                  <label for="user-create-access-token">Access Token</label>
+                  <input id="user-create-access-token" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token">
+                </div>
+                <div class="form-group">
+                  <label for="user-create-access-token-secret">Access Token Secret</label>
+                  <input id="user-create-access-token-secret" typ="text" class="form-control" aria-describedby="help-access-token" placeholder="Access Token Secret">
                 </div>
               </form>
             </div>

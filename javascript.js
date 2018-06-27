@@ -11,12 +11,24 @@ $("#btn-user-create-save").click(function(e) {
        data: {
          username: $("#user-create-username").val(),
          password: $("#user-create-password").val(),
-         confirm_password: $("#user-create-confirm-password").val()
+         confirm_password: $("#user-create-confirm-password").val(),
+         app_token: $("#user-create-app-token").val(),
+         app_token_secret: $("#user-create-app-token-secret").val(),
+         access_token: $("#user-create-access-token").val(),
+         access_token_secret: $("#user-create-access-token-secret").val()
        },
        datatype: "html",
        type: "POST",
        success: function(data) {
-         console.log(data);
+         let res;
+         if (data.includes("<success>")) {
+           res = data.replace("<success>", "");
+           $("#alert-user-create").removeClass("alert-danger").addClass("alert-success");
+         } else {
+           res = "Fehler: "+data;
+           $("#alert-user-create").removeClass("alert-success").addClass("alert-danger");
+         }
+         $("#alert-user-create").html("<strong>"+res+"</strong>").show();
        }
   });
 });
@@ -68,11 +80,6 @@ $("#btn-copy-clipboard").click(function(e) {
 $("#btn-user-edit-save").click(function(e) {
   $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
   $("#alert-user-edit").html("Fehler: <strong>Keine Funktionalität implementiert</strong>").show();
-});
-
-$("#btn-user-create-save").click(function(e) {
-  $("#alert-user-create").removeClass("alert-success").addClass("alert-danger");
-  $("#alert-user-create").html("Fehler: <strong>Keine Funktionalität implementiert</strong>").show();
 });
 
 function fillSelectUserDropdown() {

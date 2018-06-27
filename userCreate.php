@@ -2,15 +2,13 @@
 
 require_once 'dbConnect.php';
 
-echo $_POST["username"];
-echo $_POST["password"];
-
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = "";
-$username_err = $password_err = $confirm_password_err = "";
+$username_err = $password_err = $confirm_password_err = $err = "";
 
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
   // Validate username
   if (empty(trim($_POST["username"]))) {
     $username_err = "Please enter a username.";
@@ -37,9 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       } else {
         echo "Oops! Something went wrong. Please try again later.";
       }
-
     }
-
     // Close statement
     mysqli_stmt_close($stmt);
   }
@@ -48,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (empty(trim($_POST['password']))) {
     $password_err = "Please enter a password.";
   } elseif (strlen(trim($_POST['password'])) < 6) {
-    $password_err = "Password must have atleast 6 characters.";
+    $password_err = "Password must have at least 6 characters.";
   } else {
     $password = trim($_POST['password']);
   }
@@ -63,8 +59,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
   }
 
+  // Validate auth_token_set
+  if (empty(trim($_POST["app_token"]))) {
+    $err = "Please enter an app token";
+  } elseif (empty(trim($_POST["app_token"]))) {
+    $err = "Please enter an app token";
+  } elseif (empty(trim($_POST["app_token_secret"]))) {
+    $err = "Please enter an app token secret";
+  } elseif (empty(trim($_POST["access_token"]))) {
+    $err = "Please enter an access token";
+  } elseif (empty(trim($_POST["access_token_secret"]))) {
+    $err = "Please enter an access token secret";
+  }
+
   // Check input errors before inserting in database
-  if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
+  if (empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($err)) {
     // Prepare an insert statement
     $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
     if ($stmt = mysqli_prepare($link, $sql)) {
@@ -77,13 +86,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // Attempt to execute the prepared statement
       if (mysqli_stmt_execute($stmt)) {
-        echo "Prima! Der Benutzer wurde angelegt!";
+        echo "<success>Prima! Der Benutzer wurde angelegt!";
       } else {
         echo "Something went wrong. Please try again later.";
       }
     }
     // Close statement
     mysqli_stmt_close($stmt);
+  } elseif ($username_err) {
+    echo $username_err;
+  } elseif ($password_err) {
+    echo $password_err;
+  } elseif ($confirm_password_err) {
+    echo $confirm_password_err;
+  } elseif ($err) {
+    echo $err;
   }
   // Close connection
   mysqli_close($link);
