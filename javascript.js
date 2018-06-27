@@ -5,6 +5,22 @@ $(document).ready(function() {
   fillSelectUserDropdown();
 });
 
+$("#btn-user-create-save").click(function(e) {
+  $.ajax({
+       url: "userCreate.php",
+       data: {
+         username: $("#user-create-username").val(),
+         password: $("#user-create-password").val(),
+         confirm_password: $("#user-create-confirm-password").val()
+       },
+       datatype: "html",
+       type: "POST",
+       success: function(data) {
+         console.log(data);
+       }
+  });
+});
+
 $(".nav a").click(function(){
   $(".nav").find(".active").removeClass("active");
   $(this).parent().addClass("active");
@@ -36,10 +52,6 @@ $("#btn-get-wants").click(function(e) {
 
 $("#user-edit-tab").click(function(e) {
   fillUserEditForm();
-});
-
-$("#user-create-tab").click(function(e) {
-  $("#p-user-create").html("Create new User");
 });
 
 $("#select-user").change(function(e) {
@@ -103,16 +115,16 @@ function checkTokens(mod) {
   RequestService.getAccountData(auth_token_set)
   .then(function (result) {
     let username = result.account.username;
-    $("#alert-user-"+mod+"").removeClass("alert-danger").addClass("alert-success");
-    $("#alert-user-"+mod+"").html("Connected to Account <strong>"+username+"</strong>").show();
+    $("#alert-user-"+mod).removeClass("alert-danger").addClass("alert-success");
+    $("#alert-user-"+mod).html("Connected to Account <strong>"+username+"</strong>").show();
     console.log(result.account);
-    $("#icon-user-"+mod+"").removeClass("fa-spinner fa-spin");
+    $("#icon-user-"+mod).removeClass("fa-spinner fa-spin");
   })
   .catch(function (err) {
-    $("#alert-user-"+mod+"").removeClass("alert-success").addClass("alert-danger");
-    $("#alert-user-"+mod+"").html("Fehler: <strong>"+err.statusText+"</strong>").show();
+    $("#alert-user-"+mod).removeClass("alert-success").addClass("alert-danger");
+    $("#alert-user-"+mod).html("Fehler: <strong>"+err.statusText+"</strong>").show();
     console.error('Augh, there was an error!', err.status, err.statusText);
-    $("#icon-user-"+mod+"").removeClass("fa-spinner fa-spin");
+    $("#icon-user-"+mod).removeClass("fa-spinner fa-spin");
   });
 }
 
