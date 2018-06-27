@@ -13,7 +13,13 @@ $(".nav a").click(function(){
 $("#btn-user-edit-check").click(function(e) {
   $("#icon-user-edit").addClass("fa-spinner fa-spin");
   console.log("loading...");
-  checkTokens();
+  checkTokens("edit");
+});
+
+$("#btn-user-create-check").click(function(e) {
+  $("#icon-user-create").addClass("fa-spinner fa-spin");
+  console.log("loading...");
+  checkTokens("create");
 });
 
 $("#btn-get-lists").click(function(e) {
@@ -32,6 +38,10 @@ $("#user-edit-tab").click(function(e) {
   fillUserEditForm();
 });
 
+$("#user-create-tab").click(function(e) {
+  $("#p-user-create").html("Create new User");
+});
+
 $("#select-user").change(function(e) {
   fillUserEditForm();
   $("#alert-user-edit").hide();
@@ -46,6 +56,11 @@ $("#btn-copy-clipboard").click(function(e) {
 $("#btn-user-edit-save").click(function(e) {
   $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
   $("#alert-user-edit").html("Fehler: <strong>Keine Funktionalität implementiert</strong>").show();
+});
+
+$("#btn-user-create-save").click(function(e) {
+  $("#alert-user-create").removeClass("alert-success").addClass("alert-danger");
+  $("#alert-user-create").html("Fehler: <strong>Keine Funktionalität implementiert</strong>").show();
 });
 
 function fillSelectUserDropdown() {
@@ -76,28 +91,28 @@ function fillUserEditForm() {
   }
 }
 
-function checkTokens() {
+function checkTokens(mod) {
 
   let auth_token_set = {
-    app_token : $("#user-edit-app-token").val(),
-    app_secret : $("#user-edit-app-token-secret").val(),
-    access_token : $("#user-edit-access-token").val(),
-    access_token_secret : $("#user-edit-access-token-secret").val()
+    app_token : $("#user-"+mod+"-app-token").val(),
+    app_secret : $("#user-"+mod+"-app-token-secret").val(),
+    access_token : $("#user-"+mod+"-access-token").val(),
+    access_token_secret : $("#user-"+mod+"-access-token-secret").val()
   }
 
   RequestService.getAccountData(auth_token_set)
   .then(function (result) {
     let username = result.account.username;
-    $("#alert-user-edit").removeClass("alert-danger").addClass("alert-success");
-    $("#alert-user-edit").html("Connected to Account <strong>"+username+"</strong>").show();
+    $("#alert-user-"+mod+"").removeClass("alert-danger").addClass("alert-success");
+    $("#alert-user-"+mod+"").html("Connected to Account <strong>"+username+"</strong>").show();
     console.log(result.account);
-    $("#icon-user-edit").removeClass("fa-spinner fa-spin");
+    $("#icon-user-"+mod+"").removeClass("fa-spinner fa-spin");
   })
   .catch(function (err) {
-    $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
-    $("#alert-user-edit").html("Fehler: <strong>"+err.statusText+"</strong>").show();
+    $("#alert-user-"+mod+"").removeClass("alert-success").addClass("alert-danger");
+    $("#alert-user-"+mod+"").html("Fehler: <strong>"+err.statusText+"</strong>").show();
     console.error('Augh, there was an error!', err.status, err.statusText);
-    $("#icon-user-edit").removeClass("fa-spinner fa-spin");
+    $("#icon-user-"+mod+"").removeClass("fa-spinner fa-spin");
   });
 }
 
