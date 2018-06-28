@@ -2,7 +2,7 @@
   /* Database credentials. Assuming you are running MySQL server with default setting (user 'root' with no password) */
 
   define('DB_SERVER', 'localhost');
-  define('DB_USERNAME', '25051m13850_3');
+  define('DB_USERNAME', '25051m13850_35');
   define('DB_PASSWORD', 'Frankring20c');
   define('DB_NAME', '25051m13850_3');
 
@@ -11,6 +11,7 @@
 
   // Check connection
   if ($link === false) {
-    die("ERROR: Could not connect. " . mysqli_connect_error());
+    $err = "ERROR: Could not connect. " . mysqli_connect_error();
+    die(json_encode(array('err' => $err)));
   }
 ?>

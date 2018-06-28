@@ -90,10 +90,15 @@ function fillSelectUserDropdown() {
        success: function(data) {
          let jsonResult = $.parseJSON(data);
          if(jsonResult) {
-           for (var user in jsonResult) {
-             let username = jsonResult[user]["username"];
-             let option = $('<option />').val(username).html(username);
-             $("#select-user").append(option);
+           if(jsonResult["err"]) {
+             console.log(jsonResult["err"]);
+           } else {
+             console.log(jsonResult);
+             for (var user in jsonResult) {
+               let username = jsonResult[user]["username"];
+               let option = $('<option />').val(username).html(username);
+               $("#select-user").append(option);
+             }
            }
            $("#select-user").append("<option value='test'>test</option>");
          }
