@@ -17,18 +17,22 @@ $("#btn-user-create-save").click(function(e) {
          access_token: $("#user-create-access-token").val(),
          access_token_secret: $("#user-create-access-token-secret").val()
        },
-       datatype: "html",
+       datatype: "json",
        type: "POST",
        success: function(data) {
-         let res;
-         if (data.includes("<success>")) {
-           res = data.replace("<success>", "");
-           $("#alert-user-create").removeClass("alert-danger").addClass("alert-success");
-         } else {
-           res = "Fehler: "+data;
-           $("#alert-user-create").removeClass("alert-success").addClass("alert-danger");
+         console.log(data);
+         let jsonResult = $.parseJSON(data);
+         if(jsonResult) {
+           if(jsonResult["err"]) {
+             console.log(jsonResult["err"]);
+             $("#alert-user-create").removeClass("alert-success").addClass("alert-danger");
+             $("#alert-user-create").html("Fehler: <strong>"+jsonResult["err"]+"</strong>").show();
+           } else if(jsonResult["succ"]) {
+             console.log(jsonResult["succ"]);
+             $("#alert-user-create").removeClass("alert-danger").addClass("alert-success");
+             $("#alert-user-create").html("Fehler: <strong>"+jsonResult["succ"]+"</strong>").show();
+           }
          }
-         $("#alert-user-create").html("<strong>"+res+"</strong>").show();
        }
   });
 });
@@ -88,12 +92,12 @@ function fillSelectUserDropdown() {
        datatype: "json",
        type: "POST",
        success: function(data) {
+         console.log(data);
          let jsonResult = $.parseJSON(data);
          if(jsonResult) {
            if(jsonResult["err"]) {
              console.log(jsonResult["err"]);
            } else {
-             console.log(jsonResult);
              for (var user in jsonResult) {
                let username = jsonResult[user]["username"];
                let option = $('<option />').val(username).html(username);

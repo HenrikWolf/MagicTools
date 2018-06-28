@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
       } else {
-        echo "Oops! Something went wrong. Please try again later.";
+        echo json_encode(array('err' => "Something went wrong. Please try again later."));
       }
     }
     // Close statement
@@ -86,21 +86,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // Attempt to execute the prepared statement
       if (mysqli_stmt_execute($stmt)) {
-        echo "<success>Prima! Der Benutzer wurde angelegt!";
+        $succ = "Prima! Der Benutzer wurde angelegt!";
+        echo json_encode(array('succ' => $succ));
       } else {
-        echo "Something went wrong. Please try again later.";
+        echo json_encode(array('err' => "Something went wrong. Please try again later."));
       }
     }
     // Close statement
     mysqli_stmt_close($stmt);
   } elseif ($username_err) {
-    echo $username_err;
+    echo json_encode(array('err' => $username_err));
   } elseif ($password_err) {
-    echo $password_err;
+    echo json_encode(array('err' => $password_err));
   } elseif ($confirm_password_err) {
-    echo $confirm_password_err;
+    echo json_encode(array('err' => $confirm_password_err));
   } elseif ($err) {
-    echo $err;
+    echo json_encode(array('err' => $err));
   }
   // Close connection
   mysqli_close($link);
