@@ -83,14 +83,22 @@ $("#btn-user-edit-save").click(function(e) {
 });
 
 function fillSelectUserDropdown() {
-  let ats = prop.auth_token_sets;
-  if(ats) {
-    for (var set in ats) {
-      let option = $('<option />').val(set).html(set);
-      $("#select-user").append(option);
-    }
-    $("#select-user").append("<option value='test'>test</option>");
-  }
+  $.ajax({
+       url: "getUserList.php",
+       datatype: "json",
+       type: "POST",
+       success: function(data) {
+         let jsonResult = $.parseJSON(data);
+         if(jsonResult) {
+           for (var user in jsonResult) {
+             let username = jsonResult[user]["username"];
+             let option = $('<option />').val(username).html(username);
+             $("#select-user").append(option);
+           }
+           $("#select-user").append("<option value='test'>test</option>");
+         }
+       }
+  });
 }
 
 function fillUserEditForm() {
