@@ -7,7 +7,7 @@ $(document).ready(function() {
 
 $("#btn-user-create-save").click(function(e) {
   $.ajax({
-       url: "php/userCreate.php",
+       url: "php/createUser.php",
        data: {
          username: $("#user-create-username").val(),
          password: $("#user-create-password").val(),
