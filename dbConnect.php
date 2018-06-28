@@ -4,7 +4,7 @@
   define('DB_SERVER', 'localhost');
   define('DB_USERNAME', '25051m13850_3');
   define('DB_PASSWORD', 'Frankring20c');
-  define('DB_NAME', '25051m13850_35');
+  define('DB_NAME', '25051m13850_3');
 
   /* Attempt to connect to MySQL database */
   $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
