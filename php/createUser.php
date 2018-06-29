@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // Attempt to execute the prepared statement
       if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(array('succ' => "Prima! Der Benutzer wurde angelegt!"));
+        echo json_encode(array('succ' => "Prima! Der Benutzer wurde angelegt!", 'username' => $username));
       } else {
         echo json_encode(array('err' => "Something went wrong. Please try again later."));
       }

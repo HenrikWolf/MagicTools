@@ -29,6 +29,7 @@ $("#btn-user-create-save").click(function(e) {
              $("#alert-user-create").html("Fehler: <strong>"+jsonResult["err"]+"</strong>").show();
            } else if(jsonResult["succ"]) {
              console.log(jsonResult["succ"]);
+             $("#select-user").append("<option value='test'>"+jsonResult["username"]+"</option>");
              $("#alert-user-create").removeClass("alert-danger").addClass("alert-success");
              $("#alert-user-create").html("Fehler: <strong>"+jsonResult["succ"]+"</strong>").show();
            }
