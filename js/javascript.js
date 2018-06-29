@@ -1,5 +1,5 @@
-import {RequestService} from "./js/requestService.js"
-import prop from "./js/properties.js";
+import {RequestService} from "./requestService.js"
+import prop from "./properties.js";
 
 $(document).ready(function() {
   fillSelectUserDropdown();
@@ -113,18 +113,34 @@ function fillSelectUserDropdown() {
 function fillUserEditForm() {
   let user = $("#select-user").find(":selected").text();
   $("#p-user-edit").html("Edit user <i>"+user+"</i>");
-  let ats = eval("prop.auth_token_sets."+user);
-  if (ats) {
-    $("#user-edit-app-token").val(ats.app_token);
-    $("#user-edit-app-token-secret").val(ats.app_secret);
-    $("#user-edit-access-token").val(ats.access_token);
-    $("#user-edit-access-token-secret").val(ats.access_token_secret);
-  } else {
-    $("#user-edit-app-token").val("");
-    $("#user-edit-app-token-secret").val("");
-    $("#user-edit-access-token").val("");
-    $("#user-edit-access-token-secret").val("");
-  }
+  $.ajax({
+       url: "php/getUser.php",
+       data: {
+         username: user
+       },
+       datatype: "json",
+       type: "POST",
+       success: function(data) {
+         console.log(data);
+         let jsonResult = $.parseJSON(data);
+         if(jsonResult) {
+           if(jsonResult["err"]) {
+             console.log(jsonResult["err"]);
+             $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
+             $("#alert-user-edit").html("Fehler: <strong>"+jsonResult["err"]+"</strong>").show();
+             $("#user-edit-app-token").val("");
+             $("#user-edit-app-token-secret").val("");
+             $("#user-edit-access-token").val("");
+             $("#user-edit-access-token-secret").val("");
+           } else {
+             $("#user-edit-app-token").val(jsonResult[0]["app_token"]);
+             $("#user-edit-app-token-secret").val(jsonResult[0]["app_token_secret"]);
+             $("#user-edit-access-token").val(jsonResult[0]["access_token"]);
+             $("#user-edit-access-token-secret").val(jsonResult[0]["access_token_secret"]);
+           }
+         }
+       }
+  });
 }
 
 function checkTokens(mod) {
