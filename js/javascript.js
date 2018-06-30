@@ -24,14 +24,10 @@ $("#btn-user-create-save").click(function(e) {
          let jsonResult = $.parseJSON(data);
          if(jsonResult) {
            if(jsonResult["err"]) {
-             console.log(jsonResult["err"]);
-             $("#alert-user-create").removeClass("alert-success").addClass("alert-danger");
-             $("#alert-user-create").html("Fehler: <strong>"+jsonResult["err"]+"</strong>").show();
+             setAlert(1, "#alert-user-create", jsonResult["err"]);
            } else if(jsonResult["succ"]) {
-             console.log(jsonResult["succ"]);
-             $("#select-user").append("<option value='test'>"+jsonResult["username"]+"</option>");
-             $("#alert-user-create").removeClass("alert-danger").addClass("alert-success");
-             $("#alert-user-create").html("Erfolg: <strong>"+jsonResult["succ"]+"</strong>").show();
+             $("#select-user").append("<option value='"+jsonResult["username"]+"'>"+jsonResult["username"]+"</option>");
+             setAlert(0, "#alert-user-create", jsonResult["succ"]);
            }
          }
        }
@@ -44,26 +40,22 @@ $(".nav a").click(function(){
 });
 
 $("#btn-user-edit-check").click(function(e) {
-  $("#icon-user-edit").addClass("fa-spinner fa-spin");
-  console.log("loading...");
+  addSpinner("#icon-user-edit");
   checkTokens("edit");
 });
 
 $("#btn-user-create-check").click(function(e) {
-  $("#icon-user-create").addClass("fa-spinner fa-spin");
-  console.log("loading...");
+  addSpinner("#icon-user-create");
   checkTokens("create");
 });
 
 $("#btn-get-lists").click(function(e) {
-  $("#icon-export-get-lists").addClass("fa-spinner fa-spin");
-  console.log("loading...");
+  addSpinner("#icon-export-get-lists");
   getWantlists();
 });
 
 $("#btn-get-wants").click(function(e) {
-  $("#icon-export-get-wants").addClass("fa-spinner fa-spin");
-  console.log("loading...");
+  addSpinner("#icon-export-get-wants");
   getWantlist();
 });
 
@@ -83,8 +75,7 @@ $("#btn-copy-clipboard").click(function(e) {
 });
 
 $("#btn-user-edit-save").click(function(e) {
-  $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
-  $("#alert-user-edit").html("Fehler: <strong>Keine Funktionalität implementiert</strong>").show();
+  setAlert(1, "#alert-user-edit", "Keine Funktionalität implementiert");
 });
 
 function fillSelectUserDropdown() {
@@ -126,13 +117,11 @@ function fillUserEditForm() {
          let jsonResult = $.parseJSON(data);
          if(jsonResult) {
            if(jsonResult["err"]) {
-             console.log(jsonResult["err"]);
-             $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
-             $("#alert-user-edit").html("Fehler: <strong>"+jsonResult["err"]+"</strong>").show();
              $("#user-edit-app-token").val("");
              $("#user-edit-app-token-secret").val("");
              $("#user-edit-access-token").val("");
              $("#user-edit-access-token-secret").val("");
+             setAlert(1, "#alert-user-edit", jsonResult["err"]);
            } else {
              $("#user-edit-app-token").val(jsonResult[0]["app_token"]);
              $("#user-edit-app-token-secret").val(jsonResult[0]["app_token_secret"]);
@@ -156,16 +145,12 @@ function checkTokens(mod) {
   RequestService.getAccountData(auth_token_set)
   .then(function (result) {
     let username = result.account.username;
-    $("#alert-user-"+mod).removeClass("alert-danger").addClass("alert-success");
-    $("#alert-user-"+mod).html("Connected to Account <strong>"+username+"</strong>").show();
-    console.log(result.account);
-    $("#icon-user-"+mod).removeClass("fa-spinner fa-spin");
+    setAlert(0, "#alert-user-"+mod, "Connected to Account "+username);
+    removeSpinner("#icon-user-"+mod);
   })
   .catch(function (err) {
-    $("#alert-user-"+mod).removeClass("alert-success").addClass("alert-danger");
-    $("#alert-user-"+mod).html("Fehler: <strong>"+err.statusText+"</strong>").show();
-    console.error('Augh, there was an error!', err.status, err.statusText);
-    $("#icon-user-"+mod).removeClass("fa-spinner fa-spin");
+    setAlert(1, "#alert-user-"+mod, err.statusText);
+    removeSpinner("#icon-user-"+mod);
   });
 }
 
@@ -184,12 +169,11 @@ function getWantlists() {
          let jsonResult = $.parseJSON(data);
          if(jsonResult) {
            if(jsonResult["err"]) {
-             console.log(jsonResult["err"]);
-             $("#alert-export").html("Fehler: <strong>"+jsonResult["err"]+"</strong>").show();
              $("#export-dropdown").empty();
              $("#export-dropdown").prop("disabled", true);
              $("#export-dropdown").append("<option value='null' selected>Choose Wantlist</option>");
-             $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
+             setAlert(1, "#alert-export", jsonResult["err"]);
+             removeSpinner("#icon-export-get-lists");
            } else {
              let auth_token_set = {
                app_token : jsonResult[0]["app_token"],
@@ -207,12 +191,11 @@ function getWantlists() {
                  let option = $('<option />').val(list.idWantslist).html(list.name + " (" + list.itemCount + " Wants)");
                  $("#export-dropdown").append(option);
                })
-               $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
+               removeSpinner("#icon-export-get-lists");
              })
              .catch(function (err) {
-               $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
-               console.log('Augh, there was an error!', err.status, err.statusText);
-               $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
+               setAlert(1, "#alert-export", err.statusText);
+               removeSpinner("#icon-export-get-lists");
              });
            }
          }
@@ -236,13 +219,11 @@ function getWantlist() {
          let jsonResult = $.parseJSON(data);
          if(jsonResult) {
            if(jsonResult["err"]) {
-             console.log(jsonResult["err"]);
-             $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
-             $("#alert-user-edit").html("Fehler: <strong>"+jsonResult["err"]+"</strong>").show();
              $("#user-edit-app-token").val("");
              $("#user-edit-app-token-secret").val("");
              $("#user-edit-access-token").val("");
              $("#user-edit-access-token-secret").val("");
+             setAlert(1, "#alert-user-edit", jsonResult["err"]);
            } else {
              let listId = $("#export-dropdown").val();
 
@@ -255,18 +236,16 @@ function getWantlist() {
 
              // check if a valid wantlist is selected
              if (listId=="null" || listId==null) {
-               $("#alert-export").html("Please select a valid Wantlist").show();
-               console.log("No valid wantlist selected.");
-               $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+               setAlert(1, "#alert-export", "No valid auth_token_set found");
+               removeSpinner("#icon-export-get-wants");
              }
              // check if a valid auth_token_set is found
              else if (auth_token_set==null) {
-               $("#alert-export").html("Fehler: <strong>No valid auth_token_set found</strong>").show();
-               console.log("No valid auth_token_set found");
                $("#export-dropdown").empty();
                $("#export-dropdown").prop("disabled", true);
                $("#export-dropdown").append("<option value='null' selected>Choose Wantlist</option>");
-               $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+               setAlert(1, "#alert-export", "No valid auth_token_set found");
+               removeSpinner("#icon-export-get-wants");
              } else {
 
                RequestService.getWantlist(listId, auth_token_set)
@@ -297,12 +276,10 @@ function getWantlist() {
                  })
                  $("#export-output").val(txt);
                  console.log(list);
-                 $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+                 removeSpinner("#icon-export-get-wants");
                })
                .catch(function (err) {
-                 $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
-                 console.error('Augh, there was an error!', err.status, err.statusText);
-                 $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+                 setAlert(1, "#alert-export", err.statusText);
                });
 
              }
@@ -314,4 +291,37 @@ function getWantlist() {
          }
        }
   });
+}
+
+/* set an alert and write message to console
+  code: 0 in case of success, 1 in case of error
+  box: id of the alert element
+  msg: message
+*/
+function setAlert(code, box, msg) {
+  if (code==0) {
+    console.log("Erfolg: "+msg);
+    $(box).removeClass("alert-danger").addClass("alert-success");
+    $(box).html("Erfolg: <strong>"+msg+"</strong>").show();
+  }
+  if (code==1) {
+    console.log("Fehler: "+msg);
+    $(box).removeClass("alert-success").addClass("alert-danger");
+    $(box).html("Fehler: <strong>"+msg+"</strong>").show();
+  }
+}
+
+/* remove a spinner
+  box: id of the spinner element
+*/
+function removeSpinner(box) {
+  $(box).removeClass("fa-spinner fa-spin");
+}
+
+/* add a spinner and write a notive to console
+  box: id of the spinner element
+*/
+function addSpinner(box) {
+  console.log("loading...");
+  $(box).addClass("fa-spinner fa-spin");
 }
