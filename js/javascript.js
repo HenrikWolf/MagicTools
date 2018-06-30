@@ -31,7 +31,7 @@ $("#btn-user-create-save").click(function(e) {
              console.log(jsonResult["succ"]);
              $("#select-user").append("<option value='test'>"+jsonResult["username"]+"</option>");
              $("#alert-user-create").removeClass("alert-danger").addClass("alert-success");
-             $("#alert-user-create").html("Fehler: <strong>"+jsonResult["succ"]+"</strong>").show();
+             $("#alert-user-create").html("Erfolg: <strong>"+jsonResult["succ"]+"</strong>").show();
            }
          }
        }
@@ -170,103 +170,148 @@ function checkTokens(mod) {
 }
 
 function getWantlists() {
+  let user = $("#select-user").find(":selected").text();
 
-  let auth_token_set = readAuthTokenSet();
-
-  // check if a valid auth_token_set is found
-  if (auth_token_set==null) {
-    $("#alert-export").html("Fehler: <strong>No valid auth_token_set found</strong>").show();
-    console.log("No valid auth_token_set found");
-    $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
-    $("#export-dropdown").empty();
-    $("#export-dropdown").prop("disabled", true);
-    $("#export-dropdown").append("<option value='null' selected>Choose Wantlist</option>");
-  } else {
-
-    RequestService.getWantlists(auth_token_set)
-    .then(function (result) {
-      $("#alert-export").hide();
-      $("#export-dropdown").empty();
-      $("#export-dropdown").prop("disabled", false);
-      let lists = result.wantslist;
-      lists.forEach(function(list) {
-        let option = $('<option />').val(list.idWantslist).html(list.name + " (" + list.itemCount + " Wants)");
-        $("#export-dropdown").append(option);
-      })
-      console.log(lists);
-      $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
-    })
-    .catch(function (err) {
-      $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
-      console.error('Augh, there was an error!', err.status, err.statusText);
-      $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
-    });
-  }
+  $.ajax({
+       url: "php/getUser.php",
+       data: {
+         username: user
+       },
+       datatype: "json",
+       type: "POST",
+       success: function(data) {
+         console.log(data);
+         let jsonResult = $.parseJSON(data);
+         if(jsonResult) {
+           if(jsonResult["err"]) {
+             console.log(jsonResult["err"]);
+             $("#alert-export").html("Fehler: <strong>"+jsonResult["err"]+"</strong>").show();
+             $("#export-dropdown").empty();
+             $("#export-dropdown").prop("disabled", true);
+             $("#export-dropdown").append("<option value='null' selected>Choose Wantlist</option>");
+             $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
+           } else {
+             let auth_token_set = {
+               app_token : jsonResult[0]["app_token"],
+               app_secret : jsonResult[0]["app_token_secret"],
+               access_token : jsonResult[0]["access_token"],
+               access_token_secret : jsonResult[0]["access_token_secret"]
+             }
+             RequestService.getWantlists(auth_token_set)
+             .then(function (result) {
+               $("#alert-export").hide();
+               $("#export-dropdown").empty();
+               $("#export-dropdown").prop("disabled", false);
+               let lists = result.wantslist;
+               lists.forEach(function(list) {
+                 let option = $('<option />').val(list.idWantslist).html(list.name + " (" + list.itemCount + " Wants)");
+                 $("#export-dropdown").append(option);
+               })
+               $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
+             })
+             .catch(function (err) {
+               $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
+               console.log('Augh, there was an error!', err.status, err.statusText);
+               $("#icon-export-get-lists").removeClass("fa-spinner fa-spin");
+             });
+           }
+         }
+       }
+  });
 }
 
 function getWantlist() {
 
-  let auth_token_set = readAuthTokenSet();
-  let listId = $("#export-dropdown").val();
-
-  // check if a valid wantlist is selected
-  if (listId=="null" || listId==null) {
-    $("#alert-export").html("Please select a valid Wantlist").show();
-    console.log("No valid wantlist selected.");
-    $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
-  }
-  // check if a valid auth_token_set is found
-  else if (auth_token_set==null) {
-    $("#alert-export").html("Fehler: <strong>No valid auth_token_set found</strong>").show();
-    console.log("No valid auth_token_set found");
-    $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
-    $("#export-dropdown").empty();
-    $("#export-dropdown").prop("disabled", true);
-    $("#export-dropdown").append("<option value='null' selected>Choose Wantlist</option>");
-  } else {
-
-    RequestService.getWantlist(listId, auth_token_set)
-    .then(function (result) {
-      $("#alert-export").hide();
-      let list = result.wantslist.item;
-      let txt = "";
-      list.forEach(function(item) {
-        //storing additional information in array
-        var additionalInfo = [];
-
-        txt += item.count + "x ";
-        if (item.metaproduct) {
-          txt += item.metaproduct.enName;
-        } else {
-          txt += item.product.enName;
-          additionalInfo.push(item.product.expansionName);
-        }
-        if (item.isFoil == true){additionalInfo.push("Foil")}
-
-        //appending the addional info to txt
-        if (additionalInfo.length>0){
-          txt += " (";
-          for (var i = 0; i < additionalInfo.length-1; i++){txt += additionalInfo[i] + ", ";}
-          txt += additionalInfo[additionalInfo.length-1] + ")";
-        }
-        txt += "\n";
-      })
-      $("#export-output").val(txt);
-      console.log(list);
-      $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
-    })
-    .catch(function (err) {
-      $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
-      console.error('Augh, there was an error!', err.status, err.statusText);
-      $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
-    });
-
-  }
-}
-
-// read tokens from properties
-function readAuthTokenSet() {
   let user = $("#select-user").find(":selected").text();
-  let ats = eval("prop.auth_token_sets."+user);
-  return ats;
+
+  $.ajax({
+       url: "php/getUser.php",
+       data: {
+         username: user
+       },
+       datatype: "json",
+       type: "POST",
+       success: function(data) {
+         console.log(data);
+         let jsonResult = $.parseJSON(data);
+         if(jsonResult) {
+           if(jsonResult["err"]) {
+             console.log(jsonResult["err"]);
+             $("#alert-user-edit").removeClass("alert-success").addClass("alert-danger");
+             $("#alert-user-edit").html("Fehler: <strong>"+jsonResult["err"]+"</strong>").show();
+             $("#user-edit-app-token").val("");
+             $("#user-edit-app-token-secret").val("");
+             $("#user-edit-access-token").val("");
+             $("#user-edit-access-token-secret").val("");
+           } else {
+             let listId = $("#export-dropdown").val();
+
+             let auth_token_set = {
+               app_token : jsonResult[0]["app_token"],
+               app_secret : jsonResult[0]["app_token_secret"],
+               access_token : jsonResult[0]["access_token"],
+               access_token_secret : jsonResult[0]["access_token_secret"]
+             }
+
+             // check if a valid wantlist is selected
+             if (listId=="null" || listId==null) {
+               $("#alert-export").html("Please select a valid Wantlist").show();
+               console.log("No valid wantlist selected.");
+               $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+             }
+             // check if a valid auth_token_set is found
+             else if (auth_token_set==null) {
+               $("#alert-export").html("Fehler: <strong>No valid auth_token_set found</strong>").show();
+               console.log("No valid auth_token_set found");
+               $("#export-dropdown").empty();
+               $("#export-dropdown").prop("disabled", true);
+               $("#export-dropdown").append("<option value='null' selected>Choose Wantlist</option>");
+               $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+             } else {
+
+               RequestService.getWantlist(listId, auth_token_set)
+               .then(function (result) {
+                 $("#alert-export").hide();
+                 let list = result.wantslist.item;
+                 let txt = "";
+                 list.forEach(function(item) {
+                   //storing additional information in array
+                   var additionalInfo = [];
+
+                   txt += item.count + "x ";
+                   if (item.metaproduct) {
+                     txt += item.metaproduct.enName;
+                   } else {
+                     txt += item.product.enName;
+                     additionalInfo.push(item.product.expansionName);
+                   }
+                   if (item.isFoil == true){additionalInfo.push("Foil")}
+
+                   //appending the addional info to txt
+                   if (additionalInfo.length>0){
+                     txt += " (";
+                     for (var i = 0; i < additionalInfo.length-1; i++){txt += additionalInfo[i] + ", ";}
+                     txt += additionalInfo[additionalInfo.length-1] + ")";
+                   }
+                   txt += "\n";
+                 })
+                 $("#export-output").val(txt);
+                 console.log(list);
+                 $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+               })
+               .catch(function (err) {
+                 $("#alert-export").html("Fehler: <strong>"+err.statusText+"</strong>").show();
+                 console.error('Augh, there was an error!', err.status, err.statusText);
+                 $("#icon-export-get-wants").removeClass("fa-spinner fa-spin");
+               });
+
+             }
+             $("#user-edit-app-token").val(jsonResult[0]["app_token"]);
+             $("#user-edit-app-token-secret").val(jsonResult[0]["app_token_secret"]);
+             $("#user-edit-access-token").val(jsonResult[0]["access_token"]);
+             $("#user-edit-access-token-secret").val(jsonResult[0]["access_token_secret"]);
+           }
+         }
+       }
+  });
 }
