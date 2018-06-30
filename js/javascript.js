@@ -75,7 +75,30 @@ $("#btn-copy-clipboard").click(function(e) {
 });
 
 $("#btn-user-edit-save").click(function(e) {
-  setAlert(1, "#alert-user-edit", "Keine Funktionalität implementiert");
+  let user = $("#select-user").find(":selected").text();
+  $.ajax({
+    url: "php/editUser.php",
+    data: {
+      username: user,
+      app_token: $("#user-edit-app-token").val(),
+      app_token_secret: $("#user-edit-app-token-secret").val(),
+      access_token: $("#user-edit-access-token").val(),
+      access_token_secret: $("#user-edit-access-token-secret").val()
+    },
+    datatype: "json",
+    type: "POST",
+    success: function(data) {
+      console.log(data);
+      let jsonResult = $.parseJSON(data);
+      if(jsonResult) {
+        if(jsonResult["err"]) {
+          setAlert(1, "#alert-user-edit", jsonResult["err"]);
+        } else if(jsonResult["succ"]) {
+          setAlert(0, "#alert-user-edit", jsonResult["succ"]);
+        }
+      }
+    }
+  });
 });
 
 function fillSelectUserDropdown() {
