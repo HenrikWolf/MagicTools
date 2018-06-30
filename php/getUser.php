@@ -3,7 +3,7 @@
 require_once 'dbConnect.php';
 
 // Define variables and initialize with empty values
-$rows = array();
+$row = null;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -17,12 +17,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (!$result) {
     echo json_encode(array('err' => mysqli_error($link)));
   } else if (mysqli_num_rows($result) == 1) {
-    while($r = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-      $rows[] = $r;
-    }
-    echo json_encode($rows);
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    echo json_encode($row);
   } else {
-    echo json_encode(array('err' => "result contains not one entry"));
+    echo json_encode(array('err' => "no user ".$_POST['username']." found"));
   }
 
   // Close statement and connection
