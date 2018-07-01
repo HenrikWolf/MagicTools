@@ -256,7 +256,7 @@ function getWantlists() {
       let jsonResult = $.parseJSON(data);
 
       if(!jsonResult) {
-        resetDropdown()"#export-dropdown", true, true);
+        resetDropdown("#export-dropdown", true, true);
         setAlert(1, "#alert-export", "No valid jsonReturn");
         removeSpinner("#icon-export-get-lists");
       }
@@ -418,7 +418,7 @@ function resetDropdown(box, disabled, defaultOption) {
   $(box).empty();
   $(box).prop("disabled", disabled);
   if (defaultOption) {
-    addOption(box, null, Choose Wantlist);
+    addOption(box, null, "Choose Wantlist");
   }
 }
 
