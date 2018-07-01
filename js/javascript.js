@@ -21,6 +21,11 @@ $("#select-user").change(function(e) {
   $("#alert-user-edit").hide();
 });
 
+// Login
+$("#login-button").click(function(e) {
+  login();
+});
+
 // ------------------------------------------------------------------
 // ------------------- start button event handler -------------------
 // ------------------------------------------------------------------
@@ -410,6 +415,40 @@ function getList() {
           setAlert(1, "#alert-export", err.statusText);
           removeSpinner("#icon-export-get-wants");
         });
+      }
+    }
+  });
+}
+
+function login() {
+
+  // get username and password
+  let username = $("#login-username-input").val();
+  let password = $("#login-password-input").val();
+
+  // execute php script for logging in a user
+  $.ajax({
+    url: "php/login.php",
+    data: {
+      username: username,
+      password: password
+    },
+    datatype: "json",
+    type: "POST",
+    success: function(data) {
+      console.log(data);
+      let jsonResult = $.parseJSON(data);
+
+      if(!jsonResult) {
+        console.log("No valid jsonReturn");
+      }
+
+      else if(jsonResult["err"]) {
+        console.log(jsonResult["err"]);
+      }
+
+      else if(jsonResult["succ"]) {
+        console.log(jsonResult["succ"]);
       }
     }
   });

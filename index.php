@@ -1,3 +1,8 @@
+
+<?php
+  session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -63,9 +68,9 @@
         </li>
       </ul>
       <form class="form-inline">
-        <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
-        <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="button">Login</button>
+        <input class="form-control mr-sm-2" id="login-username-input" type="text" placeholder="Username" aria-label="Username">
+        <input class="form-control mr-sm-2" id="login-password-input" type="password" placeholder="Password" aria-label="Password">
+        <button class="btn btn-outline-success my-2 my-sm-0" id="login-button" type="button">Login</button>
       </form>
     </div>
   </nav>
