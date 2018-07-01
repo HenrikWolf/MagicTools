@@ -44,6 +44,40 @@ $(".nav a").click(function(){
   $(this).parent().addClass("active");
 });
 
+$("#user-delete-tab").click(function(e) {
+  // addSpinner("#icon-user-edit");
+
+  // get username
+  let selectedUser = $("#select-user").find(":selected").text();
+
+  $.ajax({
+    url: "php/deleteUser.php",
+    data: {
+      username: selectedUser
+    },
+    datatype: "json",
+    type: "POST",
+    success: function(data) {
+      console.log(data);
+      let jsonResult = $.parseJSON(data);
+
+      if(!jsonResult) {
+        console.log("No valid jsonReturn");
+      }
+
+      else if (jsonResult["err"]) {
+        console.log(jsonResult["err"]);
+      }
+
+      else if(jsonResult["succ"]) {
+        $("#select-user").find(":selected").remove();
+        fillUserEditForm();
+        console.log(jsonResult["succ"]);
+      }
+    }
+  });
+});
+
 $("#btn-user-edit-check").click(function(e) {
   addSpinner("#icon-user-edit");
   checkTokens("edit");
