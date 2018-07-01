@@ -1,81 +1,41 @@
 import {RequestService} from "./requestService.js"
+// TODO: import js moduls for each part of the application
+// TODO: add utilities as a service
 
+// if page is loaded, fill selectUserDropdown
 $(document).ready(function() {
   fillSelectUserDropdown();
 });
 
-$("#btn-user-create-save").click(function(e) {
-  // TODO: add spinner
-  $.ajax({
-    url: "php/createUser.php",
-    data: {
-      username: $("#user-create-username").val(),
-      password: $("#user-create-password").val(),
-      confirm_password: $("#user-create-confirm-password").val(),
-      app_token: $("#user-create-app-token").val(),
-      app_token_secret: $("#user-create-app-token-secret").val(),
-      access_token: $("#user-create-access-token").val(),
-      access_token_secret: $("#user-create-access-token-secret").val()
-    },
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        setAlert(1, "#alert-user-create", "No valid jsonReturn");
-      }
-
-      else if(jsonResult["err"]) {
-        setAlert(1, "#alert-user-create", jsonResult["err"]);
-      }
-
-      else if(jsonResult["succ"]) {
-        addOption("#select-user", jsonResult["username"], jsonResult["username"]);
-        setAlert(0, "#alert-user-create", jsonResult["succ"]);
-      }
-    }
-  });
-});
-
+// Assures that only one element is active.
+// Needed as long there are two navs.
 $(".nav a").click(function(){
   $(".nav").find(".active").removeClass("active");
   $(this).parent().addClass("active");
 });
 
+// If selected user in dropDown is changed, update forms
+$("#select-user").change(function(e) {
+  fillUserEditForm();
+  resetDropdown("#export-dropdown", true, true);
+  $("#alert-user-edit").hide();
+});
+
+// ------------------------------------------------------------------
+// ------------------- start button event handler -------------------
+// ------------------------------------------------------------------
+
+$("#btn-user-create-check").click(function(e) {
+  addSpinner("#icon-user-create");
+  checkTokens("create");
+});
+
+$("#btn-user-create-save").click(function(e) {
+  createUser();
+});
+
 $("#user-delete-tab").click(function(e) {
-  // addSpinner("#icon-user-edit");
-
-  // get username
-  let selectedUser = $("#select-user").find(":selected").text();
-
-  $.ajax({
-    url: "php/deleteUser.php",
-    data: {
-      username: selectedUser
-    },
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        console.log("No valid jsonReturn");
-      }
-
-      else if (jsonResult["err"]) {
-        console.log(jsonResult["err"]);
-      }
-
-      else if(jsonResult["succ"]) {
-        $("#select-user").find(":selected").remove();
-        fillUserEditForm();
-        console.log(jsonResult["succ"]);
-      }
-    }
-  });
+  deleteUser();
 });
 
 $("#btn-user-edit-check").click(function(e) {
@@ -83,26 +43,20 @@ $("#btn-user-edit-check").click(function(e) {
   checkTokens("edit");
 });
 
-$("#btn-user-create-check").click(function(e) {
-  addSpinner("#icon-user-create");
-  checkTokens("create");
+$("#btn-user-edit-save").click(function(e) {
+  editUser();
 });
 
 $("#btn-get-lists").click(function(e) {
   addSpinner("#icon-export-get-lists");
-  getWantlists();
+  getLists();
 });
 
 $("#btn-get-wants").click(function(e) {
   addSpinner("#icon-export-get-wants");
-  getWantlist();
+  getList();
 });
 
-$("#select-user").change(function(e) {
-  fillUserEditForm();
-  resetDropdown("#export-dropdown", true, true);
-  $("#alert-user-edit").hide();
-});
 
 $("#btn-copy-clipboard").click(function(e) {
   let copyText = document.getElementById("export-output");
@@ -110,11 +64,16 @@ $("#btn-copy-clipboard").click(function(e) {
   document.execCommand("copy");
 });
 
-$("#btn-user-edit-save").click(function(e) {
+// -------------------------------------------------------------------
+// ------------------------- start functions -------------------------
+// -------------------------------------------------------------------
+
+function editUser() {
 
   // get username
   let selectedUser = $("#select-user").find(":selected").text();
 
+  // execute php script for updating a user
   $.ajax({
     url: "php/editUser.php",
     data: {
@@ -143,9 +102,11 @@ $("#btn-user-edit-save").click(function(e) {
       }
     }
   });
-});
+}
 
 function fillSelectUserDropdown() {
+
+  // execute php script for getting a list of users
   $.ajax({
     url: "php/getUserList.php",
     datatype: "json",
@@ -173,6 +134,40 @@ function fillSelectUserDropdown() {
   });
 }
 
+function deleteUser() {
+
+  // get username
+  let selectedUser = $("#select-user").find(":selected").text();
+
+  // execute php script for deleting a user
+  $.ajax({
+    url: "php/deleteUser.php",
+    data: {
+      username: selectedUser
+    },
+    datatype: "json",
+    type: "POST",
+    success: function(data) {
+      console.log(data);
+      let jsonResult = $.parseJSON(data);
+
+      if(!jsonResult) {
+        console.log("No valid jsonReturn");
+      }
+
+      else if (jsonResult["err"]) {
+        console.log(jsonResult["err"]);
+      }
+
+      else if(jsonResult["succ"]) {
+        $("#select-user").find(":selected").remove();
+        fillUserEditForm();
+        console.log(jsonResult["succ"]);
+      }
+    }
+  });
+}
+
 function fillUserEditForm() {
 
   // get username
@@ -181,6 +176,7 @@ function fillUserEditForm() {
   // set label to the beginning of the form
   $("#p-user-edit").html("Edit user <i>"+selectedUser+"</i>");
 
+  // execute php script for getting a user
   $.ajax({
     url: "php/getUser.php",
     data: {
@@ -218,8 +214,48 @@ function fillUserEditForm() {
   });
 }
 
+function createUser() {
+
+  // get user information from form
+  let user = {
+    username: $("#user-create-username").val(),
+    password: $("#user-create-password").val(),
+    confirm_password: $("#user-create-confirm-password").val(),
+    app_token: $("#user-create-app-token").val(),
+    app_token_secret: $("#user-create-app-token-secret").val(),
+    access_token: $("#user-create-access-token").val(),
+    access_token_secret: $("#user-create-access-token-secret").val()
+  }
+
+  // execute php script for adding a user
+  $.ajax({
+    url: "php/createUser.php",
+    data: user,
+    datatype: "json",
+    type: "POST",
+    success: function(data) {
+      console.log(data);
+      let jsonResult = $.parseJSON(data);
+
+      if(!jsonResult) {
+        setAlert(1, "#alert-user-create", "No valid jsonReturn");
+      }
+
+      else if(jsonResult["err"]) {
+        setAlert(1, "#alert-user-create", jsonResult["err"]);
+      }
+
+      else if(jsonResult["succ"]) {
+        addOption("#select-user", jsonResult["username"], jsonResult["username"]);
+        setAlert(0, "#alert-user-create", jsonResult["succ"]);
+      }
+    }
+  });
+}
+
 function checkTokens(mod) {
 
+  // get auth information of a user from a form
   let auth_token_set = {
     app_token : $("#user-"+mod+"-app-token").val(),
     app_secret : $("#user-"+mod+"-app-token-secret").val(),
@@ -227,6 +263,7 @@ function checkTokens(mod) {
     access_token_secret : $("#user-"+mod+"-access-token-secret").val()
   }
 
+  // request to mkm for checking auth token set
   RequestService.getAccountData(auth_token_set)
   .then(function (result) {
     let username = result.account.username;
@@ -239,11 +276,12 @@ function checkTokens(mod) {
   });
 }
 
-function getWantlists() {
+function getLists() {
 
   // get username
   let selectedUser = $("#select-user").find(":selected").text();
 
+  // execute php script for getting a user
   $.ajax({
     url: "php/getUser.php",
     data: {
@@ -295,7 +333,7 @@ function getWantlists() {
   });
 }
 
-function getWantlist() {
+function getList() {
 
   // get username and choosen list
   let selectedUser = $("#select-user").find(":selected").text();
@@ -307,6 +345,7 @@ function getWantlist() {
     removeSpinner("#icon-export-get-wants");
   }
 
+  // execute php script for getting a user
   $.ajax({
     url: "php/getUser.php",
     data: {
@@ -375,6 +414,10 @@ function getWantlist() {
     }
   });
 }
+
+// -------------------------------------------------------------------
+// --------------------- start utility functions ---------------------
+// -------------------------------------------------------------------
 
 /* set an alert and write message to console
 code: 0 in case of success, 1 in case of error
