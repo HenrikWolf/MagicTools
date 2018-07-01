@@ -3,19 +3,19 @@ import prop from "./properties.js";
 export class RequestService {
 
   static getAccountData(auth_token_set) {
-    var request_url = prop.mkm_url + "account";
+    let request_url = prop.mkm_url + "account";
 
     return this.getData(request_url, auth_token_set);
   }
 
   static getWantlists(auth_token_set) {
-    var request_url = prop.mkm_url + "wantslist";
+    let request_url = prop.mkm_url + "wantslist";
 
     return this.getData(request_url, auth_token_set);
   }
 
   static getWantlist(listId, auth_token_set) {
-    var request_url = prop.mkm_url + "wantslist/" + listId;
+    let request_url = prop.mkm_url + "wantslist/" + listId;
 
     return this.getData(request_url, auth_token_set);
   }
@@ -23,31 +23,31 @@ export class RequestService {
   static getData(request_url, auth_token_set) {
 
     // create unique values for OAuth
-    var nonce = Math.floor(Date.now()).toString();
-    var timestamp = Math.floor(Date.now() / 1000).toString();
+    let nonce = Math.floor(Date.now()).toString();
+    let timestamp = Math.floor(Date.now() / 1000).toString();
 
     // get params needed for OAuth
-    var realm = request_url;
-    var oauth_consumer_key = auth_token_set.app_token;
-    var oauth_token = auth_token_set.access_token;
-    var oauth_nonce = nonce;
-    var oauth_timestamp = timestamp;
-    var oauth_signature_method = prop.signature_method;
-    var oauth_version = prop.version;
+    let realm = request_url;
+    let oauth_consumer_key = auth_token_set.app_token;
+    let oauth_token = auth_token_set.access_token;
+    let oauth_nonce = nonce;
+    let oauth_timestamp = timestamp;
+    let oauth_signature_method = prop.signature_method;
+    let oauth_version = prop.version;
 
-    var baseStringWithoutGet = "oauth_consumer_key=" + oauth_consumer_key
+    let baseStringWithoutGet = "oauth_consumer_key=" + oauth_consumer_key
             + "&oauth_nonce=" + oauth_nonce
             + "&oauth_signature_method=" + oauth_signature_method + "&oauth_timestamp=" + oauth_timestamp
             + "&oauth_token=" + oauth_token + "&oauth_version=" + oauth_version;
 
-    var baseString = "GET&" + encodeURIComponent(realm) + "&" + encodeURIComponent(baseStringWithoutGet);
+    let baseString = "GET&" + encodeURIComponent(realm) + "&" + encodeURIComponent(baseStringWithoutGet);
 
-    var signingKey = encodeURIComponent(auth_token_set.app_secret) + "&" + encodeURIComponent(auth_token_set.access_token_secret);
+    let signingKey = encodeURIComponent(auth_token_set.app_secret) + "&" + encodeURIComponent(auth_token_set.access_token_secret);
 
-    var rawSignature = CryptoJS.HmacSHA1(baseString, signingKey);
-    var signature = CryptoJS.enc.Base64.stringify(rawSignature);
+    let rawSignature = CryptoJS.HmacSHA1(baseString, signingKey);
+    let signature = CryptoJS.enc.Base64.stringify(rawSignature);
 
-    var auth = "realm=\"" + realm + "\",oauth_consumer_key=\"" + oauth_consumer_key
+    let auth = "realm=\"" + realm + "\",oauth_consumer_key=\"" + oauth_consumer_key
         + "\",oauth_token=\"" + oauth_token + "\",oauth_nonce=\"" + oauth_nonce
         + "\",oauth_timestamp=\"" + oauth_timestamp + "\",oauth_signature_method=\"" + oauth_signature_method
         + "\",oauth_version=\"" + oauth_version + "\",oauth_signature=\"" + signature  + "\"";
@@ -57,7 +57,7 @@ export class RequestService {
 
   static request(request_url, auth) {
     return new Promise(function (resolve, reject) {
-      var xhr = new XMLHttpRequest();
+      let xhr = new XMLHttpRequest();
       xhr.open("GET", request_url, true);
       xhr.setRequestHeader("Content-type", "application/json");
       xhr.setRequestHeader("Authorization", "OAuth " + auth);

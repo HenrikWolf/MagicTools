@@ -32,7 +32,7 @@ $("#btn-user-create-save").click(function(e) {
       }
 
       else if(jsonResult["succ"]) {
-        $("#select-user").append("<option value='"+jsonResult["username"]+"'>"+jsonResult["username"]+"</option>");
+        addOption("#select-user", jsonResult["username"], jsonResult["username"]);
         setAlert(0, "#alert-user-create", jsonResult["succ"]);
       }
     }
@@ -100,7 +100,7 @@ $("#btn-get-wants").click(function(e) {
 
 $("#select-user").change(function(e) {
   fillUserEditForm();
-  resetExportDropdown(true, true);
+  resetDropdown("#export-dropdown", true, true);
   $("#alert-user-edit").hide();
 });
 
@@ -111,7 +111,6 @@ $("#btn-copy-clipboard").click(function(e) {
 });
 
 $("#btn-user-edit-save").click(function(e) {
-  // TODO: add spinner
 
   // get username
   let selectedUser = $("#select-user").find(":selected").text();
@@ -164,10 +163,9 @@ function fillSelectUserDropdown() {
       }
 
       else {
-        for (var user in jsonResult) {
+        for (let user in jsonResult) {
           let username = jsonResult[user]["username"];
-          let option = $('<option />').val(username).html(username);
-          $("#select-user").append(option);
+          addOption("#select-user", username, username);
         }
         fillUserEditForm();
       }
@@ -258,13 +256,13 @@ function getWantlists() {
       let jsonResult = $.parseJSON(data);
 
       if(!jsonResult) {
-        resetExportDropdown(true, true);
+        resetDropdown()"#export-dropdown", true, true);
         setAlert(1, "#alert-export", "No valid jsonReturn");
         removeSpinner("#icon-export-get-lists");
       }
 
       else if (jsonResult["err"]) {
-        resetExportDropdown(true, true);
+        resetDropdown("#export-dropdown", true, true);
         setAlert(1, "#alert-export", jsonResult["err"]);
         removeSpinner("#icon-export-get-lists");
       }
@@ -281,11 +279,10 @@ function getWantlists() {
         RequestService.getWantlists(auth_token_set)
         .then(function (result) {
           $("#alert-export").hide();
-          resetExportDropdown(false, false);
+          resetDropdown("#export-dropdown", false, false);
           let lists = result.wantslist;
           lists.forEach(function(list) {
-            let option = $('<option />').val(list.idWantslist).html(list.name + " (" + list.itemCount + " Wants)");
-            $("#export-dropdown").append(option);
+            addOption("#export-dropdown", list.idWantslist, list.name + " (" + list.itemCount + " Wants)");
           })
           removeSpinner("#icon-export-get-lists");
         })
@@ -347,7 +344,7 @@ function getWantlist() {
           let txt = "";
           list.forEach(function(item) {
             //storing additional information in array
-            var additionalInfo = [];
+            let additionalInfo = [];
 
             txt += item.count + "x ";
             if (item.metaproduct) {
@@ -361,7 +358,7 @@ function getWantlist() {
             //appending the addional info to txt
             if (additionalInfo.length>0){
               txt += " (";
-              for (var i = 0; i < additionalInfo.length-1; i++){txt += additionalInfo[i] + ", ";}
+              for (let i = 0; i < additionalInfo.length-1; i++){txt += additionalInfo[i] + ", ";}
               txt += additionalInfo[additionalInfo.length-1] + ")";
             }
             txt += "\n";
@@ -412,17 +409,25 @@ function addSpinner(box) {
   $(box).addClass("fa-spinner fa-spin");
 }
 
-/* add a spinner and write a notice to console
+/* reset a dropdown menu
+box: id of dropdown element
 disabled: disabled or not? (boolean)
 default: should a default option displayed? (boolean)
 */
-// TODO: box as param
-function resetExportDropdown(disabled, defaultOption) {
-  $("#export-dropdown").empty();
-  $("#export-dropdown").prop("disabled", disabled);
+function resetDropdown(box, disabled, defaultOption) {
+  $(box).empty();
+  $(box).prop("disabled", disabled);
   if (defaultOption) {
-    $("#export-dropdown").append("<option value='null' selected>Choose Wantlist</option>");
+    addOption(box, null, Choose Wantlist);
   }
 }
 
-// TODO: add method for adding otions to a selection
+/* add an option to a select dropdown
+box: id of dropdown element
+val: value of added option
+txt: text of added option
+*/
+function addOption(box, val, txt) {
+  let option = $('<option />').val(val).html(txt);
+  $(box).append(option);
+}
