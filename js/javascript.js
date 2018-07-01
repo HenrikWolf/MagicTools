@@ -5,6 +5,7 @@ $(document).ready(function() {
 });
 
 $("#btn-user-create-save").click(function(e) {
+  // TODO: add spinner
   $.ajax({
     url: "php/createUser.php",
     data: {
@@ -21,13 +22,18 @@ $("#btn-user-create-save").click(function(e) {
     success: function(data) {
       console.log(data);
       let jsonResult = $.parseJSON(data);
-      if(jsonResult) {
-        if(jsonResult["err"]) {
-          setAlert(1, "#alert-user-create", jsonResult["err"]);
-        } else if(jsonResult["succ"]) {
-          $("#select-user").append("<option value='"+jsonResult["username"]+"'>"+jsonResult["username"]+"</option>");
-          setAlert(0, "#alert-user-create", jsonResult["succ"]);
-        }
+
+      if(!jsonResult) {
+        setAlert(1, "#alert-user-create", "No valid jsonReturn");
+      }
+
+      else if(jsonResult["err"]) {
+        setAlert(1, "#alert-user-create", jsonResult["err"]);
+      }
+
+      else if(jsonResult["succ"]) {
+        $("#select-user").append("<option value='"+jsonResult["username"]+"'>"+jsonResult["username"]+"</option>");
+        setAlert(0, "#alert-user-create", jsonResult["succ"]);
       }
     }
   });
@@ -58,10 +64,6 @@ $("#btn-get-wants").click(function(e) {
   getWantlist();
 });
 
-$("#user-edit-tab").click(function(e) {
-  fillUserEditForm();
-});
-
 $("#select-user").change(function(e) {
   fillUserEditForm();
   resetExportDropdown(true, true);
@@ -69,17 +71,21 @@ $("#select-user").change(function(e) {
 });
 
 $("#btn-copy-clipboard").click(function(e) {
-  var copyText = document.getElementById("export-output");
+  let copyText = document.getElementById("export-output");
   copyText.select();
   document.execCommand("copy");
 });
 
 $("#btn-user-edit-save").click(function(e) {
-  let user = $("#select-user").find(":selected").text();
+  // TODO: add spinner
+
+  // get username
+  let selectedUser = $("#select-user").find(":selected").text();
+
   $.ajax({
     url: "php/editUser.php",
     data: {
-      username: user,
+      username: selectedUser,
       app_token: $("#user-edit-app-token").val(),
       app_token_secret: $("#user-edit-app-token-secret").val(),
       access_token: $("#user-edit-access-token").val(),
@@ -90,12 +96,17 @@ $("#btn-user-edit-save").click(function(e) {
     success: function(data) {
       console.log(data);
       let jsonResult = $.parseJSON(data);
-      if(jsonResult) {
-        if(jsonResult["err"]) {
-          setAlert(1, "#alert-user-edit", jsonResult["err"]);
-        } else if(jsonResult["succ"]) {
-          setAlert(0, "#alert-user-edit", jsonResult["succ"]);
-        }
+
+      if(!jsonResult) {
+        setAlert(1, "#alert-user-edit", "No valid jsonReturn");
+      }
+
+      else if(jsonResult["err"]) {
+        setAlert(1, "#alert-user-edit", jsonResult["err"]);
+      }
+
+      else if(jsonResult["succ"]) {
+        setAlert(0, "#alert-user-edit", jsonResult["succ"]);
       }
     }
   });
@@ -109,48 +120,67 @@ function fillSelectUserDropdown() {
     success: function(data) {
       console.log(data);
       let jsonResult = $.parseJSON(data);
-      if(jsonResult) {
-        if(jsonResult["err"]) {
-          console.log(jsonResult["err"]);
-        } else {
-          for (var user in jsonResult) {
-            let username = jsonResult[user]["username"];
-            let option = $('<option />').val(username).html(username);
-            $("#select-user").append(option);
-          }
+
+      if(!jsonResult) {
+        console.log("No valid jsonReturn");
+      }
+
+      else if(jsonResult["err"]) {
+        console.log(jsonResult["err"]);
+      }
+
+      else {
+        for (var user in jsonResult) {
+          let username = jsonResult[user]["username"];
+          let option = $('<option />').val(username).html(username);
+          $("#select-user").append(option);
         }
-        $("#select-user").append("<option value='test'>test</option>");
+        fillUserEditForm();
       }
     }
   });
 }
 
 function fillUserEditForm() {
-  let user = $("#select-user").find(":selected").text();
-  $("#p-user-edit").html("Edit user <i>"+user+"</i>");
+
+  // get username
+  let selectedUser = $("#select-user").find(":selected").text();
+
+  // set label to the beginning of the form
+  $("#p-user-edit").html("Edit user <i>"+selectedUser+"</i>");
+
   $.ajax({
     url: "php/getUser.php",
     data: {
-      username: user
+      username: selectedUser
     },
     datatype: "json",
     type: "POST",
     success: function(data) {
       console.log(data);
       let jsonResult = $.parseJSON(data);
-      if(jsonResult) {
-        if(jsonResult["err"]) {
-          $("#user-edit-app-token").val("");
-          $("#user-edit-app-token-secret").val("");
-          $("#user-edit-access-token").val("");
-          $("#user-edit-access-token-secret").val("");
-          setAlert(1, "#alert-user-edit", jsonResult["err"]);
-        } else {
-          $("#user-edit-app-token").val(jsonResult["app_token"]);
-          $("#user-edit-app-token-secret").val(jsonResult["app_token_secret"]);
-          $("#user-edit-access-token").val(jsonResult["access_token"]);
-          $("#user-edit-access-token-secret").val(jsonResult["access_token_secret"]);
-        }
+
+      if(!jsonResult) {
+        $("#user-edit-app-token").val("");
+        $("#user-edit-app-token-secret").val("");
+        $("#user-edit-access-token").val("");
+        $("#user-edit-access-token-secret").val("");
+        setAlert(1, "#alert-user-edit", "No valid jsonReturn");
+      }
+
+      else if (jsonResult["err"]) {
+        $("#user-edit-app-token").val("");
+        $("#user-edit-app-token-secret").val("");
+        $("#user-edit-access-token").val("");
+        $("#user-edit-access-token-secret").val("");
+        setAlert(1, "#alert-user-edit", jsonResult["err"]);
+      }
+
+      else {
+        $("#user-edit-app-token").val(jsonResult["app_token"]);
+        $("#user-edit-app-token-secret").val(jsonResult["app_token_secret"]);
+        $("#user-edit-access-token").val(jsonResult["access_token"]);
+        $("#user-edit-access-token-secret").val(jsonResult["access_token_secret"]);
       }
     }
   });
@@ -352,6 +382,7 @@ function addSpinner(box) {
 disabled: disabled or not? (boolean)
 default: should a default option displayed? (boolean)
 */
+// TODO: box as param
 function resetExportDropdown(disabled, defaultOption) {
   $("#export-dropdown").empty();
   $("#export-dropdown").prop("disabled", disabled);
@@ -359,3 +390,5 @@ function resetExportDropdown(disabled, defaultOption) {
     $("#export-dropdown").append("<option value='null' selected>Choose Wantlist</option>");
   }
 }
+
+// TODO: add method for adding otions to a selection

@@ -1,12 +1,18 @@
 <?php
 
+// Connect to database
 require_once 'dbConnect.php';
 
 // Define variables and initialize with empty values
-$token_err = "";
+$token_err = $username_err = "";
 
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  // Validate username
+  if (empty(trim($_POST["username"]))) {
+    $username_err = "username is null";
+  }
 
   // Validate auth_token_set
   if (empty(trim($_POST["app_token"]))) {
@@ -19,15 +25,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $token_err = "Please enter an access token secret";
   }
 
-  // TODO: validate username
+  // Check input errors before updating in database
+  if (empty($token_err) && empty($password_err)) {
 
-  // Check input errors before inserting in database
-  if (empty($token_err)) {
     // Prepare an insert statement
     $sql = "UPDATE users SET app_token = ?, app_token_secret = ?, access_token = ?,
             access_token_secret = ? WHERE username = ?";
 
+    // Attempt to prepare a sql query
     if ($stmt = mysqli_prepare($link, $sql)) {
+
       // Bind variables to the prepared statement as parameters
       mysqli_stmt_bind_param($stmt, "sssss", $param_app_token, $param_app_token_secret,
               $param_access_token, $param_access_token_secret, $param_username);
@@ -45,14 +52,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       } else {
         echo json_encode(array('err' => "Something went wrong. Please try again later."));
       }
+
     } else {
       echo json_encode(array('err' => "Something went wrong. Please try again later."));
     }
+
     // Close statement
     mysqli_stmt_close($stmt);
-  } else {
+
+  } elseif ($token_err) {
     echo json_encode(array('err' => $token_err));
+  } elseif ($username_err) {
+    echo json_encode(array('err' => $username_err));
   }
+
   // Close connection
   mysqli_close($link);
 }

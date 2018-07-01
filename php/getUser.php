@@ -1,5 +1,6 @@
 <?php
 
+// Connect to database
 require_once 'dbConnect.php';
 
 // Define variables and initialize with empty values
@@ -13,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Execute statement
   $result = mysqli_query($link, $sql);
 
-  // if result is wrong, return an error. Otherwise return entries
+  // If result is empty, return an error. Otherwise return entries
   if (!$result) {
     echo json_encode(array('err' => mysqli_error($link)));
   } else if (mysqli_num_rows($result) == 1) {
