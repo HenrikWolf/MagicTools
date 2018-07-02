@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // check password
       if ($row !== false && password_verify($_POST["password"], $row['password'])) {
+          $_SESSION['id'] = $row['id'];
           $_SESSION['username'] = $row['username'];
           echo json_encode(array('succ' => "password is correct"));
       } else {

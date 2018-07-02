@@ -67,7 +67,7 @@
           <a class="nav-link fas fa-user-minus fa-lg px-1" style="color:white" id="user-delete-tab" data-toggle="pill" href="#user-delete" role="tab" aria-controls="user-add" aria-selected="false"></a>
         </li>
       </ul>
-      <?php if(!isset($_SESSION['username'])) { ?>
+      <?php if(!isset($_SESSION['id'])) { ?>
       <form class="form-inline">
         <input class="form-control mr-sm-2" id="login-username-input" type="text" placeholder="Username" aria-label="Username">
         <input class="form-control mr-sm-2" id="login-password-input" type="password" placeholder="Password" aria-label="Password">
