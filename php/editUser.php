@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 // Connect to database
 require_once 'dbConnect.php';
 
@@ -9,9 +11,9 @@ $token_err = $username_err = "";
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  // Validate username
-  if (empty(trim($_POST["username"]))) {
-    $username_err = "username is null";
+  // Validate logged in user
+  if (!isset($_SESSION['id'])) {
+    $username_err = "Kein Benutzer eingeloggt";
   }
 
   // Validate auth_token_set
@@ -30,25 +32,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare an insert statement
     $sql = "UPDATE users SET app_token = ?, app_token_secret = ?, access_token = ?,
-            access_token_secret = ? WHERE username = ?";
+            access_token_secret = ? WHERE id = ?";
 
     // Attempt to prepare a sql query
     if ($stmt = mysqli_prepare($link, $sql)) {
 
       // Bind variables to the prepared statement as parameters
       mysqli_stmt_bind_param($stmt, "sssss", $param_app_token, $param_app_token_secret,
-              $param_access_token, $param_access_token_secret, $param_username);
+              $param_access_token, $param_access_token_secret, $param_id);
 
       // Set parameters
       $param_app_token = trim($_POST['app_token']);
       $param_app_token_secret = trim($_POST['app_token_secret']);
       $param_access_token = trim($_POST['access_token']);
       $param_access_token_secret = trim($_POST['access_token_secret']);
-      $param_username = trim($_POST['username']);
+      $param_id = $_SESSION['id'];
 
       // Attempt to execute the prepared statement
       if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(array('succ' => "Prima! Der Benutzer wurde geändert!", 'username' => trim($_POST['username'])));
+        echo json_encode(array('succ' => "Prima! Der Benutzer wurde geändert!", 'username' => $_SESSION['username']));
       } else {
         echo json_encode(array('err' => "Something went wrong. Please try again later."));
       }

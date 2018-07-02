@@ -80,7 +80,6 @@ function editUser() {
   $.ajax({
     url: "php/editUser.php",
     data: {
-      username: "Test",
       app_token: $("#user-edit-app-token").val(),
       app_token_secret: $("#user-edit-app-token-secret").val(),
       access_token: $("#user-edit-access-token").val(),
@@ -112,9 +111,6 @@ function deleteUser() {
   // execute php script for deleting a user
   $.ajax({
     url: "php/deleteUser.php",
-    data: {
-      username: "test"
-    },
     datatype: "json",
     type: "POST",
     success: function(data) {
