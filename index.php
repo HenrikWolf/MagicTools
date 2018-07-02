@@ -65,6 +65,7 @@
         <button class="btn btn-outline-secondary my-2 my-sm-0" id="login-button" type="button">Login</button>
       </form>
       <?php } else { ?>
+      <span class="navbar-text text-light mr-sm-3"><?php echo $_SESSION['username']?></span>
       <ul class="nav">
         <li class="nav-item">
           <a class="nav-link fas fa-user-edit fa-lg px-1 mr-sm-2" style="color:white" id="user-edit-tab" data-toggle="pill" href="#user-edit" role="tab" aria-controls="user-edit" aria-selected="false"></a>
