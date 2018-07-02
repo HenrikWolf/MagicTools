@@ -6,12 +6,17 @@ session_start();
 require_once 'dbConnect.php';
 
 // Define variables and initialize with empty values
+$login_err = "";
 
-if (!isset($_SESSION['id'])) {
-  echo json_encode(array('err' => "Kein Benutzer eingeloggt"));
-} else {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Validate logged in user
+  if (!isset($_SESSION['id'])) {
+    $login_err = "Kein Benutzer eingeloggt";
+  }
+
+  // Check input errors before updating in database
+  if (empty($login_err)) {
 
     // Prepare a select statement
     $sql = "DELETE FROM users WHERE id = ?";
@@ -33,10 +38,15 @@ if (!isset($_SESSION['id'])) {
       echo json_encode(array('err' => "Something went wrong. Please try again later."));
     }
 
-    // Close statement and connection
+    // Close statement
     mysqli_stmt_close($stmt);
-    mysqli_close($link);
+
+  } elseif ($login_err) {
+    echo json_encode(array('err' => $login_err));
   }
+
+  // Close connection
+  mysqli_close($link);
 }
 
 ?>

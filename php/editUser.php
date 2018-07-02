@@ -6,14 +6,14 @@ session_start();
 require_once 'dbConnect.php';
 
 // Define variables and initialize with empty values
-$token_err = $username_err = "";
+$token_err = $login_err = "";
 
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Validate logged in user
   if (!isset($_SESSION['id'])) {
-    $username_err = "Kein Benutzer eingeloggt";
+    $login_err = "Kein Benutzer eingeloggt";
   }
 
   // Validate auth_token_set
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   // Check input errors before updating in database
-  if (empty($token_err) && empty($password_err)) {
+  if (empty($token_err) && empty($login_err)) {
 
     // Prepare an insert statement
     $sql = "UPDATE users SET app_token = ?, app_token_secret = ?, access_token = ?,
@@ -64,8 +64,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   } elseif ($token_err) {
     echo json_encode(array('err' => $token_err));
-  } elseif ($username_err) {
-    echo json_encode(array('err' => $username_err));
+  } elseif ($login_err) {
+    echo json_encode(array('err' => $login_err));
   }
 
   // Close connection

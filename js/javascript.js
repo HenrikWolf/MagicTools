@@ -62,7 +62,7 @@ $("#btn-get-lists").click(function(e) {
 
 $("#btn-get-wants").click(function(e) {
   addSpinner("#icon-export-get-wants");
-  getList();
+  getWants();
 });
 
 
@@ -286,7 +286,7 @@ function getLists() {
   });
 }
 
-function getList() {
+function getWants() {
 
   // get choosen list
   let selectedList = $("#export-dropdown").val();

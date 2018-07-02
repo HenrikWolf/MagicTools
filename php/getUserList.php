@@ -1,5 +1,6 @@
 <?php
 
+// Connect to database
 require_once 'dbConnect.php';
 
 // Define variables and initialize with empty values
