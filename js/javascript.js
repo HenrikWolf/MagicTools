@@ -26,6 +26,11 @@ $("#login-button").click(function(e) {
   login();
 });
 
+// Logout
+$("#logout-button").click(function(e) {
+  logout();
+});
+
 // ------------------------------------------------------------------
 // ------------------- start button event handler -------------------
 // ------------------------------------------------------------------
@@ -448,6 +453,34 @@ function login() {
       }
 
       else if(jsonResult["succ"]) {
+        window.location.reload();
+        console.log(jsonResult["succ"]);
+      }
+    }
+  });
+}
+
+function logout() {
+
+  // execute php script for logging out a user
+  $.ajax({
+    url: "php/logout.php",
+    datatype: "json",
+    type: "POST",
+    success: function(data) {
+      console.log(data);
+      let jsonResult = $.parseJSON(data);
+
+      if(!jsonResult) {
+        console.log("No valid jsonReturn");
+      }
+
+      else if(jsonResult["err"]) {
+        console.log(jsonResult["err"]);
+      }
+
+      else if(jsonResult["succ"]) {
+        window.location.reload();
         console.log(jsonResult["succ"]);
       }
     }

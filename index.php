@@ -67,11 +67,17 @@
           <a class="nav-link fas fa-user-minus fa-lg px-1" style="color:white" id="user-delete-tab" data-toggle="pill" href="#user-delete" role="tab" aria-controls="user-add" aria-selected="false"></a>
         </li>
       </ul>
+      <?php if(!isset($_SESSION['username'])) { ?>
       <form class="form-inline">
         <input class="form-control mr-sm-2" id="login-username-input" type="text" placeholder="Username" aria-label="Username">
         <input class="form-control mr-sm-2" id="login-password-input" type="password" placeholder="Password" aria-label="Password">
-        <button class="btn btn-outline-success my-2 my-sm-0" id="login-button" type="button">Login</button>
+        <button class="btn btn-outline-secondary my-2 my-sm-0" id="login-button" type="button">Login</button>
       </form>
+      <?php } else { ?>
+      <form class="form-inline">
+        <button class="btn btn-outline-secondary my-2 my-sm-0" id="logout-button" type="button">Logout</button>
+      </form>
+      <?php } ?>
     </div>
   </nav>
 

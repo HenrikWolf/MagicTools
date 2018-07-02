@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 // Connect to database
 require_once 'dbConnect.php';
 
@@ -34,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // check password
       if ($row !== false && password_verify($_POST["password"], $row['password'])) {
-          //$_SESSION['userid'] = $user['id'];
+          $_SESSION['username'] = $row['username'];
           echo json_encode(array('succ' => "password is correct"));
       } else {
           echo json_encode(array('err' => "password is wrong"));
