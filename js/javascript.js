@@ -2,7 +2,7 @@ import {RequestService} from "./requestService.js"
 // TODO: import js moduls for each part of the application
 // TODO: add utilities as a service
 
-// if page is loaded, fill selectUserDropdown
+// if page is loaded
 $(document).ready(function() {
 });
 
@@ -15,7 +15,9 @@ $(".nav a").click(function(){
 
 // Login
 $("#login-button").click(function(e) {
-  login();
+  let username = $("#login-username-input").val();
+  let password = $("#login-password-input").val();
+  login(username, password);
 });
 
 // Logout
@@ -127,6 +129,7 @@ function deleteUser() {
 
       else if(jsonResult["succ"]) {
         console.log(jsonResult["succ"]);
+        logout();
       }
     }
   });
@@ -203,6 +206,7 @@ function createUser() {
 
       else if(jsonResult["succ"]) {
         setAlert(0, "#alert-user-create", jsonResult["succ"]);
+        login(user["username"], user["password"]);
       }
     }
   });
@@ -360,11 +364,7 @@ function getList() {
   });
 }
 
-function login() {
-
-  // get username and password
-  let username = $("#login-username-input").val();
-  let password = $("#login-password-input").val();
+function login(username, password) {
 
   // execute php script for logging in a user
   $.ajax({
