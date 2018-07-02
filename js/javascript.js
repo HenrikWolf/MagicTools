@@ -4,7 +4,6 @@ import {RequestService} from "./requestService.js"
 
 // if page is loaded, fill selectUserDropdown
 $(document).ready(function() {
-  fillSelectUserDropdown();
 });
 
 // Assures that only one element is active.
@@ -12,13 +11,6 @@ $(document).ready(function() {
 $(".nav a").click(function(){
   $(".nav").find(".active").removeClass("active");
   $(this).parent().addClass("active");
-});
-
-// If selected user in dropDown is changed, update forms
-$("#select-user").change(function(e) {
-  fillUserEditForm();
-  resetDropdown("#export-dropdown", true, true);
-  $("#alert-user-edit").hide();
 });
 
 // Login
@@ -46,6 +38,10 @@ $("#btn-user-create-save").click(function(e) {
 
 $("#user-delete-tab").click(function(e) {
   deleteUser();
+});
+
+$("#user-edit-tab").click(function(e) {
+  fillUserEditForm();
 });
 
 $("#btn-user-edit-check").click(function(e) {
@@ -80,14 +76,11 @@ $("#btn-copy-clipboard").click(function(e) {
 
 function editUser() {
 
-  // get username
-  let selectedUser = $("#select-user").find(":selected").text();
-
   // execute php script for updating a user
   $.ajax({
     url: "php/editUser.php",
     data: {
-      username: selectedUser,
+      username: "Test",
       app_token: $("#user-edit-app-token").val(),
       app_token_secret: $("#user-edit-app-token-secret").val(),
       access_token: $("#user-edit-access-token").val(),
@@ -114,46 +107,13 @@ function editUser() {
   });
 }
 
-function fillSelectUserDropdown() {
-
-  // execute php script for getting a list of users
-  $.ajax({
-    url: "php/getUserList.php",
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        console.log("No valid jsonReturn");
-      }
-
-      else if(jsonResult["err"]) {
-        console.log(jsonResult["err"]);
-      }
-
-      else {
-        for (let user in jsonResult) {
-          let username = jsonResult[user]["username"];
-          addOption("#select-user", username, username);
-        }
-        fillUserEditForm();
-      }
-    }
-  });
-}
-
 function deleteUser() {
-
-  // get username
-  let selectedUser = $("#select-user").find(":selected").text();
 
   // execute php script for deleting a user
   $.ajax({
     url: "php/deleteUser.php",
     data: {
-      username: selectedUser
+      username: "test"
     },
     datatype: "json",
     type: "POST",
@@ -170,8 +130,6 @@ function deleteUser() {
       }
 
       else if(jsonResult["succ"]) {
-        $("#select-user").find(":selected").remove();
-        fillUserEditForm();
         console.log(jsonResult["succ"]);
       }
     }
@@ -180,18 +138,9 @@ function deleteUser() {
 
 function fillUserEditForm() {
 
-  // get username
-  let selectedUser = $("#select-user").find(":selected").text();
-
-  // set label to the beginning of the form
-  $("#p-user-edit").html("Edit user <i>"+selectedUser+"</i>");
-
   // execute php script for getting a user
   $.ajax({
     url: "php/getUser.php",
-    data: {
-      username: selectedUser
-    },
     datatype: "json",
     type: "POST",
     success: function(data) {
@@ -215,6 +164,7 @@ function fillUserEditForm() {
       }
 
       else {
+        $("#p-user-edit").html("Edit user <i>"+jsonResult['username']+"</i>");
         $("#user-edit-app-token").val(jsonResult["app_token"]);
         $("#user-edit-app-token-secret").val(jsonResult["app_token_secret"]);
         $("#user-edit-access-token").val(jsonResult["access_token"]);
@@ -256,7 +206,6 @@ function createUser() {
       }
 
       else if(jsonResult["succ"]) {
-        addOption("#select-user", jsonResult["username"], jsonResult["username"]);
         setAlert(0, "#alert-user-create", jsonResult["succ"]);
       }
     }
@@ -288,15 +237,9 @@ function checkTokens(mod) {
 
 function getLists() {
 
-  // get username
-  let selectedUser = $("#select-user").find(":selected").text();
-
   // execute php script for getting a user
   $.ajax({
     url: "php/getUser.php",
-    data: {
-      username: selectedUser
-    },
     datatype: "json",
     type: "POST",
     success: function(data) {
@@ -345,8 +288,7 @@ function getLists() {
 
 function getList() {
 
-  // get username and choosen list
-  let selectedUser = $("#select-user").find(":selected").text();
+  // get choosen list
   let selectedList = $("#export-dropdown").val();
 
   // check if a valid wantlist is selected
@@ -358,9 +300,6 @@ function getList() {
   // execute php script for getting a user
   $.ajax({
     url: "php/getUser.php",
-    data: {
-      username: selectedUser
-    },
     datatype: "json",
     type: "POST",
     success: function(data) {
