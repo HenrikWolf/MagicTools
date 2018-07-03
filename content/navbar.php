@@ -23,7 +23,7 @@
         <a class="nav-link fas fa-user-plus fa-lg px-1 mr-sm-2" id="user-create-tab" data-toggle="pill" href="#user-create" role="tab" aria-controls="user-create" aria-selected="false"></a>
       </li>
     </ul>
-    <form class="form-inline">
+    <form class="form-inline" id="login-form">
       <input class="form-control mr-sm-2" id="login-username-input" type="text" placeholder="Username" aria-label="Username">
       <input class="form-control mr-sm-2" id="login-password-input" type="password" placeholder="Password" aria-label="Password">
       <button class="btn btn-outline-light my-2 my-sm-0" id="login-button" type="button">Login</button>

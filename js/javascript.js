@@ -13,11 +13,20 @@ $(".nav a").click(function(){
   $(this).parent().addClass("active");
 });
 
-// Login
+// Login on click
 $("#login-button").click(function(e) {
   let username = $("#login-username-input").val();
   let password = $("#login-password-input").val();
   login(username, password);
+});
+
+// Login on enter
+$("#login-form").keypress(function(e) {
+  if(e.which == 13) {
+    let username = $("#login-username-input").val();
+    let password = $("#login-password-input").val();
+    login(username, password);
+  }
 });
 
 // Logout
