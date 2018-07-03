@@ -20,26 +20,26 @@
     <?php if(!isset($_SESSION['id'])) { ?>
     <ul class="nav">
       <li class="nav-item">
-        <a class="nav-link fas fa-user-plus fa-lg px-1 mr-sm-2" style="color:white" id="user-create-tab" data-toggle="pill" href="#user-create" role="tab" aria-controls="user-create" aria-selected="false"></a>
+        <a class="nav-link fas fa-user-plus fa-lg px-1 mr-sm-2" id="user-create-tab" data-toggle="pill" href="#user-create" role="tab" aria-controls="user-create" aria-selected="false"></a>
       </li>
     </ul>
     <form class="form-inline">
       <input class="form-control mr-sm-2" id="login-username-input" type="text" placeholder="Username" aria-label="Username">
       <input class="form-control mr-sm-2" id="login-password-input" type="password" placeholder="Password" aria-label="Password">
-      <button class="btn btn-outline-secondary my-2 my-sm-0" id="login-button" type="button">Login</button>
+      <button class="btn btn-outline-light my-2 my-sm-0" id="login-button" type="button">Login</button>
     </form>
     <?php } else { ?>
     <span class="navbar-text text-light mr-sm-3"><?php echo $_SESSION['username']?></span>
     <ul class="nav">
       <li class="nav-item">
-        <a class="nav-link fas fa-user-edit fa-lg px-1 mr-sm-2" style="color:white" id="user-edit-tab" data-toggle="pill" href="#user-edit" role="tab" aria-controls="user-edit" aria-selected="false"></a>
+        <a class="nav-link fas fa-user-edit fa-lg px-1 mr-sm-2" id="user-edit-tab" data-toggle="pill" href="#user-edit" role="tab" aria-controls="user-edit" aria-selected="false"></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link fas fa-user-minus fa-lg px-1 mr-sm-2" style="color:white" id="user-delete-tab" data-toggle="pill" href="#user-delete" role="tab" aria-controls="user-add" aria-selected="false"></a>
+        <a class="nav-link fas fa-user-minus fa-lg px-1 mr-sm-2" id="user-delete-tab" data-toggle="pill" href="#user-delete" role="tab" aria-controls="user-add" aria-selected="false"></a>
       </li>
     </ul>
     <form class="form-inline">
-      <button class="btn btn-outline-secondary" id="logout-button" type="button">Logout</button>
+      <button class="btn btn-outline-light" id="logout-button" type="button">Logout</button>
     </form>
     <?php } ?>
   </div>

@@ -32,3 +32,22 @@
   top: 55%;
   transform: translateY(-55%);
 }
+
+/* change color of login and logout button */
+.btn-outline-light {
+  border-color: lightgrey;
+}
+
+.btn-outline-light:hover {
+  background-color: lightgrey;
+  border-color: lightgrey;
+}
+
+/* change color of user icons */
+.fa-user-plus, .fa-user-edit, .fa-user-minus {
+  color: white;
+}
+
+.fa-user-plus:hover, .fa-user-edit:hover, .fa-user-minus:hover {
+  color: lightgrey;
+}
