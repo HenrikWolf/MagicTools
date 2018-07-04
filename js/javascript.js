@@ -1,6 +1,6 @@
-import {RequestService} from "./requestService.js"
+import {RequestService} from "./requestService.js";
+import {Util} from "./utilities.js";
 // TODO: import js moduls for each part of the application
-// TODO: add utilities as a service
 
 // if page is loaded
 $(document).ready(function() {
@@ -40,7 +40,6 @@ $("#logout-button").click(function(e) {
 // ------------------------------------------------------------------
 
 $("#btn-user-create-check").click(function(e) {
-  addSpinner("#icon-user-create");
   checkTokens("create");
 });
 
@@ -53,7 +52,6 @@ $("#user-delete-tab").click(function(e) {
 });
 
 $("#btn-user-edit-check").click(function(e) {
-  addSpinner("#icon-user-edit");
   checkTokens("edit");
 });
 
@@ -62,7 +60,6 @@ $("#btn-user-edit-save").click(function(e) {
 });
 
 $("#btn-get-wants").click(function(e) {
-  addSpinner("#icon-export-get-wants");
   getWants();
 });
 
@@ -98,16 +95,16 @@ function editUser() {
       let jsonResult = $.parseJSON(data);
 
       if(!jsonResult) {
-        setAlert(1, "#alert-user-edit", "No valid jsonReturn");
+        Util.setAlert(1, "#alert-user-edit", "No valid jsonReturn");
       }
 
       else if(jsonResult["err"]) {
-        setAlert(1, "#alert-user-edit", jsonResult["err"]);
+        Util.setAlert(1, "#alert-user-edit", jsonResult["err"]);
       }
 
       else if(jsonResult["succ"]) {
         fillListDropdown(ats, "Fehler")
-        setAlert(0, "#alert-user-edit", jsonResult["succ"]);
+        Util.setAlert(0, "#alert-user-edit", jsonResult["succ"]);
       }
     }
   });
@@ -164,15 +161,15 @@ function createUser() {
       let jsonResult = $.parseJSON(data);
 
       if(!jsonResult) {
-        setAlert(1, "#alert-user-create", "No valid jsonReturn");
+        Util.setAlert(1, "#alert-user-create", "No valid jsonReturn");
       }
 
       else if(jsonResult["err"]) {
-        setAlert(1, "#alert-user-create", jsonResult["err"]);
+        Util.setAlert(1, "#alert-user-create", jsonResult["err"]);
       }
 
       else if(jsonResult["succ"]) {
-        setAlert(0, "#alert-user-create", jsonResult["succ"]);
+        Util.setAlert(0, "#alert-user-create", jsonResult["succ"]);
         login(user["username"], user["password"]);
       }
     }
@@ -180,6 +177,8 @@ function createUser() {
 }
 
 function checkTokens(mod) {
+
+  Util.addSpinner("#icon-user-"+mod);
 
   // get auth information of a user from a form
   let auth_token_set = {
@@ -193,12 +192,12 @@ function checkTokens(mod) {
   RequestService.getAccountData(auth_token_set)
   .then(function (result) {
     let username = result.account.username;
-    setAlert(0, "#alert-user-"+mod, "Connected to Account "+username);
-    removeSpinner("#icon-user-"+mod);
+    Util.setAlert(0, "#alert-user-"+mod, "Connected to Account "+username);
+    Util.removeSpinner("#icon-user-"+mod);
   })
   .catch(function (err) {
-    setAlert(1, "#alert-user-"+mod, err.statusText);
-    removeSpinner("#icon-user-"+mod);
+    Util.setAlert(1, "#alert-user-"+mod, err.statusText);
+    Util.removeSpinner("#icon-user-"+mod);
   });
 }
 
@@ -248,44 +247,46 @@ function fillUserEditForm(ats, username, error) {
     $("#user-edit-access-token-secret").val(ats.access_token_secret);
   } else {
     $("#user-edit-form")[0].reset();
-    setAlert(1, "#alert-user-edit", error);
+    Util.setAlert(1, "#alert-user-edit", error);
   }
 }
 
 function fillListDropdown(ats, error) {
-  addSpinner("#icon-export-get-lists");
+  Util.addSpinner("#icon-export-get-lists");
   if (ats) {
     RequestService.getWantlists(ats)
     .then(function (result) {
       $("#alert-export").hide();
-      resetDropdown("#export-dropdown", false, false);
+      Util.resetDropdown("#export-dropdown", false, false);
       let lists = result.wantslist;
       lists.forEach(function(list) {
-        addOption("#export-dropdown", list.idWantslist, list.name + " (" + list.itemCount + " Wants)");
+        Util.addOption("#export-dropdown", list.idWantslist, list.name + " (" + list.itemCount + " Wants)");
       })
-      removeSpinner("#icon-export-get-lists");
+      Util.removeSpinner("#icon-export-get-lists");
     })
     .catch(function (err) {
-      resetDropdown("#export-dropdown", true, true);
-      setAlert(1, "#alert-export", err.statusText);
-      removeSpinner("#icon-export-get-lists");
+      Util.resetDropdown("#export-dropdown", true, true);
+      Util.setAlert(1, "#alert-export", err.statusText);
+      Util.removeSpinner("#icon-export-get-lists");
     });
   } else {
-    resetDropdown("#export-dropdown", true, true);
-    setAlert(1, "#alert-export", error);
-    removeSpinner("#icon-export-get-lists");
+    Util.resetDropdown("#export-dropdown", true, true);
+    Util.setAlert(1, "#alert-export", error);
+    Util.removeSpinner("#icon-export-get-lists");
   };
 }
 
 function getWants() {
+
+  Util.addSpinner("#icon-export-get-wants");
 
   // get choosen list
   let selectedList = $("#export-dropdown").val();
 
   // check if a valid wantlist is selected
   if (!selectedList) {
-    setAlert(1, "#alert-export", "No valid wantlist selected");
-    removeSpinner("#icon-export-get-wants");
+    Util.setAlert(1, "#alert-export", "No valid wantlist selected");
+    Util.removeSpinner("#icon-export-get-wants");
   }
 
   // execute php script for getting a user
@@ -298,13 +299,13 @@ function getWants() {
       let jsonResult = $.parseJSON(data);
 
       if(!jsonResult) {
-        setAlert(1, "#alert-export", "No valid jsonReturn");
-        removeSpinner("#icon-export-get-wants");
+        Util.setAlert(1, "#alert-export", "No valid jsonReturn");
+        Util.removeSpinner("#icon-export-get-wants");
       }
 
       else if (jsonResult["err"]) {
-        setAlert(1, "#alert-export", jsonResult["err"]);
-        removeSpinner("#icon-export-get-wants");
+        Util.setAlert(1, "#alert-export", jsonResult["err"]);
+        Util.removeSpinner("#icon-export-get-wants");
       }
 
       else {
@@ -343,11 +344,11 @@ function getWants() {
             txt += "\n";
           })
           $("#export-output").val(txt);
-          removeSpinner("#icon-export-get-wants");
+          Util.removeSpinner("#icon-export-get-wants");
         })
         .catch(function (err) {
-          setAlert(1, "#alert-export", err.statusText);
-          removeSpinner("#icon-export-get-wants");
+          Util.setAlert(1, "#alert-export", err.statusText);
+          Util.removeSpinner("#icon-export-get-wants");
         });
       }
     }
@@ -410,64 +411,4 @@ function logout() {
       }
     }
   });
-}
-
-// -------------------------------------------------------------------
-// --------------------- start utility functions ---------------------
-// -------------------------------------------------------------------
-
-/* set an alert and write message to console
-code: 0 in case of success, 1 in case of error
-box: id of the alert element
-msg: message
-*/
-function setAlert(code, box, msg) {
-  if (code==0) {
-    console.log("Erfolg: "+msg);
-    $(box).removeClass("alert-danger").addClass("alert-success");
-    $(box).html("Erfolg: <strong>"+msg+"</strong>").show();
-  }
-  if (code==1) {
-    console.log("Fehler: "+msg);
-    $(box).removeClass("alert-success").addClass("alert-danger");
-    $(box).html("Fehler: <strong>"+msg+"</strong>").show();
-  }
-}
-
-/* remove a spinner
-box: id of the spinner element
-*/
-function removeSpinner(box) {
-  $(box).removeClass("fa-spinner fa-spin");
-}
-
-/* add a spinner and write a notive to console
-box: id of the spinner element
-*/
-function addSpinner(box) {
-  console.log("loading...");
-  $(box).addClass("fa-spinner fa-spin");
-}
-
-/* reset a dropdown menu
-box: id of dropdown element
-disabled: disabled or not? (boolean)
-default: should a default option displayed? (boolean)
-*/
-function resetDropdown(box, disabled, defaultOption) {
-  $(box).empty();
-  $(box).prop("disabled", disabled);
-  if (defaultOption) {
-    addOption(box, null, "Choose Wantlist");
-  }
-}
-
-/* add an option to a select dropdown
-box: id of dropdown element
-val: value of added option
-txt: text of added option
-*/
-function addOption(box, val, txt) {
-  let option = $('<option />').val(val).html(txt);
-  $(box).append(option);
 }
