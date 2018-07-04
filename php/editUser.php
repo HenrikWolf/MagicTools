@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Validate auth_token_set
   if (empty(trim($_POST["app_token"]))) {
     $token_err = "Please enter an app token";
-  } elseif (empty(trim($_POST["app_token_secret"]))) {
+  } elseif (empty(trim($_POST["app_secret"]))) {
     $token_err = "Please enter an app token secret";
   } elseif (empty(trim($_POST["access_token"]))) {
     $token_err = "Please enter an access token";
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // Set parameters
       $param_app_token = trim($_POST['app_token']);
-      $param_app_token_secret = trim($_POST['app_token_secret']);
+      $param_app_token_secret = trim($_POST['app_secret']);
       $param_access_token = trim($_POST['access_token']);
       $param_access_token_secret = trim($_POST['access_token_secret']);
       $param_id = $_SESSION['id'];

@@ -4,6 +4,7 @@ import {RequestService} from "./requestService.js"
 
 // if page is loaded
 $(document).ready(function() {
+  getUserData();
 });
 
 // Assures that only one element is active.
@@ -51,10 +52,6 @@ $("#user-delete-tab").click(function(e) {
   deleteUser();
 });
 
-$("#user-edit-tab").click(function(e) {
-  fillUserEditForm();
-});
-
 $("#btn-user-edit-check").click(function(e) {
   addSpinner("#icon-user-edit");
   checkTokens("edit");
@@ -62,11 +59,6 @@ $("#btn-user-edit-check").click(function(e) {
 
 $("#btn-user-edit-save").click(function(e) {
   editUser();
-});
-
-$("#btn-get-lists").click(function(e) {
-  addSpinner("#icon-export-get-lists");
-  getLists();
 });
 
 $("#btn-get-wants").click(function(e) {
@@ -87,15 +79,18 @@ $("#btn-copy-clipboard").click(function(e) {
 
 function editUser() {
 
+  // get user information from form
+  let ats = {
+    app_token: $("#user-edit-app-token").val(),
+    app_secret: $("#user-edit-app-token-secret").val(),
+    access_token: $("#user-edit-access-token").val(),
+    access_token_secret: $("#user-edit-access-token-secret").val()
+  }
+
   // execute php script for updating a user
   $.ajax({
     url: "php/editUser.php",
-    data: {
-      app_token: $("#user-edit-app-token").val(),
-      app_token_secret: $("#user-edit-app-token-secret").val(),
-      access_token: $("#user-edit-access-token").val(),
-      access_token_secret: $("#user-edit-access-token-secret").val()
-    },
+    data: ats,
     datatype: "json",
     type: "POST",
     success: function(data) {
@@ -111,6 +106,7 @@ function editUser() {
       }
 
       else if(jsonResult["succ"]) {
+        fillListDropdown(ats, "Fehler")
         setAlert(0, "#alert-user-edit", jsonResult["succ"]);
       }
     }
@@ -139,44 +135,6 @@ function deleteUser() {
       else if(jsonResult["succ"]) {
         console.log(jsonResult["succ"]);
         logout();
-      }
-    }
-  });
-}
-
-function fillUserEditForm() {
-
-  // execute php script for getting a user
-  $.ajax({
-    url: "php/getUser.php",
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        $("#user-edit-app-token").val("");
-        $("#user-edit-app-token-secret").val("");
-        $("#user-edit-access-token").val("");
-        $("#user-edit-access-token-secret").val("");
-        setAlert(1, "#alert-user-edit", "No valid jsonReturn");
-      }
-
-      else if (jsonResult["err"]) {
-        $("#user-edit-app-token").val("");
-        $("#user-edit-app-token-secret").val("");
-        $("#user-edit-access-token").val("");
-        $("#user-edit-access-token-secret").val("");
-        setAlert(1, "#alert-user-edit", jsonResult["err"]);
-      }
-
-      else {
-        $("#p-user-edit").html("Edit user <i>"+jsonResult['username']+"</i>");
-        $("#user-edit-app-token").val(jsonResult["app_token"]);
-        $("#user-edit-app-token-secret").val(jsonResult["app_token_secret"]);
-        $("#user-edit-access-token").val(jsonResult["access_token"]);
-        $("#user-edit-access-token-secret").val(jsonResult["access_token_secret"]);
       }
     }
   });
@@ -244,7 +202,7 @@ function checkTokens(mod) {
   });
 }
 
-function getLists() {
+function getUserData() {
 
   // execute php script for getting a user
   $.ajax({
@@ -256,43 +214,67 @@ function getLists() {
       let jsonResult = $.parseJSON(data);
 
       if(!jsonResult) {
-        resetDropdown("#export-dropdown", true, true);
-        setAlert(1, "#alert-export", "No valid jsonReturn");
-        removeSpinner("#icon-export-get-lists");
+        fillUserEditForm(null, null, "No valid jsonReturn");
+        fillListDropdown(null, "No valid jsonReturn");
       }
 
       else if (jsonResult["err"]) {
-        resetDropdown("#export-dropdown", true, true);
-        setAlert(1, "#alert-export", jsonResult["err"]);
-        removeSpinner("#icon-export-get-lists");
+        fillUserEditForm(null, null, jsonResult["err"]);
+        fillListDropdown(null, jsonResult["err"]);
       }
 
       else {
 
-        let auth_token_set = {
+        let ats = {
           app_token : jsonResult["app_token"],
           app_secret : jsonResult["app_token_secret"],
           access_token : jsonResult["access_token"],
           access_token_secret : jsonResult["access_token_secret"]
         }
 
-        RequestService.getWantlists(auth_token_set)
-        .then(function (result) {
-          $("#alert-export").hide();
-          resetDropdown("#export-dropdown", false, false);
-          let lists = result.wantslist;
-          lists.forEach(function(list) {
-            addOption("#export-dropdown", list.idWantslist, list.name + " (" + list.itemCount + " Wants)");
-          })
-          removeSpinner("#icon-export-get-lists");
-        })
-        .catch(function (err) {
-          setAlert(1, "#alert-export", err.statusText);
-          removeSpinner("#icon-export-get-lists");
-        });
+        fillUserEditForm(ats, jsonResult["username"]);
+        fillListDropdown(ats);
       }
     }
   });
+}
+
+function fillUserEditForm(ats, username, error) {
+  if (ats) {
+    $("#p-user-edit").html("Edit user <i>"+username+"</i>");
+    $("#user-edit-app-token").val(ats.app_token);
+    $("#user-edit-app-token-secret").val(ats.app_secret);
+    $("#user-edit-access-token").val(ats.access_token);
+    $("#user-edit-access-token-secret").val(ats.access_token_secret);
+  } else {
+    $("#user-edit-form")[0].reset();
+    setAlert(1, "#alert-user-edit", error);
+  }
+}
+
+function fillListDropdown(ats, error) {
+  addSpinner("#icon-export-get-lists");
+  if (ats) {
+    RequestService.getWantlists(ats)
+    .then(function (result) {
+      $("#alert-export").hide();
+      resetDropdown("#export-dropdown", false, false);
+      let lists = result.wantslist;
+      lists.forEach(function(list) {
+        addOption("#export-dropdown", list.idWantslist, list.name + " (" + list.itemCount + " Wants)");
+      })
+      removeSpinner("#icon-export-get-lists");
+    })
+    .catch(function (err) {
+      resetDropdown("#export-dropdown", true, true);
+      setAlert(1, "#alert-export", err.statusText);
+      removeSpinner("#icon-export-get-lists");
+    });
+  } else {
+    resetDropdown("#export-dropdown", true, true);
+    setAlert(1, "#alert-export", error);
+    removeSpinner("#icon-export-get-lists");
+  };
 }
 
 function getWants() {
@@ -361,7 +343,6 @@ function getWants() {
             txt += "\n";
           })
           $("#export-output").val(txt);
-          console.log(list);
           removeSpinner("#icon-export-get-wants");
         })
         .catch(function (err) {

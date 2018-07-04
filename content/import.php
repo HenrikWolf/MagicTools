@@ -9,7 +9,7 @@
     <div class="form-group row">
       <label for="import-listname" class="col-md-2 col-form-label">Listname</label>
       <div class="col-md-10">
-        <input id="import-listname" typ="text" class="form-control" aria-describedby="help-import-listname" placeholder="Listname">
+        <input id="import-listname" typ="text" class="form-control" placeholder="Listname">
       </div>
     </div>
 
@@ -27,7 +27,7 @@
       <div class="col-md-1 center-parent-regular">
         <i id="icon-import" class="fas fa-lg center-child-regular"></i>
       </div>
-      <div class="col-md-6" align="right">
+      <div class="col-md-8" align="right">
         <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-import"></div>
       </div>
     </div>

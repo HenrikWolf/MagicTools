@@ -4,7 +4,7 @@
   <h3>Edit your account</h3>
   <p class="lead" id="p-user-edit"></p>
 
-  <form class="mt-md-4">
+  <form class="mt-md-4" id="user-edit-form">
 
     <!-- Beginn Input auth token set -->
     <div class="form-group">
