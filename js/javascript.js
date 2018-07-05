@@ -1,4 +1,4 @@
-import {RequestService} from "./requestService.js";
+import {MkmRequestService} from "./mkmRequestService.js";
 import {Util} from "./utilities.js";
 // TODO: import js moduls for each part of the application
 
@@ -110,9 +110,10 @@ function createWantlist() {
           access_token_secret : jsonResult["access_token_secret"]
         }
 
-        RequestService.createWantlist(listName, ats)
+        MkmRequestService.createWantlist(ats, listName, listItems)
         .then(function (result) {
           // TODO: erfolgsmeldung in alert schreiben
+          // TODO: erstelte list in dropdown aufnehmen
         })
         .catch(function (err) {
           // TODO: fehlermeldungen in alert schreiben
@@ -229,7 +230,7 @@ function checkTokens(mod) {
   Util.addSpinner("#icon-user-"+mod);
 
   // get auth information of a user from a form
-  let auth_token_set = {
+  let ats = {
     app_token : $("#user-"+mod+"-app-token").val(),
     app_secret : $("#user-"+mod+"-app-token-secret").val(),
     access_token : $("#user-"+mod+"-access-token").val(),
@@ -237,7 +238,7 @@ function checkTokens(mod) {
   }
 
   // request to mkm for checking auth token set
-  RequestService.getAccountData(auth_token_set)
+  MkmRequestService.getAccountData(ats)
   .then(function (result) {
     let username = result.account.username;
     Util.setAlert(0, "#alert-user-"+mod, "Connected to Account "+username);
@@ -302,7 +303,7 @@ function fillUserEditForm(ats, username, error) {
 function fillListDropdown(ats, error) {
   Util.addSpinner("#icon-export-get-lists");
   if (ats) {
-    RequestService.getWantlists(ats)
+    MkmRequestService.getWantlists(ats)
     .then(function (result) {
       $("#alert-export").hide();
       Util.resetDropdown("#export-dropdown", false, false);
@@ -358,14 +359,14 @@ function getWants() {
 
       else {
 
-        let auth_token_set = {
+        let ats = {
           app_token : jsonResult["app_token"],
           app_secret : jsonResult["app_token_secret"],
           access_token : jsonResult["access_token"],
           access_token_secret : jsonResult["access_token_secret"]
         }
 
-        RequestService.getWantlist(selectedList, auth_token_set)
+        MkmRequestService.getWantlist(ats, selectedList)
         .then(function (result) {
           $("#alert-export").hide();
           let list = result.wantslist.item;
