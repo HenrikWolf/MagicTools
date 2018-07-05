@@ -4,21 +4,71 @@
 
 export class UserService {
 
+  //create a new user account
   static createUser(user) {
     return new Promise(function (resolve, reject) {
-      // TODO: execute ajax here
+      $.ajax({
+        url: "php/createUser.php",
+        data: user,
+        datatype: "json",
+        type: "POST",
+        success: function(data) {
+          let res = UserService.parseJSON(data);
+          if (res["err"]) {
+            reject(res["err"]);
+          } else {
+            resolve(res);
+          }
+        },
+        error: function(err) {
+          reject(err.statusText);
+        }
+      });
     });
   }
 
+  // delete a user account
   static deleteUser() {
     return new Promise(function (resolve, reject) {
-      // TODO: execute ajax here
+      $.ajax({
+        url: "php/deleteUser.php",
+        datatype: "json",
+        type: "POST",
+        success: function(data) {
+          let res = UserService.parseJSON(data);
+          if (res["err"]) {
+            reject(res["err"]);
+          } else {
+            resolve(res);
+          }
+        },
+        error: function(err) {
+          reject(err.statusText);
+        }
+      });
     });
   }
 
-  static editUser(ats) {
+  // edit user account
+  static editUser(user) {
     return new Promise(function (resolve, reject) {
-      // TODO: execute ajax here
+      $.ajax({
+        url: "php/editUser.php",
+        data: user,
+        datatype: "json",
+        type: "POST",
+        success: function(data) {
+          let res = UserService.parseJSON(data);
+          if (res["err"]) {
+            reject(res["err"]);
+          } else {
+            resolve(res);
+          }
+        },
+        error: function(err) {
+          reject(err.statusText);
+        }
+      });
     });
   }
 

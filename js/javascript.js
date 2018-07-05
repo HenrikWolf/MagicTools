@@ -1,78 +1,78 @@
 import {MkmRequestService} from "./mkmRequestService.js";
 import {UserService} from "./userService.js"
 import {Util} from "./utilities.js";
-// TODO: extract ajax calls to UserService
 
-// if page is loaded
+// -----------------------------------------------------------------
+// ---------------------- start event handler ----------------------
+// -----------------------------------------------------------------
+
 $(document).ready(function() {
+
+  // if site is loaded, fill elements with userdata
   getUserData();
-});
 
-// Assures that only one element is active.
-// Needed as long there are two navs.
-$(".nav a").click(function(){
-  $(".nav").find(".active").removeClass("active");
-  $(this).parent().addClass("active");
-});
+  // Assures that only one element is active.
+  // Needed as long there are two navs.
+  $(".nav a").click(function(){
+    $(".nav").find(".active").removeClass("active");
+    $(this).parent().addClass("active");
+  });
 
-// Login on click
-$("#login-button").click(function(e) {
-  let username = $("#login-username-input").val();
-  let password = $("#login-password-input").val();
-  login(username, password);
-});
-
-// Login on enter
-$("#login-form").keypress(function(e) {
-  if(e.which == 13) {
+  // Login on click
+  $("#login-button").click(function(e) {
     let username = $("#login-username-input").val();
     let password = $("#login-password-input").val();
     login(username, password);
-  }
-});
+  });
 
-// Logout
-$("#logout-button").click(function(e) {
-  logout();
-});
+  // Login on enter
+  $("#login-form").keypress(function(e) {
+    if(e.which == 13) {
+      let username = $("#login-username-input").val();
+      let password = $("#login-password-input").val();
+      login(username, password);
+    }
+  });
 
-// ------------------------------------------------------------------
-// ------------------- start button event handler -------------------
-// ------------------------------------------------------------------
+  // Logout
+  $("#logout-button").click(function(e) {
+    logout();
+  });
 
-$("#btn-import").click(function(e) {
-  createWantlist();
-});
+  $("#btn-import").click(function(e) {
+    createWantlist();
+  });
 
-$("#btn-user-create-check").click(function(e) {
-  checkTokens("create");
-});
+  $("#btn-user-create-check").click(function(e) {
+    checkTokens("create");
+  });
 
-$("#btn-user-create-save").click(function(e) {
-  createUser();
-});
+  $("#btn-user-create-save").click(function(e) {
+    createUser();
+  });
 
-$("#user-delete-tab").click(function(e) {
-  deleteUser();
-});
+  $("#user-delete-tab").click(function(e) {
+    deleteUser();
+  });
 
-$("#btn-user-edit-check").click(function(e) {
-  checkTokens("edit");
-});
+  $("#btn-user-edit-check").click(function(e) {
+    checkTokens("edit");
+  });
 
-$("#btn-user-edit-save").click(function(e) {
-  editUser();
-});
+  $("#btn-user-edit-save").click(function(e) {
+    editUser();
+  });
 
-$("#btn-get-wants").click(function(e) {
-  getWants();
-});
+  $("#btn-get-wants").click(function(e) {
+    getWants();
+  });
 
 
-$("#btn-copy-clipboard").click(function(e) {
-  let copyText = document.getElementById("export-output");
-  copyText.select();
-  document.execCommand("copy");
+  $("#btn-copy-clipboard").click(function(e) {
+    let copyText = document.getElementById("export-output");
+    copyText.select();
+    document.execCommand("copy");
+  });
 });
 
 // -------------------------------------------------------------------
@@ -91,10 +91,10 @@ function createWantlist() {
   .then(function(result) {
 
     let ats = {
-      app_token : jsonResult["app_token"],
-      app_secret : jsonResult["app_token_secret"],
-      access_token : jsonResult["access_token"],
-      access_token_secret : jsonResult["access_token_secret"]
+      app_token : result["app_token"],
+      app_secret : result["app_token_secret"],
+      access_token : result["access_token"],
+      access_token_secret : result["access_token_secret"]
     }
 
     // request to mkm for creating a new wantlist
@@ -112,69 +112,41 @@ function createWantlist() {
   });
 }
 
+// edit user account
 function editUser() {
 
   // get user information from form
-  let ats = {
+  let user = {
     app_token: $("#user-edit-app-token").val(),
     app_secret: $("#user-edit-app-token-secret").val(),
     access_token: $("#user-edit-access-token").val(),
     access_token_secret: $("#user-edit-access-token-secret").val()
   }
 
-  // execute php script for updating a user
-  $.ajax({
-    url: "php/editUser.php",
-    data: ats,
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        Util.setAlert(1, "#alert-user-edit", "No valid jsonReturn");
-      }
-
-      else if(jsonResult["err"]) {
-        Util.setAlert(1, "#alert-user-edit", jsonResult["err"]);
-      }
-
-      else if(jsonResult["succ"]) {
-        fillListDropdown(ats, "Fehler")
-        Util.setAlert(0, "#alert-user-edit", jsonResult["succ"]);
-      }
-    }
+  UserService.editUser(user)
+  .then(function(result) {
+    fillListDropdown(user, "Fehler")
+    Util.setAlert(0, "#alert-user-edit", result["succ"]);
+  })
+  .catch(function(err) {
+    Util.setAlert(1, "#alert-user-edit", err);
   });
 }
 
+// delete logged in user account
 function deleteUser() {
 
-  // execute php script for deleting a user
-  $.ajax({
-    url: "php/deleteUser.php",
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        console.log("No valid jsonReturn");
-      }
-
-      else if (jsonResult["err"]) {
-        console.log(jsonResult["err"]);
-      }
-
-      else if(jsonResult["succ"]) {
-        console.log(jsonResult["succ"]);
-        logout();
-      }
-    }
+  UserService.deleteUser()
+  .then(function(result) {
+    logout();
+    console.log(result["succ"]);
+  })
+  .catch(function(err) {
+    console.log(err);
   });
 }
 
+// create a new user account
 function createUser() {
 
   // get user information from form
@@ -188,29 +160,13 @@ function createUser() {
     access_token_secret: $("#user-create-access-token-secret").val()
   }
 
-  // execute php script for adding a user
-  $.ajax({
-    url: "php/createUser.php",
-    data: user,
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        Util.setAlert(1, "#alert-user-create", "No valid jsonReturn");
-      }
-
-      else if(jsonResult["err"]) {
-        Util.setAlert(1, "#alert-user-create", jsonResult["err"]);
-      }
-
-      else if(jsonResult["succ"]) {
-        Util.setAlert(0, "#alert-user-create", jsonResult["succ"]);
-        login(user["username"], user["password"]);
-      }
-    }
+  UserService.createUser(user)
+  .then(function(result) {
+    Util.setAlert(0, "#alert-user-create", result["succ"]);
+    login(user["username"], user["password"]);
+  })
+  .catch(function(err) {
+    Util.setAlert(1, "#alert-user-create", err);
   });
 }
 
@@ -307,7 +263,7 @@ function fillListDropdown(ats, error) {
   };
 }
 
-// get all wantlists of logged in user
+// get all wants of selected wantlist of logged in user
 function getWants() {
 
   Util.addSpinner("#icon-export-get-wants");
@@ -359,7 +315,6 @@ function getWants() {
       Util.setAlert(1, "#alert-export", err.statusText);
       Util.removeSpinner("#icon-export-get-wants");
     });
-
   })
   .catch(function(err) {
     Util.setAlert(1, "#alert-export", err);
