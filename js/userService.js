@@ -1,133 +1,61 @@
-// -------------------------------------------
-// --------- API for user management ---------
-// -------------------------------------------
+import prop from "./properties.js";
+
+// -----------------------------------------------------
+// -------------- API for user management --------------
+// -----------------------------------------------------
 
 export class UserService {
 
   //create a new user account
   static createUser(user) {
-    return new Promise(function (resolve, reject) {
-      $.ajax({
-        url: "php/createUser.php",
-        data: user,
-        datatype: "json",
-        type: "POST",
-        success: function(data) {
-          let res = UserService.parseJSON(data);
-          if (res["err"]) {
-            reject(res["err"]);
-          } else {
-            resolve(res);
-          }
-        },
-        error: function(err) {
-          reject(err.statusText);
-        }
-      });
-    });
+    return this.executeAjax("createUser.php", null);
   }
 
   // delete a user account
   static deleteUser() {
-    return new Promise(function (resolve, reject) {
-      $.ajax({
-        url: "php/deleteUser.php",
-        datatype: "json",
-        type: "POST",
-        success: function(data) {
-          let res = UserService.parseJSON(data);
-          if (res["err"]) {
-            reject(res["err"]);
-          } else {
-            resolve(res);
-          }
-        },
-        error: function(err) {
-          reject(err.statusText);
-        }
-      });
-    });
+    return this.executeAjax("deleteUser.php", null);
   }
 
   // edit user account
   static editUser(user) {
-    return new Promise(function (resolve, reject) {
-      $.ajax({
-        url: "php/editUser.php",
-        data: user,
-        datatype: "json",
-        type: "POST",
-        success: function(data) {
-          let res = UserService.parseJSON(data);
-          if (res["err"]) {
-            reject(res["err"]);
-          } else {
-            resolve(res);
-          }
-        },
-        error: function(err) {
-          reject(err.statusText);
-        }
-      });
-    });
+    return this.executeAjax("editUser.php", user);
   }
 
   // get all user information
   static getUser() {
-    return new Promise(function (resolve, reject) {
-      $.ajax({
-        url: "php/getUser.php",
-        datatype: "json",
-        type: "POST",
-        success: function(data) {
-          let res = UserService.parseJSON(data);
-          if (res["err"]) {
-            reject(res["err"]);
-          } else {
-            resolve(res);
-          }
-        },
-        error: function(err) {
-          reject(err.statusText);
-        }
-      });
-    });
+    return this.executeAjax("getUser.php", null);
   }
 
   // login a user
   static login(username, password) {
-    return new Promise(function (resolve, reject) {
-      $.ajax({
-        url: "php/login.php",
-        data: {
-          username: username,
-          password: password
-        },
-        datatype: "json",
-        type: "POST",
-        success: function(data) {
-          let res = UserService.parseJSON(data);
-          if (res["err"]) {
-            reject(res["err"]);
-          } else {
-            resolve(res);
-          }
-        },
-        error: function(err) {
-          reject(err.statusText);
-        }
-      });
-    });
+    let data = {
+      username: username,
+      password: password
+    };
+    return this.executeAjax("login.php", data);
   }
 
   // logout a user
   static logout() {
+    return this.executeAjax("logout.php", null);
+  }
+
+  // -------------------------------------------------------------------
+  // ------------------------- start functions -------------------------
+  // -------------------------------------------------------------------
+
+  // execute an AJAX request to the server
+  static executeAjax(script, data) {
     return new Promise(function (resolve, reject) {
       $.ajax({
-        url: "php/logout.php",
+        url: "php/"+script,
+        data: data,
         datatype: "json",
         type: "POST",
         success: function(data) {
+          if (prop.log.phpRes) {
+            console.log(data);
+          }
           let res = UserService.parseJSON(data);
           if (res["err"]) {
             reject(res["err"]);
@@ -144,23 +72,20 @@ export class UserService {
 
   // parse and return json result
   static parseJSON(data) {
-    console.log(data);
-
     try {
       let jsonResult = JSON.parse(data);
 
       if(!jsonResult) {
-        return {err: "Empty JsonResult"};
+        return {err: "empty JsonResult"};
       } else {
         if(!jsonResult["succ"]) {
-          jsonResult["succ"] = "Request Erfolgreich";
+          jsonResult["succ"] = "request successful";
         }
         return jsonResult;
       }
     }
-
     catch (e) {
-      return {err: "No valid JsonResult"};
+      return {err: "no valid JsonResult"};
     }
   }
 }
