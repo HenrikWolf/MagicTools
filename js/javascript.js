@@ -79,48 +79,36 @@ $("#btn-copy-clipboard").click(function(e) {
 // ------------------------- start functions -------------------------
 // -------------------------------------------------------------------
 
+// create a new wantlist
 function createWantlist() {
 
   // get listName and listItems from form
   let listName = $("#import-listname").val();
   let listItems = $("#import-input").val();
 
-  // execute php script for getting a user
-  $.ajax({
-    url: "php/getUser.php",
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
+  // get all user information
+  UserService.getUser()
+  .then(function(result) {
 
-      if(!jsonResult) {
-        // TODO: fehlermeldungen in alert schreiben
-      }
-
-      else if (jsonResult["err"]) {
-        // TODO: fehlermeldungen in alert schreiben
-      }
-
-      else {
-
-        let ats = {
-          app_token : jsonResult["app_token"],
-          app_secret : jsonResult["app_token_secret"],
-          access_token : jsonResult["access_token"],
-          access_token_secret : jsonResult["access_token_secret"]
-        }
-
-        MkmRequestService.createWantlist(ats, listName, listItems)
-        .then(function (result) {
-          // TODO: erfolgsmeldung in alert schreiben
-          // TODO: erstelte list in dropdown aufnehmen
-        })
-        .catch(function (err) {
-          // TODO: fehlermeldungen in alert schreiben
-        });
-      }
+    let ats = {
+      app_token : jsonResult["app_token"],
+      app_secret : jsonResult["app_token_secret"],
+      access_token : jsonResult["access_token"],
+      access_token_secret : jsonResult["access_token_secret"]
     }
+
+    // request to mkm for creating a new wantlist
+    MkmRequestService.createWantlist(ats, listName, listItems)
+    .then(function (result) {
+      // TODO: erfolgsmeldung in alert schreiben
+      // TODO: erstelte list in dropdown aufnehmen
+    })
+    .catch(function (err) {
+      // TODO: fehlermeldungen in alert schreiben
+    });
+  })
+  .catch(function(err) {
+    // TODO: fehlermeldungen in alert schreiben
   });
 }
 
@@ -226,6 +214,7 @@ function createUser() {
   });
 }
 
+// check if auth token are valid
 function checkTokens(mod) {
 
   Util.addSpinner("#icon-user-"+mod);
@@ -251,40 +240,27 @@ function checkTokens(mod) {
   });
 }
 
+// fill editForm and wantlist dropdown with user informations
 function getUserData() {
 
-  // execute php script for getting a user
-  $.ajax({
-    url: "php/getUser.php",
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
+  // get all user information
+  UserService.getUser()
+  .then(function(result) {
 
-      if(!jsonResult) {
-        fillUserEditForm(null, null, "No valid jsonReturn");
-        fillListDropdown(null, "No valid jsonReturn");
-      }
-
-      else if (jsonResult["err"]) {
-        fillUserEditForm(null, null, jsonResult["err"]);
-        fillListDropdown(null, jsonResult["err"]);
-      }
-
-      else {
-
-        let ats = {
-          app_token : jsonResult["app_token"],
-          app_secret : jsonResult["app_token_secret"],
-          access_token : jsonResult["access_token"],
-          access_token_secret : jsonResult["access_token_secret"]
-        }
-
-        fillUserEditForm(ats, jsonResult["username"]);
-        fillListDropdown(ats);
-      }
+    let ats = {
+      app_token : result["app_token"],
+      app_secret : result["app_token_secret"],
+      access_token : result["access_token"],
+      access_token_secret : result["access_token_secret"]
     }
+
+    fillUserEditForm(ats, result["username"], null);
+    fillListDropdown(ats);
+
+  })
+  .catch(function(err) {
+    fillUserEditForm(null, null, err);
+    fillListDropdown(null, err);
   });
 }
 
