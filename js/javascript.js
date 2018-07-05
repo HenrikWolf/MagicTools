@@ -1,4 +1,5 @@
 import {MkmRequestService} from "./mkmRequestService.js";
+import {UserService} from "./userService.js"
 import {Util} from "./utilities.js";
 // TODO: import js moduls for each part of the application
 
@@ -404,60 +405,28 @@ function getWants() {
   });
 }
 
+// login a user
 function login(username, password) {
 
-  // execute php script for logging in a user
-  $.ajax({
-    url: "php/login.php",
-    data: {
-      username: username,
-      password: password
-    },
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        console.log("No valid jsonReturn");
-      }
-
-      else if(jsonResult["err"]) {
-        console.log(jsonResult["err"]);
-      }
-
-      else if(jsonResult["succ"]) {
-        window.location.reload();
-        console.log(jsonResult["succ"]);
-      }
-    }
+  UserService.login(username, password)
+  .then(function (result) {
+    window.location.reload();
+    console.log(result["succ"]);
+  })
+  .catch(function (err) {
+    console.log("Fehler: "+err);
   });
 }
 
+// logout a user
 function logout() {
-
-  // execute php script for logging out a user
-  $.ajax({
-    url: "php/logout.php",
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        console.log("No valid jsonReturn");
-      }
-
-      else if(jsonResult["err"]) {
-        console.log(jsonResult["err"]);
-      }
-
-      else if(jsonResult["succ"]) {
-        window.location.reload();
-        console.log(jsonResult["succ"]);
-      }
-    }
+  
+  UserService.logout()
+  .then(function (result) {
+    window.location.reload();
+    console.log(result["succ"]);
+  })
+  .catch(function (err) {
+    console.log("Fehler: "+err);
   });
 }
