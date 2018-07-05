@@ -1,7 +1,7 @@
 import {MkmRequestService} from "./mkmRequestService.js";
 import {UserService} from "./userService.js"
 import {Util} from "./utilities.js";
-// TODO: import js moduls for each part of the application
+// TODO: extract ajax calls to UserService
 
 // if page is loaded
 $(document).ready(function() {
@@ -288,7 +288,9 @@ function getUserData() {
   });
 }
 
+// fill editForm with user informations
 function fillUserEditForm(ats, username, error) {
+
   if (ats) {
     $("#p-user-edit").html("Edit user <i>"+username+"</i>");
     $("#user-edit-app-token").val(ats.app_token);
@@ -301,8 +303,11 @@ function fillUserEditForm(ats, username, error) {
   }
 }
 
+// fill dropdown list with all wantlists of logged in user
 function fillListDropdown(ats, error) {
+
   Util.addSpinner("#icon-export-get-lists");
+
   if (ats) {
     MkmRequestService.getWantlists(ats)
     .then(function (result) {
@@ -326,82 +331,63 @@ function fillListDropdown(ats, error) {
   };
 }
 
+// get all wantlists of logged in user
 function getWants() {
 
   Util.addSpinner("#icon-export-get-wants");
 
-  // get choosen list
   let selectedList = $("#export-dropdown").val();
 
-  // check if a valid wantlist is selected
-  if (!selectedList) {
-    Util.setAlert(1, "#alert-export", "No valid wantlist selected");
-    Util.removeSpinner("#icon-export-get-wants");
-  }
+  // get all user information
+  UserService.getUser()
+  .then(function(result) {
 
-  // execute php script for getting a user
-  $.ajax({
-    url: "php/getUser.php",
-    datatype: "json",
-    type: "POST",
-    success: function(data) {
-      console.log(data);
-      let jsonResult = $.parseJSON(data);
-
-      if(!jsonResult) {
-        Util.setAlert(1, "#alert-export", "No valid jsonReturn");
-        Util.removeSpinner("#icon-export-get-wants");
-      }
-
-      else if (jsonResult["err"]) {
-        Util.setAlert(1, "#alert-export", jsonResult["err"]);
-        Util.removeSpinner("#icon-export-get-wants");
-      }
-
-      else {
-
-        let ats = {
-          app_token : jsonResult["app_token"],
-          app_secret : jsonResult["app_token_secret"],
-          access_token : jsonResult["access_token"],
-          access_token_secret : jsonResult["access_token_secret"]
-        }
-
-        MkmRequestService.getWantlist(ats, selectedList)
-        .then(function (result) {
-          $("#alert-export").hide();
-          let list = result.wantslist.item;
-          let txt = "";
-          list.forEach(function(item) {
-            //storing additional information in array
-            let additionalInfo = [];
-
-            txt += item.count + "x ";
-            if (item.metaproduct) {
-              txt += item.metaproduct.enName;
-            } else {
-              txt += item.product.enName;
-              additionalInfo.push(item.product.expansionName);
-            }
-            if (item.isFoil == true){additionalInfo.push("Foil")}
-
-            //appending the addional info to txt
-            if (additionalInfo.length>0){
-              txt += " (";
-              for (let i = 0; i < additionalInfo.length-1; i++){txt += additionalInfo[i] + ", ";}
-              txt += additionalInfo[additionalInfo.length-1] + ")";
-            }
-            txt += "\n";
-          })
-          $("#export-output").val(txt);
-          Util.removeSpinner("#icon-export-get-wants");
-        })
-        .catch(function (err) {
-          Util.setAlert(1, "#alert-export", err.statusText);
-          Util.removeSpinner("#icon-export-get-wants");
-        });
-      }
+    let ats = {
+      app_token : result["app_token"],
+      app_secret : result["app_token_secret"],
+      access_token : result["access_token"],
+      access_token_secret : result["access_token_secret"]
     }
+
+    // get all entriesof selected wantlist
+    MkmRequestService.getWantlist(ats, selectedList)
+    .then(function (result) {
+      let list = result.wantslist.item;
+      let txt = "";
+      list.forEach(function(item) {
+        //storing additional information in array
+        let additionalInfo = [];
+
+        txt += item.count + "x ";
+        if (item.metaproduct) {
+          txt += item.metaproduct.enName;
+        } else {
+          txt += item.product.enName;
+          additionalInfo.push(item.product.expansionName);
+        }
+        if (item.isFoil == true){additionalInfo.push("Foil")}
+
+        //appending the addional info to txt
+        if (additionalInfo.length>0){
+          txt += " (";
+          for (let i = 0; i < additionalInfo.length-1; i++){txt += additionalInfo[i] + ", ";}
+          txt += additionalInfo[additionalInfo.length-1] + ")";
+        }
+        txt += "\n";
+      });
+      $("#alert-export").hide();
+      $("#export-output").val(txt);
+      Util.removeSpinner("#icon-export-get-wants");
+    })
+    .catch(function (err) {
+      Util.setAlert(1, "#alert-export", err.statusText);
+      Util.removeSpinner("#icon-export-get-wants");
+    });
+
+  })
+  .catch(function(err) {
+    Util.setAlert(1, "#alert-export", err);
+    Util.removeSpinner("#icon-export-get-wants");
   });
 }
 
@@ -420,7 +406,7 @@ function login(username, password) {
 
 // logout a user
 function logout() {
-  
+
   UserService.logout()
   .then(function (result) {
     window.location.reload();

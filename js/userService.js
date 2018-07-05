@@ -22,9 +22,25 @@ export class UserService {
     });
   }
 
+  // get all user information
   static getUser() {
     return new Promise(function (resolve, reject) {
-      // TODO: execute ajax here
+      $.ajax({
+        url: "php/getUser.php",
+        datatype: "json",
+        type: "POST",
+        success: function(data) {
+          let res = UserService.parseJSON(data);
+          if (res["err"]) {
+            reject(res["err"]);
+          } else {
+            resolve(res);
+          }
+        },
+        error: function(err) {
+          reject(err.statusText);
+        }
+      });
     });
   }
 
@@ -44,7 +60,7 @@ export class UserService {
           if (res["err"]) {
             reject(res["err"]);
           } else {
-            resolve(res)
+            resolve(res);
           }
         },
         error: function(err) {
@@ -66,7 +82,7 @@ export class UserService {
           if (res["err"]) {
             reject(res["err"]);
           } else {
-            resolve(res)
+            resolve(res);
           }
         },
         error: function(err) {
