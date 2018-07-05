@@ -39,6 +39,10 @@ $("#logout-button").click(function(e) {
 // ------------------- start button event handler -------------------
 // ------------------------------------------------------------------
 
+$("#btn-import").click(function(e) {
+  createWantlist();
+});
+
 $("#btn-user-create-check").click(function(e) {
   checkTokens("create");
 });
@@ -73,6 +77,50 @@ $("#btn-copy-clipboard").click(function(e) {
 // -------------------------------------------------------------------
 // ------------------------- start functions -------------------------
 // -------------------------------------------------------------------
+
+function createWantlist() {
+
+  // get listName and listItems from form
+  let listName = $("#import-listname").val();
+  let listItems = $("#import-input").val();
+
+  // execute php script for getting a user
+  $.ajax({
+    url: "php/getUser.php",
+    datatype: "json",
+    type: "POST",
+    success: function(data) {
+      console.log(data);
+      let jsonResult = $.parseJSON(data);
+
+      if(!jsonResult) {
+        // TODO: fehlermeldungen in alert schreiben
+      }
+
+      else if (jsonResult["err"]) {
+        // TODO: fehlermeldungen in alert schreiben
+      }
+
+      else {
+
+        let ats = {
+          app_token : jsonResult["app_token"],
+          app_secret : jsonResult["app_token_secret"],
+          access_token : jsonResult["access_token"],
+          access_token_secret : jsonResult["access_token_secret"]
+        }
+
+        RequestService.createWantlist(listName, ats)
+        .then(function (result) {
+          // TODO: erfolgsmeldung in alert schreiben
+        })
+        .catch(function (err) {
+          // TODO: fehlermeldungen in alert schreiben
+        });
+      }
+    }
+  });
+}
 
 function editUser() {
 
