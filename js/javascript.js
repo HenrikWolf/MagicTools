@@ -127,7 +127,8 @@ function editUser() {
 
   UserService.editUser(user)
   .then(function(result) {
-    fillListDropdown(user, "Fehler")
+    fillListDropdown(user, null);
+    $("#export-output").val('');
     Util.setAlert(0, "#alert-user-edit", result["succ"]);
   })
   .catch(function(err) {
@@ -213,7 +214,7 @@ function getUserData() {
     }
 
     fillUserEditForm(ats, result["username"], null);
-    fillListDropdown(ats);
+    fillListDropdown(ats, null);
 
   })
   .catch(function(err) {
@@ -240,9 +241,9 @@ function fillUserEditForm(ats, username, error) {
 // fill dropdown list with all wantlists of logged in user
 function fillListDropdown(ats, error) {
 
-  Util.addSpinner("#icon-export-get-lists");
-
   if (ats) {
+    Util.addSpinner("#icon-export-get-lists");
+
     MkmRequestService.getWantlists(ats)
     .then(function (result) {
       $("#alert-export").hide();
@@ -261,67 +262,70 @@ function fillListDropdown(ats, error) {
   } else {
     Util.resetDropdown("#export-dropdown", true, true);
     Util.setAlert(1, "#alert-export", error);
-    Util.removeSpinner("#icon-export-get-lists");
   };
 }
 
 // get all wants of selected wantlist of logged in user
 function getWants() {
 
-  Util.addSpinner("#icon-export-get-wants");
-
   let selectedList = $("#export-dropdown").val();
 
-  // get all user information
-  UserService.getUser()
-  .then(function(result) {
+  if (selectedList) {
+    Util.addSpinner("#icon-export-get-wants");
 
-    let ats = {
-      app_token : result["app_token"],
-      app_secret : result["app_token_secret"],
-      access_token : result["access_token"],
-      access_token_secret : result["access_token_secret"]
-    }
+    // get all user information
+    UserService.getUser()
+    .then(function(result) {
 
-    // get all entriesof selected wantlist
-    MkmRequestService.getWantlist(ats, selectedList)
-    .then(function (result) {
-      let list = result.wantslist.item;
-      let txt = "";
-      list.forEach(function(item) {
-        //storing additional information in array
-        let additionalInfo = [];
+      let ats = {
+        app_token : result["app_token"],
+        app_secret : result["app_token_secret"],
+        access_token : result["access_token"],
+        access_token_secret : result["access_token_secret"]
+      }
 
-        txt += item.count + "x ";
-        if (item.metaproduct) {
-          txt += item.metaproduct.enName;
-        } else {
-          txt += item.product.enName;
-          additionalInfo.push(item.product.expansionName);
-        }
-        if (item.isFoil == true){additionalInfo.push("Foil")}
+      // get all entriesof selected wantlist
+      MkmRequestService.getWantlist(ats, selectedList)
+      .then(function (result) {
+        let list = result.wantslist.item;
+        let txt = "";
+        list.forEach(function(item) {
+          //storing additional information in array
+          let additionalInfo = [];
 
-        //appending the addional info to txt
-        if (additionalInfo.length>0){
-          txt += " (";
-          for (let i = 0; i < additionalInfo.length-1; i++){txt += additionalInfo[i] + ", ";}
-          txt += additionalInfo[additionalInfo.length-1] + ")";
-        }
-        txt += "\n";
+          txt += item.count + "x ";
+          if (item.metaproduct) {
+            txt += item.metaproduct.enName;
+          } else {
+            txt += item.product.enName;
+            additionalInfo.push(item.product.expansionName);
+          }
+          if (item.isFoil == true){additionalInfo.push("Foil")}
+
+          //appending the addional info to txt
+          if (additionalInfo.length>0){
+            txt += " (";
+            for (let i = 0; i < additionalInfo.length-1; i++){txt += additionalInfo[i] + ", ";}
+            txt += additionalInfo[additionalInfo.length-1] + ")";
+          }
+          txt += "\n";
+        });
+        $("#alert-export").hide();
+        $("#export-output").val(txt);
+        Util.removeSpinner("#icon-export-get-wants");
+      })
+      .catch(function (err) {
+        Util.setAlert(1, "#alert-export", err);
+        Util.removeSpinner("#icon-export-get-wants");
       });
-      $("#alert-export").hide();
-      $("#export-output").val(txt);
-      Util.removeSpinner("#icon-export-get-wants");
     })
-    .catch(function (err) {
+    .catch(function(err) {
       Util.setAlert(1, "#alert-export", err);
       Util.removeSpinner("#icon-export-get-wants");
     });
-  })
-  .catch(function(err) {
-    Util.setAlert(1, "#alert-export", err);
-    Util.removeSpinner("#icon-export-get-wants");
-  });
+  } else {
+    Util.setAlert(1, "#alert-export", "Keine Liste ausgewählt");
+  }
 }
 
 // login a user
