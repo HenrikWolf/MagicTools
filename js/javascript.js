@@ -194,13 +194,8 @@ function checkTokens(mod) {
     Util.removeSpinner("#btn-user-"+mod+"-check");
   })
   .catch(function (err) {
-<<<<<<< HEAD
     Util.setAlert(1, "#alert-user-"+mod, err.statusText);
     Util.removeSpinner("#btn-user-"+mod+"-check");
-=======
-    Util.setAlert(1, "#alert-user-"+mod, err);
-    Util.removeSpinner("#icon-user-"+mod);
->>>>>>> 35d323b0c104b01ee1485d55b8db03137708ce98
   });
 }
 
@@ -247,7 +242,6 @@ function fillUserEditForm(ats, username, error) {
 function fillListDropdown(ats, error) {
 
   if (ats) {
-    Util.addSpinner("#icon-export-get-lists");
 
     MkmRequestService.getWantlists(ats)
     .then(function (result) {
@@ -270,6 +264,8 @@ function fillListDropdown(ats, error) {
 
 // get all wants of selected wantlist of logged in user
 function getWants() {
+
+  Util.addSpinner("#btn-get-wants");
 
   let selectedList = $("#export-dropdown").val();
 
@@ -314,16 +310,16 @@ function getWants() {
         });
         $("#alert-export").hide();
         $("#export-output").val(txt);
-        Util.removeSpinner("#btn-export-get-wants");
+        Util.removeSpinner("#btn-get-wants");
       })
       .catch(function (err) {
         Util.setAlert(1, "#alert-export", err);
-        Util.removeSpinner("#btn-export-get-wants");
+        Util.removeSpinner("#btn-get-wants");
       });
     })
     .catch(function(err) {
       Util.setAlert(1, "#alert-export", err);
-      Util.removeSpinner("#btn-export-get-wants");
+      Util.removeSpinner("#btn-get-wants");
     });
   } else {
     Util.setAlert(1, "#alert-export", "Keine Liste ausgewählt");

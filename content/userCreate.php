@@ -46,10 +46,7 @@
       <div class="col-md-2">
         <button type="button" class="btn btn-secondary btn-block" id="btn-user-create-save">Save</button>
       </div>
-      <div class="col-md-1 center-parent-regular">
-        <i id="icon-user-create" class="fas fa-lg center-child-regular"></i>
-      </div>
-      <div class="col-md-6" align="right">
+      <div class="col-md-7" align="right">
         <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-user-create"></div>
       </div>
     </div>
