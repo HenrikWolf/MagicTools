@@ -23,18 +23,24 @@ export class Util {
   }
 
   /* remove a spinner
-  box: id of the spinner element
+  box: id of the button that is loading
   */
   static removeSpinner(box) {
-    $(box).removeClass("fa-spinner fa-spin");
+    var btnLoad = $(box);
+    btnLoad.html(btnLoad.data('original-text'));
   }
 
   /* add a spinner and write a notive to console
-  box: id of the spinner element
+  box: id of the button that is loading
   */
   static addSpinner(box) {
     console.log("loading...");
-    $(box).addClass("fa-spinner fa-spin");
+    var btnLoad = $(box);
+    var loadingText = "<i class='fa fa-spinner fa-spin '></i> loading...";
+    if (btnLoad.html() !== loadingText) {
+      btnLoad.data('original-text', btnLoad.html());
+      btnLoad.html(loadingText);
+    }
   }
 
   /* reset a dropdown menu

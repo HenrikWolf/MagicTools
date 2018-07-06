@@ -13,10 +13,7 @@
         </select>
       </div>
       <div class="col-md-3">
-        <button type="button" class="btn btn-secondary btn-block" id="btn-get-wants">Get Wants</button>
-      </div>
-      <div class="col-md-3 center-parent-dropdown">
-        <i id="icon-export-get-wants" class="fas fa-lg center-child-dropdown"></i>
+        <button type="button" class="btn btn-secondary btn-block" id="btn-get-wants" data-loading-text="Loading">Get Wants</button>
       </div>
     </div>
 

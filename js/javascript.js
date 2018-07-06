@@ -227,7 +227,7 @@ function createUser() {
 
 function checkTokens(mod) {
 
-  Util.addSpinner("#icon-user-"+mod);
+  Util.addSpinner("#btn-user-"+mod+"-check");
 
   // get auth information of a user from a form
   let ats = {
@@ -242,11 +242,11 @@ function checkTokens(mod) {
   .then(function (result) {
     let username = result.account.username;
     Util.setAlert(0, "#alert-user-"+mod, "Connected to Account "+username);
-    Util.removeSpinner("#icon-user-"+mod);
+    Util.removeSpinner("#btn-user-"+mod+"-check");
   })
   .catch(function (err) {
     Util.setAlert(1, "#alert-user-"+mod, err.statusText);
-    Util.removeSpinner("#icon-user-"+mod);
+    Util.removeSpinner("#btn-user-"+mod+"-check");
   });
 }
 
@@ -301,7 +301,6 @@ function fillUserEditForm(ats, username, error) {
 }
 
 function fillListDropdown(ats, error) {
-  Util.addSpinner("#icon-export-get-lists");
   if (ats) {
     MkmRequestService.getWantlists(ats)
     .then(function (result) {
@@ -311,23 +310,20 @@ function fillListDropdown(ats, error) {
       lists.forEach(function(list) {
         Util.addOption("#export-dropdown", list.idWantslist, list.name + " (" + list.itemCount + " Wants)");
       })
-      Util.removeSpinner("#icon-export-get-lists");
     })
     .catch(function (err) {
       Util.resetDropdown("#export-dropdown", true, true);
       Util.setAlert(1, "#alert-export", err.statusText);
-      Util.removeSpinner("#icon-export-get-lists");
     });
   } else {
     Util.resetDropdown("#export-dropdown", true, true);
     Util.setAlert(1, "#alert-export", error);
-    Util.removeSpinner("#icon-export-get-lists");
   };
 }
 
 function getWants() {
 
-  Util.addSpinner("#icon-export-get-wants");
+  Util.addSpinner("#btn-get-wants");
 
   // get choosen list
   let selectedList = $("#export-dropdown").val();
@@ -335,7 +331,7 @@ function getWants() {
   // check if a valid wantlist is selected
   if (!selectedList) {
     Util.setAlert(1, "#alert-export", "No valid wantlist selected");
-    Util.removeSpinner("#icon-export-get-wants");
+    Util.removeSpinner("#btn-get-wants");
   }
 
   // execute php script for getting a user
@@ -349,12 +345,12 @@ function getWants() {
 
       if(!jsonResult) {
         Util.setAlert(1, "#alert-export", "No valid jsonReturn");
-        Util.removeSpinner("#icon-export-get-wants");
+        Util.removeSpinner("#btn-get-wants");
       }
 
       else if (jsonResult["err"]) {
         Util.setAlert(1, "#alert-export", jsonResult["err"]);
-        Util.removeSpinner("#icon-export-get-wants");
+        Util.removeSpinner("#btn-get-wants");
       }
 
       else {
@@ -393,11 +389,11 @@ function getWants() {
             txt += "\n";
           })
           $("#export-output").val(txt);
-          Util.removeSpinner("#icon-export-get-wants");
+          Util.removeSpinner("#btn-get-wants");
         })
         .catch(function (err) {
           Util.setAlert(1, "#alert-export", err.statusText);
-          Util.removeSpinner("#icon-export-get-wants");
+          Util.removeSpinner("#btn-get-wants");
         });
       }
     }
