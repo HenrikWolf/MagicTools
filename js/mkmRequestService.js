@@ -98,6 +98,7 @@ export class MkmRequestService {
     });
   }
 
+  // send post request to mkm api
   static postData(requestUrl, auth, xmlData) {
 
     return new Promise(function (resolve, reject) {
@@ -107,24 +108,54 @@ export class MkmRequestService {
 
       xhr.onload = function() {
         if (this.status >= 200 && this.status < 300) {
-          let result = JSON.parse(xhr.response);
-          resolve(result);
+          if (prop.log.mkmRes) {
+            console.log(xhr.status+": "+xhr.response);
+          }
+          let res = MkmRequestService.parseJSON(xhr.response);
+          if (res["err"]) {
+            reject(res["err"]);
+          } else {
+            if (res["failed"].length > 0) {
+              reject(res["failed"][0]["error"]);
+            } else {
+              resolve(res);
+            }
+          }
         } else {
-          reject({
-            status: this.status,
-            statusText: xhr.statusText
-          });
+          if (prop.log.mkmRes) {
+            console.log(xhr.status+": "+xhr.statusText);
+          }
+          reject(xhr.statusText);
         }
       }
 
       xhr.onerror = function() {
-        reject({
-          status: this.status,
-          statusText: xhr.statusText
-        });
+        if (prop.log.mkmRes) {
+          console.log(xhr.status+": "+xhr.statusText);
+        }
+        reject(xhr.statusText);
       };
 
       xhr.send(xmlData);
     });
+  }
+
+  // parse and return json result
+  static parseJSON(data) {
+    try {
+      let jsonResult = JSON.parse(data);
+
+      if(!jsonResult) {
+        return {err: "empty JsonResult"};
+      } else {
+        if(!jsonResult["succ"]) {
+          jsonResult["succ"] = "request successful";
+        }
+        return jsonResult;
+      }
+    }
+    catch (e) {
+      return {err: "no valid JsonResult"};
+    }
   }
 }

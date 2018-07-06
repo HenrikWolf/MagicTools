@@ -100,15 +100,17 @@ function createWantlist() {
     // request to mkm for creating a new wantlist
     MkmRequestService.createWantlist(ats, listName, listItems)
     .then(function (result) {
-      // TODO: erfolgsmeldung in alert schreiben
-      // TODO: erstelte list in dropdown aufnehmen
+      console.log(result);
+      let listStr = result.wantslist[0].name + " (" + result.wantslist[0].itemCount + " Wants)";
+      Util.addOption("#export-dropdown", result.wantslist[0].idWantslist, listStr);
+      Util.setAlert(0, "#alert-import", "Wantlist wurde hinzugefügt");
     })
     .catch(function (err) {
-      // TODO: fehlermeldungen in alert schreiben
+      Util.setAlert(1, "#alert-import", err);
     });
   })
   .catch(function(err) {
-    // TODO: fehlermeldungen in alert schreiben
+    Util.setAlert(1, "#alert-import", err);
   });
 }
 
