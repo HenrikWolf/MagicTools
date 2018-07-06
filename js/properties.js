@@ -5,5 +5,10 @@ export default {
   xml : {
     start : "<?xml version='1.0' encoding='UTF-8' ?><request>",
     end :  "</request>"
+  },
+  log : {
+    mkmRes : false,
+    phpRes : false,
+    alerts: false
   }
 }
