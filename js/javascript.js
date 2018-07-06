@@ -265,11 +265,11 @@ function fillListDropdown(ats, error) {
 // get all wants of selected wantlist of logged in user
 function getWants() {
 
-  Util.addSpinner("#btn-get-wants");
-
   let selectedList = $("#export-dropdown").val();
 
   if (selectedList) {
+
+    Util.addSpinner("#btn-get-wants");
 
     // get all user information
     UserService.getUser()
