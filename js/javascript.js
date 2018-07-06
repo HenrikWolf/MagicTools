@@ -193,7 +193,7 @@ function checkTokens(mod) {
     Util.removeSpinner("#icon-user-"+mod);
   })
   .catch(function (err) {
-    Util.setAlert(1, "#alert-user-"+mod, err.statusText);
+    Util.setAlert(1, "#alert-user-"+mod, err);
     Util.removeSpinner("#icon-user-"+mod);
   });
 }
@@ -255,7 +255,7 @@ function fillListDropdown(ats, error) {
     })
     .catch(function (err) {
       Util.resetDropdown("#export-dropdown", true, true);
-      Util.setAlert(1, "#alert-export", err.statusText);
+      Util.setAlert(1, "#alert-export", err);
       Util.removeSpinner("#icon-export-get-lists");
     });
   } else {
@@ -314,7 +314,7 @@ function getWants() {
       Util.removeSpinner("#icon-export-get-wants");
     })
     .catch(function (err) {
-      Util.setAlert(1, "#alert-export", err.statusText);
+      Util.setAlert(1, "#alert-export", err);
       Util.removeSpinner("#icon-export-get-wants");
     });
   })

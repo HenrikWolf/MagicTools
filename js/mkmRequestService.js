@@ -67,31 +67,38 @@ export class MkmRequestService {
     return auth;
   }
 
+  // send get request to mkm api
   static getData(requestUrl, auth) {
 
     return new Promise(function (resolve, reject) {
       let xhr = new XMLHttpRequest();
       xhr.open("GET", requestUrl, true);
-      xhr.setRequestHeader("Content-type", "application/json");
       xhr.setRequestHeader("Authorization", "OAuth " + auth);
 
       xhr.onload = function() {
         if (this.status >= 200 && this.status < 300) {
-          let result = JSON.parse(xhr.response);
-          resolve(result);
+          if (prop.log.mkmRes) {
+            console.log(xhr.status+": "+xhr.response);
+          }
+          let res = MkmRequestService.parseJSON(xhr.response);
+          if (res["err"]) {
+            reject(res["err"]);
+          } else {
+            resolve(res);
+          }
         } else {
-          reject({
-            status: this.status,
-            statusText: xhr.statusText
-          });
+          if (prop.log.mkmRes) {
+            console.log(xhr.status+": "+xhr.statusText);
+          }
+          reject(xhr.statusText);
         }
       }
 
       xhr.onerror = function() {
-        reject({
-          status: this.status,
-          statusText: xhr.statusText
-        });
+        if (prop.log.mkmRes) {
+          console.log(xhr.status+": "+xhr.statusText);
+        }
+        reject(xhr.statusText);
       };
 
       xhr.send();
