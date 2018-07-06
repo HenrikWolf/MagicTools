@@ -1,7 +1,12 @@
 import prop from "./properties.js";
 
+// -------------------------------------------------------
+// -------------- API for connection to MKM --------------
+// -------------------------------------------------------
+
 export class MkmRequestService {
 
+  // create an empty wantlist with a specified name
   static createWantlist(ats, listName, listItems) {
     let requestUrl = prop.mkm_url + "wantslist";
     let authString = this.getAuthString(requestUrl, ats, "POST");
@@ -11,6 +16,7 @@ export class MkmRequestService {
     return this.postData(requestUrl, authString, xmlData);
   }
 
+  // get mkm account data, e.g. for checking tokens
   static getAccountData(ats) {
     let requestUrl = prop.mkm_url + "account";
     let authString = this.getAuthString(requestUrl, ats, "GET");
@@ -18,6 +24,7 @@ export class MkmRequestService {
     return this.getData(requestUrl, authString);
   }
 
+  // get a list of all wantlists
   static getWantlists(ats) {
     let requestUrl = prop.mkm_url + "wantslist";
     let authString = this.getAuthString(requestUrl, ats, "GET");
@@ -25,12 +32,17 @@ export class MkmRequestService {
     return this.getData(requestUrl, authString);
   }
 
+  // get content of a wantlist
   static getWantlist(ats, listId) {
     let requestUrl = prop.mkm_url + "wantslist/" + listId;
     let authString = this.getAuthString(requestUrl, ats, "GET");
 
     return this.getData(requestUrl, authString);
   }
+
+  // -------------------------------------------------------------------
+  // ------------------------- start functions -------------------------
+  // -------------------------------------------------------------------
 
   static getAuthString(requestUrl, ats, method) {
 
@@ -69,48 +81,19 @@ export class MkmRequestService {
 
   // send get request to mkm api
   static getData(requestUrl, auth) {
-
-    return new Promise(function (resolve, reject) {
-      let xhr = new XMLHttpRequest();
-      xhr.open("GET", requestUrl, true);
-      xhr.setRequestHeader("Authorization", "OAuth " + auth);
-
-      xhr.onload = function() {
-        if (this.status >= 200 && this.status < 300) {
-          if (prop.log.mkmRes) {
-            console.log(xhr.status+": "+xhr.response);
-          }
-          let res = MkmRequestService.parseJSON(xhr.response);
-          if (res["err"]) {
-            reject(res["err"]);
-          } else {
-            resolve(res);
-          }
-        } else {
-          if (prop.log.mkmRes) {
-            console.log(xhr.status+": "+xhr.statusText);
-          }
-          reject(xhr.statusText);
-        }
-      }
-
-      xhr.onerror = function() {
-        if (prop.log.mkmRes) {
-          console.log(xhr.status+": "+xhr.statusText);
-        }
-        reject(xhr.statusText);
-      };
-
-      xhr.send();
-    });
+    return MkmRequestService.executeXhr(requestUrl, auth, null, "GET");
   }
 
   // send post request to mkm api
   static postData(requestUrl, auth, xmlData) {
+    return MkmRequestService.executeXhr(requestUrl, auth, xmlData, "POST");
+  }
 
+  // execute XMLHttpRequest to mkm api
+  static executeXhr(requestUrl, auth, xmlData, method) {
     return new Promise(function (resolve, reject) {
       let xhr = new XMLHttpRequest();
-      xhr.open("POST", requestUrl, true);
+      xhr.open(method, requestUrl, true);
       xhr.setRequestHeader("Authorization", "OAuth " + auth);
 
       xhr.onload = function() {
@@ -122,8 +105,12 @@ export class MkmRequestService {
           if (res["err"]) {
             reject(res["err"]);
           } else {
-            if (res["failed"].length > 0) {
-              reject(res["failed"][0]["error"]);
+            if (res["failed"]) {
+              if (res["failed"].length > 0) {
+                reject(res["failed"][0]["error"]);
+              } else {
+                resolve(res);
+              }
             } else {
               resolve(res);
             }
