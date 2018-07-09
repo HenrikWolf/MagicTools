@@ -46,8 +46,8 @@
       <div class="col-md-2">
         <button type="button" class="btn btn-secondary btn-block" id="btn-user-create-save">Save</button>
       </div>
-      <div class="col-md-7" align="right">
-        <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-user-create"></div>
+      <div class="col-md-auto ml-auto">
+        <div class="alert alert-success" role="alert" style="display:none;" id="alert-user-create"></div>
       </div>
     </div>
 

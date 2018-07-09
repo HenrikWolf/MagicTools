@@ -12,32 +12,9 @@
     background-color: #454d54;
 }
 
-/* ????? */
+/* adapt alert line-height to button size */
 .alert {
   line-height:15px;
-}
-
-.alert-trim {
-  display: inline-block;
-}
-
-/* fix position of loading spinner */
-.center-parent-regular {
-  position: relative;
-}
-.center-child-regular {
-  position: absolute;
-  top: 30%;
-  transform: translateY(-30%);
-}
-
-.center-parent-dropdown {
-  position: relative;
-}
-.center-child-dropdown {
-  position: absolute;
-  top: 55%;
-  transform: translateY(-55%);
 }
 
 /* change color of login and logout button */

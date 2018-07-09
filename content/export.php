@@ -24,10 +24,10 @@
 
     <!-- Beginn Button and Alert -->
     <div class="form-group row">
-      <div class="col-md-10">
-        <div class="alert alert-danger alert-trim" role="alert" style="display:none;" id="alert-export"></div>
+      <div class="col-md-auto mr-auto">
+        <div class="alert alert-danger" role="alert" style="display:none;" id="alert-export"></div>
       </div>
-      <div class="col-md-2" align="right">
+      <div class="col-md-2">
         <button type="button" class="btn btn-secondary btn-block" id="btn-copy-clipboard">Copy</button>
       </div>
     </div>

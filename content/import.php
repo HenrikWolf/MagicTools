@@ -24,8 +24,8 @@
       <div class="col-md-3">
         <button type="button" class="btn btn-secondary btn-block" id="btn-import">Create List</button>
       </div>
-      <div class="col-md-8" align="right">
-        <div class="alert alert-success alert-trim" role="alert" style="display:none;" id="alert-import"></div>
+      <div class="col-md-auto ml-auto">
+        <div class="alert alert-success" role="alert" style="display:none;" id="alert-import"></div>
       </div>
     </div>
 
