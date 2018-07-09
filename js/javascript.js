@@ -86,32 +86,68 @@ function createWantlist() {
   let listName = $("#import-listname").val();
   let listItems = $("#import-input").val();
 
-  // get all user information
-  UserService.getUser()
-  .then(function(result) {
+  let listItemsArray = listItems.split('\n');
+  let wants = new Array();
 
-    let ats = {
-      app_token : result["app_token"],
-      app_secret : result["app_token_secret"],
-      access_token : result["access_token"],
-      access_token_secret : result["access_token_secret"]
+  // check if input matches pattern
+  let isCorrect = true;
+  let patt = new RegExp("^[0-9]x[A-Za-z ]+");
+
+  for (let i = 0; i < listItemsArray.length; i++) {
+    if(!patt.test(listItemsArray[i])) {
+      isCorrect = false;
     }
+  }
 
-    // request to mkm for creating a new wantlist
-    MkmRequestService.createWantlist(ats, listName, listItems)
-    .then(function (result) {
-      console.log(result);
-      let listStr = result.wantslist[0].name + " (" + result.wantslist[0].itemCount + " Wants)";
-      Util.addOption("#export-dropdown", result.wantslist[0].idWantslist, listStr);
-      Util.setAlert(0, "#alert-import", "Wantlist wurde hinzugefügt");
+  // if input matches pattern, extract information and create wantlist
+  if(isCorrect) {
+
+    // get all user information
+    UserService.getUser()
+    .then(function(result) {
+
+      let ats = {
+        app_token : result["app_token"],
+        app_secret : result["app_token_secret"],
+        access_token : result["access_token"],
+        access_token_secret : result["access_token_secret"]
+      }
+
+      // request to mkm for creating a new wantlist
+      MkmRequestService.createWantlist(ats, listName)
+      .then(function (result) {
+        let listId = result.wantslist[0].idWantslist;
+        let listStr = result.wantslist[0].name + " (" + result.wantslist[0].itemCount + " Wants)";
+        Util.addOption("#export-dropdown", listId, listStr);
+        Util.setAlert(0, "#alert-import", "Wantlist wurde hinzugefügt");
+
+        for (let i = 0; i < listItemsArray.length; i++) {
+          let listItem = listItemsArray[i];
+          let cardName = listItem.substring(listItem.indexOf('x')+1);
+          let amount = listItem.substring(0, listItem.indexOf('x'));
+          wants[i] = {};
+          wants[i]["cardName"] = cardName.trim();
+          wants[i]["amount"] = parseInt(amount);
+
+          console.log(wants);
+
+          // request to mkm for putting all wants to the created wantlist
+          MkmRequestService.putWantsToWantlist(ats, listId, listItem)
+          .then(function (result) {
+            console.log(result);
+          });
+        }
+      })
+      .catch(function (err) {
+        Util.setAlert(1, "#alert-import", err);
+      });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       Util.setAlert(1, "#alert-import", err);
     });
-  })
-  .catch(function(err) {
-    Util.setAlert(1, "#alert-import", err);
-  });
+  } else {
+    Util.setAlert(1, "#alert-import", "Input ist nicht korrekt");
+  }
 }
 
 // edit user account

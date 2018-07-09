@@ -6,8 +6,15 @@ import prop from "./properties.js";
 
 export class MkmRequestService {
 
+  // put wants to a wantlist
+  static putWantsToWantlist(ats, listId, listItem) {
+    return new Promise(function (resolve, reject) {
+      resolve("listId: "+listId+", listItem: "+listItem);
+    });
+  }
+
   // create an empty wantlist with a specified name
-  static createWantlist(ats, listName, listItems) {
+  static createWantlist(ats, listName) {
     let requestUrl = prop.mkm_url + "wantslist";
     let authString = this.getAuthString(requestUrl, ats, "POST");
 
