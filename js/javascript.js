@@ -143,8 +143,6 @@ function createWantlist() {
           });
         }
 
-        console.log(wants);
-
         Promise.all().then(function(result) {
 
           console.log(wants);

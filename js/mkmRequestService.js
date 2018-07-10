@@ -15,12 +15,11 @@ export class MkmRequestService {
 
   // find a metaproduct by id
   static findMetaproduct(ats, metaproduct) {
-    //let requestUrl = prop.mkm_url + "metaproducts/find" + this.formatParams(metaproduct);
     let requestUrl = prop.mkm_url + "metaproducts/find";
-    let requestUrl2 = prop.mkm_url + "metaproducts/find?search=ponder";
-    let authString = this.getAuthString2(requestUrl, ats, "GET");
+    let requestUrlParams = requestUrl + this.formatParams(metaproduct);
+    let authString = this.getAuthString2(requestUrl, ats, "GET", metaproduct);
 
-    return this.getData(requestUrl2, authString);
+    return this.getData(requestUrlParams, authString);
   }
 
   static formatParams( params ){
@@ -70,7 +69,7 @@ export class MkmRequestService {
   // ------------------------- start functions -------------------------
   // -------------------------------------------------------------------
 
-  static getAuthString2(requestUrl, ats, method) {
+  static getAuthString2(requestUrl, ats, method, params) {
 
     // create unique values for OAuth
     let nonce = Math.floor(Date.now()).toString();
@@ -88,7 +87,7 @@ export class MkmRequestService {
     let baseStringWithoutGet = "oauth_consumer_key=" + oauthConsumerKey
             + "&oauth_nonce=" + oauthNonce
             + "&oauth_signature_method=" + oauthSignatureMethod + "&oauth_timestamp=" + oauthTimestamp
-            + "&oauth_token=" + oauthToken + "&oauth_version=" + oauthVersion + "&search=ponder";
+            + "&oauth_token=" + oauthToken + "&oauth_version=" + oauthVersion + "&search=" + params["search"];
 
     let baseString = method+"&" + encodeURIComponent(realm) + "&" + encodeURIComponent(baseStringWithoutGet);
 
@@ -100,7 +99,7 @@ export class MkmRequestService {
     let auth = "realm=\"" + realm + "\",oauth_consumer_key=\"" + oauthConsumerKey
         + "\",oauth_token=\"" + oauthToken + "\",oauth_nonce=\"" + oauthNonce
         + "\",oauth_timestamp=\"" + oauthTimestamp + "\",oauth_signature_method=\"" + oauthSignatureMethod
-        + "\",oauth_version=\"" + oauthVersion + "\",oauth_signature=\"" + signature  + "\",search=\"ponder\"";
+        + "\",oauth_version=\"" + oauthVersion + "\",oauth_signature=\"" + signature  + "\",search=\"" + params["search"] + "\"";
 
     console.log(auth);
     return auth;
