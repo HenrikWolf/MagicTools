@@ -17,18 +17,9 @@ export class MkmRequestService {
   static findMetaproduct(ats, metaproduct) {
     let requestUrl = prop.mkm_url + "metaproducts/find";
     let requestUrlParams = requestUrl + this.formatParams(metaproduct);
-    let authString = this.getAuthString2(requestUrl, ats, "GET", metaproduct);
+    let authString = this.getAuthString(requestUrl, ats, "GET", metaproduct);
 
     return this.getData(requestUrlParams, authString);
-  }
-
-  static formatParams( params ){
-    return "?" + Object
-    .keys(params)
-    .map(function(key){
-      return key+"="+encodeURIComponent(params[key])
-    })
-    .join("&")
   }
 
   // create an empty wantlist with a specified name
@@ -69,75 +60,56 @@ export class MkmRequestService {
   // ------------------------- start functions -------------------------
   // -------------------------------------------------------------------
 
-  static getAuthString2(requestUrl, ats, method, params) {
-
-    // create unique values for OAuth
-    let nonce = Math.floor(Date.now()).toString();
-    let timestamp = Math.floor(Date.now() / 1000).toString();
-
-    // get params needed for OAuth
-    let realm = requestUrl;
-    let oauthConsumerKey = ats.app_token;
-    let oauthToken = ats.access_token;
-    let oauthNonce = nonce;
-    let oauthTimestamp = timestamp;
-    let oauthSignatureMethod = prop.signature_method;
-    let oauthVersion = prop.version;
-
-    let baseStringWithoutGet = "oauth_consumer_key=" + oauthConsumerKey
-            + "&oauth_nonce=" + oauthNonce
-            + "&oauth_signature_method=" + oauthSignatureMethod + "&oauth_timestamp=" + oauthTimestamp
-            + "&oauth_token=" + oauthToken + "&oauth_version=" + oauthVersion + "&search=" + params["search"];
-
-    let baseString = method+"&" + encodeURIComponent(realm) + "&" + encodeURIComponent(baseStringWithoutGet);
-
-    let signingKey = encodeURIComponent(ats.app_secret) + "&" + encodeURIComponent(ats.access_token_secret);
-
-    let rawSignature = CryptoJS.HmacSHA1(baseString, signingKey);
-    let signature = CryptoJS.enc.Base64.stringify(rawSignature);
-
-    let auth = "realm=\"" + realm + "\",oauth_consumer_key=\"" + oauthConsumerKey
-        + "\",oauth_token=\"" + oauthToken + "\",oauth_nonce=\"" + oauthNonce
-        + "\",oauth_timestamp=\"" + oauthTimestamp + "\",oauth_signature_method=\"" + oauthSignatureMethod
-        + "\",oauth_version=\"" + oauthVersion + "\",oauth_signature=\"" + signature  + "\",search=\"" + params["search"] + "\"";
-
-    console.log(auth);
-    return auth;
+  // format params for get request as a string
+  static formatParams(params){
+    return "?" + Object.keys(params).map(function(key) {
+      return key+"="+encodeURIComponent(params[key]);
+    }).join("&")
   }
 
-  static getAuthString(requestUrl, ats, method) {
+  // get auth string for request header
+  static getAuthString(requestUrl, ats, method, params) {
 
     // create unique values for OAuth
     let nonce = Math.floor(Date.now()).toString();
     let timestamp = Math.floor(Date.now() / 1000).toString();
 
     // get params needed for OAuth
-    let realm = requestUrl;
-    let oauthConsumerKey = ats.app_token;
-    let oauthToken = ats.access_token;
-    let oauthNonce = nonce;
-    let oauthTimestamp = timestamp;
-    let oauthSignatureMethod = prop.signature_method;
-    let oauthVersion = prop.version;
+    let oauth = {
+      oauth_consumer_key: ats.app_token,
+      oauth_nonce: nonce,
+      oauth_signature_method: prop.signature_method,
+      oauth_timestamp: timestamp,
+      oauth_token: ats.access_token,
+      oauth_version: prop.version
+    }
 
-    let baseStringWithoutGet = "oauth_consumer_key=" + oauthConsumerKey
-            + "&oauth_nonce=" + oauthNonce
-            + "&oauth_signature_method=" + oauthSignatureMethod + "&oauth_timestamp=" + oauthTimestamp
-            + "&oauth_token=" + oauthToken + "&oauth_version=" + oauthVersion;
+    // combine oauch object with params
+    Object.assign(oauth, params);
 
-    let baseString = method+"&" + encodeURIComponent(realm) + "&" + encodeURIComponent(baseStringWithoutGet);
+    // create baseString for signature
+    let baseStringWithoutGet = Object.keys(oauth).map(function(key) {
+      return key+"="+encodeURIComponent(oauth[key])
+    }).join("&")
 
+    let baseString = method+"&" + encodeURIComponent(requestUrl) + "&" + encodeURIComponent(baseStringWithoutGet);
+
+    // create signingKey for signature
     let signingKey = encodeURIComponent(ats.app_secret) + "&" + encodeURIComponent(ats.access_token_secret);
 
     let rawSignature = CryptoJS.HmacSHA1(baseString, signingKey);
     let signature = CryptoJS.enc.Base64.stringify(rawSignature);
 
-    let auth = "realm=\"" + realm + "\",oauth_consumer_key=\"" + oauthConsumerKey
-        + "\",oauth_token=\"" + oauthToken + "\",oauth_nonce=\"" + oauthNonce
-        + "\",oauth_timestamp=\"" + oauthTimestamp + "\",oauth_signature_method=\"" + oauthSignatureMethod
-        + "\",oauth_version=\"" + oauthVersion + "\",oauth_signature=\"" + signature  + "\"";
+    // add signature and url to oauth object
+    oauth["oauth_signature"] = signature;
+    oauth["realm"] = requestUrl;
 
-    return auth;
+    // create auth string
+    let authString = Object.keys(oauth).map(function(key) {
+      return key+"=\""+oauth[key]+ "\"";
+    }).join(",");
+
+    return authString;
   }
 
   // send get request to mkm api
