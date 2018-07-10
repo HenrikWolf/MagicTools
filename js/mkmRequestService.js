@@ -13,6 +13,25 @@ export class MkmRequestService {
     });
   }
 
+  // find a metaproduct by id
+  static findMetaproduct(ats, metaproduct) {
+    //let requestUrl = prop.mkm_url + "metaproducts/find" + this.formatParams(metaproduct);
+    let requestUrl = prop.mkm_url + "metaproducts/find";
+    let requestUrl2 = prop.mkm_url + "metaproducts/find?search=ponder";
+    let authString = this.getAuthString2(requestUrl, ats, "GET");
+
+    return this.getData(requestUrl2, authString);
+  }
+
+  static formatParams( params ){
+    return "?" + Object
+    .keys(params)
+    .map(function(key){
+      return key+"="+encodeURIComponent(params[key])
+    })
+    .join("&")
+  }
+
   // create an empty wantlist with a specified name
   static createWantlist(ats, listName) {
     let requestUrl = prop.mkm_url + "wantslist";
@@ -50,6 +69,42 @@ export class MkmRequestService {
   // -------------------------------------------------------------------
   // ------------------------- start functions -------------------------
   // -------------------------------------------------------------------
+
+  static getAuthString2(requestUrl, ats, method) {
+
+    // create unique values for OAuth
+    let nonce = Math.floor(Date.now()).toString();
+    let timestamp = Math.floor(Date.now() / 1000).toString();
+
+    // get params needed for OAuth
+    let realm = requestUrl;
+    let oauthConsumerKey = ats.app_token;
+    let oauthToken = ats.access_token;
+    let oauthNonce = nonce;
+    let oauthTimestamp = timestamp;
+    let oauthSignatureMethod = prop.signature_method;
+    let oauthVersion = prop.version;
+
+    let baseStringWithoutGet = "oauth_consumer_key=" + oauthConsumerKey
+            + "&oauth_nonce=" + oauthNonce
+            + "&oauth_signature_method=" + oauthSignatureMethod + "&oauth_timestamp=" + oauthTimestamp
+            + "&oauth_token=" + oauthToken + "&oauth_version=" + oauthVersion + "&search=ponder";
+
+    let baseString = method+"&" + encodeURIComponent(realm) + "&" + encodeURIComponent(baseStringWithoutGet);
+
+    let signingKey = encodeURIComponent(ats.app_secret) + "&" + encodeURIComponent(ats.access_token_secret);
+
+    let rawSignature = CryptoJS.HmacSHA1(baseString, signingKey);
+    let signature = CryptoJS.enc.Base64.stringify(rawSignature);
+
+    let auth = "realm=\"" + realm + "\",oauth_consumer_key=\"" + oauthConsumerKey
+        + "\",oauth_token=\"" + oauthToken + "\",oauth_nonce=\"" + oauthNonce
+        + "\",oauth_timestamp=\"" + oauthTimestamp + "\",oauth_signature_method=\"" + oauthSignatureMethod
+        + "\",oauth_version=\"" + oauthVersion + "\",oauth_signature=\"" + signature  + "\",search=\"ponder\"";
+
+    console.log(auth);
+    return auth;
+  }
 
   static getAuthString(requestUrl, ats, method) {
 

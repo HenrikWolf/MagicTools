@@ -129,14 +129,35 @@ function createWantlist() {
           wants[i]["cardName"] = cardName.trim();
           wants[i]["amount"] = parseInt(amount);
 
+          let metaproduct = {
+            search: wants[i]["cardName"]
+          }
+
+          // request to mkm for getting the id of an metaproduct
+          MkmRequestService.findMetaproduct(ats, metaproduct)
+          .then(function (result) {
+            console.log(result);
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+        }
+
+        console.log(wants);
+
+        Promise.all().then(function(result) {
+
           console.log(wants);
 
           // request to mkm for putting all wants to the created wantlist
-          MkmRequestService.putWantsToWantlist(ats, listId, listItem)
+          MkmRequestService.putWantsToWantlist(ats, listId, listItems)
           .then(function (result) {
             console.log(result);
+          })
+          .catch(function (err) {
+
           });
-        }
+        });
       })
       .catch(function (err) {
         Util.setAlert(1, "#alert-import", err);
