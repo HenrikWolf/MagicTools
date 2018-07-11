@@ -118,7 +118,6 @@ function createWantlist() {
         let listId = result.wantslist[0].idWantslist;
         let listStr = result.wantslist[0].name + " (" + result.wantslist[0].itemCount + " Wants)";
         Util.addOption("#export-dropdown", listId, listStr);
-        Util.setAlert(0, "#alert-import", "Wantlist wurde hinzugefügt");
 
         let promises = new Array();
         let wants = new Array();
@@ -126,9 +125,9 @@ function createWantlist() {
         for (let i = 0; i < listItemsArray.length; i++) {
           let listItem = listItemsArray[i];
           let cardName = listItem.substring(listItem.indexOf('x')+1);
-          let amount = listItem.substring(0, listItem.indexOf('x'));
+          let count = listItem.substring(0, listItem.indexOf('x'));
           wants[i] = {};
-          wants[i]["amount"] = parseInt(amount);
+          wants[i]["count"] = parseInt(count);
 
           let metaproduct = {
             search: cardName.trim()
@@ -138,39 +137,38 @@ function createWantlist() {
           promises.push(MkmRequestService.findMetaproduct(ats, metaproduct)
           .then(function (result) {
             if (result["metaproduct"].length==1) {
-              wants[i]["id"] = result["metaproduct"][0]["metaproduct"]["idMetaproduct"];
+              wants[i]["idMetaproduct"] = result["metaproduct"][0]["metaproduct"]["idMetaproduct"];
             } else {
-              // TODO: write error alert
+              Util.setAlert(1, "#alert-import", "Mehr als ein Metaprodukt gefunden");
             }
           })
           .catch(function (err) {
-            console.log(err);
+            Util.setAlert(1, "#alert-import", err); // Fehler bei findMetaproduct
           }));
         }
 
+        // if all metaproducts are found, put they to the new wantlist
         Promise.all(promises).then(function(result) {
-
-          console.log(wants);
 
           // request to mkm for putting all wants to the created wantlist
           MkmRequestService.putWantsToWantlist(ats, listId, wants)
           .then(function (result) {
-            console.log(result);
+            Util.setAlert(0, "#alert-import", "Wantlist wurde hinzugefügt");
           })
           .catch(function (err) {
-            console.log(err);
+            Util.setAlert(1, "#alert-import", err); // Fehler bei putWantsToWantlist
           });
         });
       })
       .catch(function (err) {
-        Util.setAlert(1, "#alert-import", err);
+        Util.setAlert(1, "#alert-import", err); // Fehler bei createWantlist
       });
     })
     .catch(function(err) {
-      Util.setAlert(1, "#alert-import", err);
+      Util.setAlert(1, "#alert-import", err); // Fehler bei getUser
     });
   } else {
-    Util.setAlert(1, "#alert-import", "Input ist nicht korrekt");
+    Util.setAlert(1, "#alert-import", "Input ist nicht korrekt"); // Fehler bei der Eingabesyntax
   }
 }
 

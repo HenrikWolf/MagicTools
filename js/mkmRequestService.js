@@ -63,19 +63,21 @@ export class MkmRequestService {
   // ------------------------- start functions -------------------------
   // -------------------------------------------------------------------
 
+  // get xmlDataString for creating a wantlist
   static getXmlDataForCreateWantlist(listName) {
     return prop.xml.start+"<wantslist><name>"+listName+
     "</name><idGame>1</idGame></wantslist>"+prop.xml.end;
   }
 
+  // get xmlDataString for putting wants to a wantlist
   static getXmlDataForPutWantsToWantlist(wants) {
     let xmlData = prop.xml.start+"<action>addItem</action>";
 
     for (let i = 0; i < wants.length; i++) {
-      xmlData += "<metaproduct><idMetaproduct>"+wants[i]["id"]+"</idMetaproduct>"+
-      "<count>"+wants[i]["amount"]+"</count><wishPrice></wishPrice>"+
+      xmlData += "<metaproduct><idMetaproduct>"+wants[i]["idMetaproduct"]+"</idMetaproduct>"+
+      "<count>"+wants[i]["count"]+"</count><wishPrice></wishPrice>"+
       "<minCondition>EX</minCondition><mailAlert>false</mailAlert>"+
-      "<isFoil>false</isFoil><isSigned>false</isSigned></metaproduct>";
+      "<idLanguage>1</idLanguage><idLanguage>3</idLanguage><isFoil>false</isFoil><isAltered>false</isAltered><isSigned>false</isSigned></metaproduct>";
     }
 
     xmlData += prop.xml.end;
