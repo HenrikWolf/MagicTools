@@ -87,7 +87,6 @@ function createWantlist() {
   let listItems = $("#import-input").val();
 
   let listItemsArray = listItems.split('\n');
-  let wants = new Array();
 
   // check if input matches pattern
   let isCorrect = true;
@@ -121,39 +120,45 @@ function createWantlist() {
         Util.addOption("#export-dropdown", listId, listStr);
         Util.setAlert(0, "#alert-import", "Wantlist wurde hinzugefügt");
 
+        let promises = new Array();
+        let wants = new Array();
+
         for (let i = 0; i < listItemsArray.length; i++) {
           let listItem = listItemsArray[i];
           let cardName = listItem.substring(listItem.indexOf('x')+1);
           let amount = listItem.substring(0, listItem.indexOf('x'));
           wants[i] = {};
-          wants[i]["cardName"] = cardName.trim();
           wants[i]["amount"] = parseInt(amount);
 
           let metaproduct = {
-            search: wants[i]["cardName"]
+            search: cardName.trim()
           }
 
           // request to mkm for getting the id of an metaproduct
-          MkmRequestService.findMetaproduct(ats, metaproduct)
+          promises.push(MkmRequestService.findMetaproduct(ats, metaproduct)
+          .then(function (result) {
+            if (result["metaproduct"].length==1) {
+              wants[i]["id"] = result["metaproduct"][0]["metaproduct"]["idMetaproduct"];
+            } else {
+              // TODO: write error alert
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          }));
+        }
+
+        Promise.all(promises).then(function(result) {
+
+          console.log(wants);
+
+          // request to mkm for putting all wants to the created wantlist
+          MkmRequestService.putWantsToWantlist(ats, listId, wants)
           .then(function (result) {
             console.log(result);
           })
           .catch(function (err) {
             console.log(err);
-          });
-        }
-
-        Promise.all().then(function(result) {
-
-          console.log(wants);
-
-          // request to mkm for putting all wants to the created wantlist
-          MkmRequestService.putWantsToWantlist(ats, listId, listItems)
-          .then(function (result) {
-            console.log(result);
-          })
-          .catch(function (err) {
-
           });
         });
       })

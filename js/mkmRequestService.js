@@ -7,10 +7,13 @@ import prop from "./properties.js";
 export class MkmRequestService {
 
   // put wants to a wantlist
-  static putWantsToWantlist(ats, listId, listItem) {
-    return new Promise(function (resolve, reject) {
-      resolve("listId: "+listId+", listItem: "+listItem);
-    });
+  static putWantsToWantlist(ats, listId, wants) {
+    let requestUrl = prop.mkm_url + "wantslist/" + listId;
+    let authString = this.getAuthString(requestUrl, ats, "PUT");
+
+    let xmlData = this.getXmlDataForPutWantsToWantlist(wants);
+
+    return this.putData(requestUrl, authString, xmlData);
   }
 
   // find a metaproduct by id
@@ -27,7 +30,7 @@ export class MkmRequestService {
     let requestUrl = prop.mkm_url + "wantslist";
     let authString = this.getAuthString(requestUrl, ats, "POST");
 
-    let xmlData = prop.xml.start+"<wantslist><name>"+listName+"</name><idGame>1</idGame></wantslist>"+prop.xml.end;
+    let xmlData = this.getXmlDataForCreateWantlist(listName);
 
     return this.postData(requestUrl, authString, xmlData);
   }
@@ -59,6 +62,26 @@ export class MkmRequestService {
   // -------------------------------------------------------------------
   // ------------------------- start functions -------------------------
   // -------------------------------------------------------------------
+
+  static getXmlDataForCreateWantlist(listName) {
+    return prop.xml.start+"<wantslist><name>"+listName+
+    "</name><idGame>1</idGame></wantslist>"+prop.xml.end;
+  }
+
+  static getXmlDataForPutWantsToWantlist(wants) {
+    let xmlData = prop.xml.start+"<action>addItem</action>";
+
+    for (let i = 0; i < wants.length; i++) {
+      xmlData += "<metaproduct><idMetaproduct>"+wants[i]["id"]+"</idMetaproduct>"+
+      "<count>"+wants[i]["amount"]+"</count><wishPrice></wishPrice>"+
+      "<minCondition>EX</minCondition><mailAlert>false</mailAlert>"+
+      "<isFoil>false</isFoil><isSigned>false</isSigned></metaproduct>";
+    }
+
+    xmlData += prop.xml.end;
+
+    return xmlData;
+  }
 
   // format params for get request as a string
   static formatParams(params){
@@ -120,6 +143,11 @@ export class MkmRequestService {
   // send post request to mkm api
   static postData(requestUrl, auth, xmlData) {
     return MkmRequestService.executeXhr(requestUrl, auth, xmlData, "POST");
+  }
+
+  // send put request to mkm api
+  static putData(requestUrl, auth, xmlData) {
+    return MkmRequestService.executeXhr(requestUrl, auth, xmlData, "PUT");
   }
 
   // execute XMLHttpRequest to mkm api
