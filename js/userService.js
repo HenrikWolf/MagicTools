@@ -8,7 +8,7 @@ export class UserService {
 
   //create a new user account
   static createUser(user) {
-    return this.executeAjax("createUser.php", null);
+    return this.executeAjax("createUser.php", user);
   }
 
   // delete a user account

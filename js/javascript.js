@@ -252,7 +252,7 @@ function checkTokens(mod) {
     Util.removeSpinner("#btn-user-"+mod+"-check");
   })
   .catch(function (err) {
-    Util.setAlert(1, "#alert-user-"+mod, err.statusText);
+    Util.setAlert(1, "#alert-user-"+mod, err);
     Util.removeSpinner("#btn-user-"+mod+"-check");
   });
 }
