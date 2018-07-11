@@ -51,7 +51,7 @@ $(document).ready(function() {
     createUser();
   });
 
-  $("#user-delete-tab").click(function(e) {
+  $("#user-delete-submit").click(function(e) {
     deleteUser();
   });
 

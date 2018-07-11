@@ -35,7 +35,7 @@
         <a class="nav-link fas fa-user-edit fa-lg px-1 mr-sm-2" id="user-edit-tab" data-toggle="pill" href="#user-edit" role="tab" aria-controls="user-edit" aria-selected="false"></a>
       </li>
       <li class="nav-item" data-toggle="tooltip" data-placement="bottom" title="delete user account">
-        <a class="nav-link fas fa-user-minus fa-lg px-1 mr-sm-2" id="user-delete-tab" data-toggle="pill" href="#user-delete" role="tab" aria-controls="user-add" aria-selected="false"></a>
+        <a class="nav-link fas fa-user-minus fa-lg px-1 mr-sm-2" id="user-delete-tab" data-toggle="modal" data-target="#user-delete-modal" href="#user-delete" role="tab" aria-controls="user-add" aria-selected="false"></a>
       </li>
     </ul>
     <form class="form-inline">
@@ -44,3 +44,24 @@
     <?php } ?>
   </div>
 </nav>
+
+<!-- Modal for user-delete -->
+<div class="modal fade" id="user-delete-modal" tabindex="-1" role="dialog" aria-labelledby="user-delete-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="user-delete-modal-label">Delete Account</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete your account?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="user-delete-submit" type="button" class="btn btn-dark">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
