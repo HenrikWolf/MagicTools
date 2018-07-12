@@ -199,20 +199,24 @@ export class MkmRequestService {
 
   // parse and return json result
   static parseJSON(data) {
-    try {
-      let jsonResult = JSON.parse(data);
+    if(data) {
+      try {
+        let jsonResult = JSON.parse(data);
 
-      if(!jsonResult) {
-        return {err: "empty JsonResult"};
-      } else {
-        if(!jsonResult["succ"]) {
-          jsonResult["succ"] = "request successful";
+        if(!jsonResult) {
+          return {err: "empty JsonResult"};
+        } else {
+          if(!jsonResult["succ"]) {
+            jsonResult["succ"] = "request successful";
+          }
+          return jsonResult;
         }
-        return jsonResult;
       }
-    }
-    catch (e) {
-      return {err: "no valid JsonResult"};
+      catch (e) {
+        return {err: "no valid JsonResult"};
+      }
+    } else {
+      return {err: "no result"};
     }
   }
 }

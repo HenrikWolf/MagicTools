@@ -124,40 +124,44 @@ function createWantlist() {
 
         for (let i = 0; i < listItemsArray.length; i++) {
           let listItem = listItemsArray[i];
-          let cardName = listItem.substring(listItem.indexOf('x')+1);
-          let count = listItem.substring(0, listItem.indexOf('x'));
-          wants[i] = {};
-          wants[i]["count"] = parseInt(count);
+          let cardName = listItem.substring(listItem.indexOf('x')+1).trim();
+          let count = parseInt(listItem.substring(0, listItem.indexOf('x')));
 
           let metaproduct = {
-            search: cardName.trim()
+            search: cardName
           }
 
           // request to mkm for getting the id of an metaproduct
           promises.push(MkmRequestService.findMetaproduct(ats, metaproduct)
           .then(function (result) {
-            if (result["metaproduct"].length==1) {
-              wants[i]["idMetaproduct"] = result["metaproduct"][0]["metaproduct"]["idMetaproduct"];
-            } else {
-              Util.setAlert(1, "#alert-import", "Mehr als ein Metaprodukt gefunden");
+            if (result["metaproduct"].length>=1) {
+              let want = {
+                count: count,
+                idMetaproduct: result["metaproduct"][0]["metaproduct"]["idMetaproduct"]
+              };
+              wants.push(want);
             }
           })
           .catch(function (err) {
-            Util.setAlert(1, "#alert-import", err); // Fehler bei findMetaproduct
+            console.log(err);
           }));
         }
 
         // if all metaproducts are found, put they to the new wantlist
         Promise.all(promises).then(function(result) {
-
-          // request to mkm for putting all wants to the created wantlist
-          MkmRequestService.putWantsToWantlist(ats, listId, wants)
-          .then(function (result) {
-            Util.setAlert(0, "#alert-import", "Wantlist wurde hinzugefügt");
-          })
-          .catch(function (err) {
-            Util.setAlert(1, "#alert-import", err); // Fehler bei putWantsToWantlist
-          });
+          if (wants.length>=1) {
+            
+            // request to mkm for putting all wants to the created wantlist
+            MkmRequestService.putWantsToWantlist(ats, listId, wants)
+            .then(function (result) {
+              Util.setAlert(0, "#alert-import", "Wantlist wurde hinzugefügt ("+wants.length+" Wants)");
+            })
+            .catch(function (err) {
+              Util.setAlert(1, "#alert-import", err); // Fehler bei putWantsToWantlist
+            });
+          } else {
+            Util.setAlert(1, "#alert-import", "Keine gültigen Wants");
+          }
         });
       })
       .catch(function (err) {
