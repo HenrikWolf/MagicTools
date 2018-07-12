@@ -101,6 +101,8 @@ function createWantlist() {
   // if input matches pattern, extract information and create wantlist
   if(isCorrect) {
 
+    Util.addSpinner("#btn-import");
+
     // get all user information
     UserService.getUser()
     .then(function(result) {
@@ -150,29 +152,35 @@ function createWantlist() {
         // if all metaproducts are found, put they to the new wantlist
         Promise.all(promises).then(function(result) {
           if (wants.length>=1) {
-            
+
             // request to mkm for putting all wants to the created wantlist
             MkmRequestService.putWantsToWantlist(ats, listId, wants)
             .then(function (result) {
               Util.setAlert(0, "#alert-import", "Wantlist wurde hinzugefügt ("+wants.length+" Wants)");
+              Util.removeSpinner("#btn-import");
             })
             .catch(function (err) {
               Util.setAlert(1, "#alert-import", err); // Fehler bei putWantsToWantlist
+              Util.removeSpinner("#btn-import");
             });
           } else {
             Util.setAlert(1, "#alert-import", "Keine gültigen Wants");
+            Util.removeSpinner("#btn-import");
           }
         });
       })
       .catch(function (err) {
         Util.setAlert(1, "#alert-import", err); // Fehler bei createWantlist
+        Util.removeSpinner("#btn-import");
       });
     })
     .catch(function(err) {
       Util.setAlert(1, "#alert-import", err); // Fehler bei getUser
+      Util.removeSpinner("#btn-import");
     });
   } else {
     Util.setAlert(1, "#alert-import", "Input ist nicht korrekt"); // Fehler bei der Eingabesyntax
+    Util.removeSpinner("#btn-import");
   }
 }
 
