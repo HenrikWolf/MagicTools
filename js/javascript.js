@@ -88,18 +88,8 @@ function createWantlist() {
 
   let listItemsArray = listItems.split('\n');
 
-  // check if input matches pattern
-  let isCorrect = true;
-  let patt = new RegExp("^[0-9]x[A-Za-z ]+");
-
-  for (let i = 0; i < listItemsArray.length; i++) {
-    if(!patt.test(listItemsArray[i])) {
-      isCorrect = false;
-    }
-  }
-
   // if input matches pattern, extract information and create wantlist
-  if(isCorrect) {
+  if(matchPattern(listItemsArray)) {
 
     Util.addSpinner("#btn-import");
 
@@ -182,6 +172,19 @@ function createWantlist() {
     Util.setAlert(1, "#alert-import", "Input ist nicht korrekt"); // Fehler bei der Eingabesyntax
     Util.removeSpinner("#btn-import");
   }
+}
+
+// check if input matches pattern
+function matchPattern(listItemsArray) {
+  let patt = new RegExp("^[0-9]x[A-Za-z ]+");
+
+  for (let i = 0; i < listItemsArray.length; i++) {
+    if(!patt.test(listItemsArray[i])) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 // edit user account
