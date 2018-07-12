@@ -45,6 +45,12 @@
   </div>
 </nav>
 
+<!-- Collapsable alert for login  -->
+<div class="collapse" id="alert-collapse-login">
+  <div id="alert-login" class="alert alert-danger alert-dismissible fade show" role="alert">
+  </div>
+</div>
+
 <!-- Modal for user-delete -->
 <div class="modal fade" id="user-delete-modal" tabindex="-1" role="dialog" aria-labelledby="user-delete-modal-label" aria-hidden="true">
   <div class="modal-dialog" role="document">

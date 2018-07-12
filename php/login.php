@@ -38,12 +38,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if ($row !== false && password_verify($_POST["password"], $row['password'])) {
           $_SESSION['id'] = $row['id'];
           $_SESSION['username'] = $row['username'];
-          echo json_encode(array('succ' => "password is correct"));
+          echo json_encode(array('succ' => "login successful"));
       } else {
-          echo json_encode(array('err' => "password is wrong"));
+          echo json_encode(array('err' => "Password is wrong"));
       }
     } else {
-      echo json_encode(array('err' => "no user ".$_POST['username']." found"));
+      echo json_encode(array('err' => "User ".$_POST['username']." not found"));
     }
 
     // Close statement

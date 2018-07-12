@@ -393,6 +393,8 @@ function login(username, password) {
     console.log(result["succ"]);
   })
   .catch(function (err) {
+    $("#alert-login").html("Failure: <strong>"+err+"</strong>");
+    $("#alert-collapse-login").collapse();
     console.log("Fehler: "+err);
   });
 }
