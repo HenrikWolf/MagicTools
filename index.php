@@ -50,6 +50,7 @@
           include_once("content/wasAnderes.php");
           include_once("content/userCreate.php");
           include_once("content/userEdit.php");
+          include_once("content/faq.php");
         ?>
 
       </div>

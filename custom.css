@@ -35,3 +35,13 @@
 .fa-user-plus:hover, .fa-user-edit:hover, .fa-user-minus:hover {
   color: lightgrey;
 }
+
+.user-link-faq{
+  color: black;
+  text-decoration: none;
+}
+
+.user-link-faq:hover{
+  color: grey;
+  text-decoration: none;
+}
