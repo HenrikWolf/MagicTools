@@ -17,7 +17,8 @@
         <a class="nav-link" id="contact-tab" data-toggle="pill" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Noch irgendwas</a>
       </li>
       <li class="nav-item" data-toggle="tooltip" data-placement="bottom" title="FAQ">
-        <a class="nav-link far fa-question-circle fa-lg px-1" id="faq-tab" data-toggle="pill" href="#faq" role="tab" aria-controls="faq" aria-selected="false"></a>
+        <a class="nav-link" id="faq-tab" data-toggle="pill" href="#faq" role="tab" aria-controls="faq" aria-selected="false"><i class="fas fa-question fa-lg"></i></a>
+        <!--<a class="nav-link far fa-question-circle fa-lg px-1" id="faq-tab" data-toggle="pill" href="#faq" role="tab" aria-controls="faq" aria-selected="false"></a>-->
       </li>
     </ul>
     <?php if(!isset($_SESSION['id'])) { ?>
