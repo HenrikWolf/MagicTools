@@ -28,6 +28,16 @@
             <p>Once you finished the activation on <a href="https://www.cardmarket.com/de/Magic" class="label label-success">cardmarket.com</a>, you can create an account using the button in the header. Just insert your tokens, chose a username and password and you are ready to go!</p>
           </div>
         </div>
+        <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question2">
+          <h4 class="panel-title">
+            <a href="#" class="ing user-link-faq">What does the "Export Wantlist" tool do?</a>
+          </h4>
+        </div>
+        <div id="question2" class="panel-collapse collapse" style="height: 0px;">
+          <div class="panel-body">
+            <p>Ilorem Ipsum Dolor...</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

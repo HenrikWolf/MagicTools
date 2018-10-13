@@ -10,19 +10,18 @@
       <li class="nav-item active">
         <a class="nav-link active" id="export-tab" data-toggle="pill" href="#export" role="tab" aria-controls="export" aria-selected="true">Export Wantlist</a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" id="import-tab" data-toggle="pill" href="#import" role="tab" aria-controls="import" aria-selected="false">Import Wantlist</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" id="contact-tab" data-toggle="pill" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Noch irgendwas</a>
-      </li>
-      <li class="nav-item" data-toggle="tooltip" data-placement="bottom" title="FAQ">
-        <a class="nav-link" id="faq-tab" data-toggle="pill" href="#faq" role="tab" aria-controls="faq" aria-selected="false"><i class="fas fa-question fa-lg"></i></a>
-        <!--<a class="nav-link far fa-question-circle fa-lg px-1" id="faq-tab" data-toggle="pill" href="#faq" role="tab" aria-controls="faq" aria-selected="false"></a>-->
-      </li>
+      </li> -->
     </ul>
     <?php if(!isset($_SESSION['id'])) { ?>
     <ul class="nav">
+      <li class="nav-item" data-toggle="tooltip" data-placement="bottom" title="FAQ">
+        <a class="nav-link fas fa-question fa-lg px-1 mr-sm-2" id="faq-tab" data-toggle="pill" href="#faq" role="tab" aria-controls="faq" aria-selected="false"></a>
+      </li>
       <li class="nav-item" data-toggle="tooltip" data-placement="bottom" title="new user account">
         <a class="nav-link fas fa-user-plus fa-lg px-1 mr-sm-2" id="user-create-tab" data-toggle="pill" href="#user-create" role="tab" aria-controls="user-create" aria-selected="false"></a>
       </li>

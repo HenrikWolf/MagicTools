@@ -28,11 +28,11 @@
 }
 
 /* change color of user icons */
-.fa-user-plus, .fa-user-edit, .fa-user-minus {
+.fa-user-plus, .fa-user-edit, .fa-user-minus, .fa-question {
   color: white;
 }
 
-.fa-user-plus:hover, .fa-user-edit:hover, .fa-user-minus:hover {
+.fa-user-plus:hover, .fa-user-edit:hover, .fa-user-minus:hover, .fa-question:hover {
   color: lightgrey;
 }
 
