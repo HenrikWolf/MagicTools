@@ -7,7 +7,7 @@
       <div class="panel panel-default ">
         <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question0">
           <h4 class="panel-title">
-            <a href="#" class="ing user-link-faq">What does this website do?</a>
+            <a href="#" class="ing user-link-faq">What is this website?</a>
           </h4>
         </div>
         <div id="question0" class="panel-collapse collapse" style="height: 0px;">
@@ -30,12 +30,13 @@
         </div>
         <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question2">
           <h4 class="panel-title">
-            <a href="#" class="ing user-link-faq">What does the "Export Wantlist" tool do?</a>
+            <a href="#" class="ing user-link-faq">Is using the website safe?</a>
           </h4>
         </div>
         <div id="question2" class="panel-collapse collapse" style="height: 0px;">
           <div class="panel-body">
-            <p>Ilorem Ipsum Dolor...</p>
+            <p>The usage of the tools requires you to input your cardmarket tokens. These function as login information and thus it is possible to fully access your cardmarket account with them. For this reason it is important to not share the tokens with anyone you do not want to have access to your account.</p>
+            <p>As this website requires the tokens to function, only use it if you know one of us in person and are alright with saving your cardmarket login tokens in this websites database.</p>
           </div>
         </div>
       </div>
